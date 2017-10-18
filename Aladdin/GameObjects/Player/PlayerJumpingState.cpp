@@ -10,10 +10,6 @@ PlayerJumpingState::PlayerJumpingState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
 	this->mPlayerData->player->SetVy(Define::PLAYER_MIN_JUMP_VELOCITY);
-
-	acceleratorY = 30.0f;
-	acceleratorX = 15.0f;
-
 	noPressed = false;
 }
 
@@ -25,7 +21,7 @@ PlayerJumpingState::~PlayerJumpingState()
 
 void PlayerJumpingState::Update(float dt)
 {
-	this->mPlayerData->player->AddVy(acceleratorY);
+	this->mPlayerData->player->AddVy(Define::PLAYER_JUMP_SPEED_Y);
 
 	if (mPlayerData->player->GetVy() >= 0)
 	{
@@ -41,7 +37,7 @@ void PlayerJumpingState::Update(float dt)
 			//player dang di chuyen sang ben trai      
 			if (mPlayerData->player->GetVx() < 0)
 			{
-				this->mPlayerData->player->AddVx(acceleratorX);
+				this->mPlayerData->player->AddVx(Define::PLAYER_NORMAL_SPEED_X);
 
 				if (mPlayerData->player->GetVx() > 0)
 					this->mPlayerData->player->SetVx(0);
@@ -52,7 +48,7 @@ void PlayerJumpingState::Update(float dt)
 			//player dang di chuyen sang phai   
 			if (mPlayerData->player->GetVx() > 0)
 			{
-				this->mPlayerData->player->AddVx(-acceleratorX);
+				this->mPlayerData->player->AddVx(-Define::PLAYER_NORMAL_SPEED_X);
 
 				if (mPlayerData->player->GetVx() < 0)
 					this->mPlayerData->player->SetVx(0);
@@ -70,7 +66,7 @@ void PlayerJumpingState::HandleKeyboard(std::map<int, bool> keys)
 		//di chuyen sang phai
 		if (this->mPlayerData->player->GetVx() < Define::PLAYER_MAX_RUNNING_SPEED)
 		{
-			this->mPlayerData->player->AddVx(acceleratorX);
+			this->mPlayerData->player->AddVx(Define::PLAYER_NORMAL_SPEED_X);
 
 			if (this->mPlayerData->player->GetVx() >= Define::PLAYER_MAX_RUNNING_SPEED)
 			{
@@ -87,7 +83,7 @@ void PlayerJumpingState::HandleKeyboard(std::map<int, bool> keys)
 		//di chuyen sang trai
 		if (this->mPlayerData->player->GetVx() > -Define::PLAYER_MAX_RUNNING_SPEED)
 		{
-			this->mPlayerData->player->AddVx(-acceleratorX);
+			this->mPlayerData->player->AddVx(-Define::PLAYER_NORMAL_SPEED_X);
 
 			if (this->mPlayerData->player->GetVx() < -Define::PLAYER_MAX_RUNNING_SPEED)
 			{

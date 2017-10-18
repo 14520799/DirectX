@@ -3,23 +3,13 @@
 #include "PlayerStandingState.h"
 #include "PlayerSittingState.h"
 #include "PlayerVerticalClimbingState.h"
+#include "PlayerDeathState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 
 PlayerFallingState::PlayerFallingState(PlayerData *playerData)
 {
     this->mPlayerData = playerData;
-    acceleratorY = 40.0f;
-    acceleratorX = 15.0f;
-
-    if (this->mPlayerData->player->GetVx() == 0)
-    {
-        allowMoveX = false;
-    }
-    else
-    {
-        allowMoveX = true;
-    }
 }
 
 
@@ -29,47 +19,62 @@ PlayerFallingState::~PlayerFallingState()
 
 void PlayerFallingState::Update(float dt)
 {
-    this->mPlayerData->player->AddVy(acceleratorY);
+    this->mPlayerData->player->AddVy(Define::PLAYER_FALL_SPEED_Y);
 
     if (mPlayerData->player->GetVy() > Define::PLAYER_MAX_JUMP_VELOCITY)
     {
         mPlayerData->player->SetVy(Define::PLAYER_MAX_JUMP_VELOCITY);
     }
+
+	if (mPlayerData->player->GetVx() == 0)
+	{
+		allowMoveX = false;
+	}
+	else
+	{
+		allowMoveX = true;
+	}
 }
 
 void PlayerFallingState::HandleKeyboard(std::map<int, bool> keys)
 {
     if (keys[VK_RIGHT])
     {
-        mPlayerData->player->SetReverse(false);
+		mPlayerData->player->SetReverse(false);
 
-        isLeftOrRightKeyPressed = true;
-        //di chuyen sang phai
-        if (this->mPlayerData->player->GetVx() < Define::PLAYER_MAX_RUNNING_SPEED)
-        {
-            this->mPlayerData->player->AddVx(acceleratorX);
+		if (allowMoveX)
+		{
+			isLeftOrRightKeyPressed = true;
+			//di chuyen sang phai
+			if (this->mPlayerData->player->GetVx() < Define::PLAYER_MAX_RUNNING_SPEED)
+			{
+				this->mPlayerData->player->AddVx(Define::PLAYER_NORMAL_SPEED_X);
 
-            if (this->mPlayerData->player->GetVx() >= Define::PLAYER_MAX_RUNNING_SPEED)
-            {
-                this->mPlayerData->player->SetVx(Define::PLAYER_MAX_RUNNING_SPEED);
-            }
-        }
+				if (this->mPlayerData->player->GetVx() >= Define::PLAYER_MAX_RUNNING_SPEED)
+				{
+					this->mPlayerData->player->SetVx(Define::PLAYER_MAX_RUNNING_SPEED);
+				}
+			}
+		}     
     }
     else if (keys[VK_LEFT])
     {
-        mPlayerData->player->SetReverse(true);
+		mPlayerData->player->SetReverse(true);
 
-        isLeftOrRightKeyPressed = true;
-        //di chuyen sang trai
-        if (this->mPlayerData->player->GetVx() > -Define::PLAYER_MAX_RUNNING_SPEED)
-        {
-            this->mPlayerData->player->AddVx(-acceleratorX);
+		if (allowMoveX)
+		{
+			isLeftOrRightKeyPressed = true;
+			//di chuyen sang trai
+			if (this->mPlayerData->player->GetVx() > -Define::PLAYER_MAX_RUNNING_SPEED)
+			{
+				this->mPlayerData->player->AddVx(-Define::PLAYER_NORMAL_SPEED_X);
 
-            if (this->mPlayerData->player->GetVx() <= -Define::PLAYER_MAX_RUNNING_SPEED)
-            {
-                this->mPlayerData->player->SetVx(-Define::PLAYER_MAX_RUNNING_SPEED);
-            }
-        }
+				if (this->mPlayerData->player->GetVx() <= -Define::PLAYER_MAX_RUNNING_SPEED)
+				{
+					this->mPlayerData->player->SetVx(-Define::PLAYER_MAX_RUNNING_SPEED);
+				}
+			}
+		}
     }
     else
     {

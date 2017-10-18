@@ -1,5 +1,6 @@
 #pragma once
 #include "PlayerState.h"
+#include "Player.h"
 
 class PlayerStandingState : public PlayerState
 {
@@ -9,7 +10,7 @@ public:
 
     void HandleKeyboard(std::map<int, bool> keys);
 
-	//void OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data);
+	void OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data);
 
     virtual StateName GetState();
 

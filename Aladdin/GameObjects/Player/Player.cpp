@@ -21,6 +21,7 @@ Player::Player()
 	mAnimationStandingAttack = new Animation("Resources/Aladdin/Attack/StandingAttack.png", 5, 1, 5, 0.01f);
 	mAnimationSittingAttack = new Animation("Resources/Aladdin/Attack/SittingAttack.png", 6, 1, 6, 0.01f);
 	mAnimationStandingThrowApple = new Animation("Resources/Aladdin/Attack/StandingThrowApple.png", 6, 1, 6, 0.01f);
+	mAnimationDeath = new Animation("Resources/Aladdin/Death.png", 13, 1, 13, 0.1f);
 
 	this->mPlayerData = new PlayerData();
 	this->mPlayerData->player = this;
@@ -29,6 +30,8 @@ Player::Player()
 	this->SetState(new PlayerFallingState(this->mPlayerData));
 
 	allowJump = true;
+	allowDeath = true;
+	timeDeath = 0; //time duoc mien sat thuong sau khi hoi sinh
 }
 
 Player::~Player()
@@ -45,6 +48,18 @@ void Player::Update(float dt)
 	}
 
 	Entity::Update(dt);
+
+	//duoc mien sat thuong sau khi hoi sinh
+	if (!allowDeath)
+	{
+		timeDeath += dt;
+
+		if (timeDeath > 3.0f)
+		{
+			allowDeath = true;
+			timeDeath = 0;
+		}
+	}
 }
 
 void Player::HandleKeyboard(std::map<int, bool> keys)
@@ -61,7 +76,7 @@ void Player::OnKeyPressed(int key)
 	{
 		if (allowJump)
 		{
-			if (mCurrentState == PlayerState::Running || mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::Sitting || mCurrentState == PlayerState::VerticalClimbing ||
+			if (mCurrentState == PlayerState::Running || mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::Sitting ||
 				mCurrentState == PlayerState::StandingAttack || mCurrentState == PlayerState::SittingAttack)
 			{
 				this->SetState(new PlayerJumpingState(this->mPlayerData));
@@ -224,6 +239,10 @@ void Player::changeAnimation(PlayerState::StateName state)
 
 	case PlayerState::StandingThrowApple:
 		mCurrentAnimation = mAnimationStandingThrowApple;
+		break;
+
+	case PlayerState::Death:
+		mCurrentAnimation = mAnimationDeath;
 		break;
 
 	default:

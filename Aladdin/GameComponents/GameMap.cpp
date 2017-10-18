@@ -1,5 +1,5 @@
 #include "GameMap.h"
-#include "../GameObjects/MapObjects/BrickGold.h"
+#include "../GameObjects/MapObjects/Apple.h"
 #include "../GameObjects/MapObjects/BrickNormal.h"
 
 GameMap::GameMap(char* filePath)
@@ -61,7 +61,7 @@ void GameMap::LoadMap(char* filePath)
 
         //xac dinh layer Brick bi an di de tu do tao ra cac vien gach trong game, nhung vien gach khong phai la 1 physic static nos co the bi pha huy duoc
 
-        /*if (layer->GetName() == "brick" || layer->GetName() == "coin")
+        if (layer->GetName() == "Tao")
         {
             for (size_t j = 0; j < mMap->GetNumTilesets(); j++)
             {
@@ -70,8 +70,8 @@ void GameMap::LoadMap(char* filePath)
                 int tileWidth = mMap->GetTileWidth();
                 int tileHeight = mMap->GetTileHeight();
 
-                int tileSetWidth = tileSet->GetImage()->GetWidth() / tileWidth;
-                int tileSetHeight = tileSet->GetImage()->GetHeight() / tileHeight;
+                //int tileSetWidth = tileSet->GetImage()->GetWidth() / tileWidth;
+                //int tileSetHeight = tileSet->GetImage()->GetHeight() / tileHeight;
 
                 for (size_t m = 0; m < layer->GetHeight(); m++)
                 {
@@ -79,39 +79,39 @@ void GameMap::LoadMap(char* filePath)
                     {
                         if (layer->GetTileTilesetIndex(n, m) != -1)
                         {
-                            int tileID = layer->GetTileId(n, m);
+                            //int tileID = layer->GetTileId(n, m);
 
-                            int y = tileID / tileSetWidth;
-                            int x = tileID - y * tileSetWidth;
+                            //int y = tileID / tileSetWidth;
+                            //int x = tileID - y * tileSetWidth;
 
-                            RECT sourceRECT;
-                            sourceRECT.top = y * tileHeight;
-                            sourceRECT.bottom = sourceRECT.top + tileHeight;
-                            sourceRECT.left = x * tileWidth;
-                            sourceRECT.right = sourceRECT.left + tileWidth;
+                            //RECT sourceRECT;
+                            //sourceRECT.top = y * tileHeight;
+                            //sourceRECT.bottom = sourceRECT.top + tileHeight;
+                            //sourceRECT.left = x * tileWidth;
+                            //sourceRECT.right = sourceRECT.left + tileWidth;
 
-                            RECT bound;
-                            bound.left = n * tileWidth;
-                            bound.top = m * tileHeight;
-                            bound.right = bound.left + tileWidth;
-                            bound.bottom = bound.top + tileHeight;
+                            //RECT bound;
+                            //bound.left = n * tileWidth;
+                            //bound.top = m * tileHeight;
+                            //bound.right = bound.left + tileWidth;
+                            //bound.bottom = bound.top + tileHeight;
 
                             D3DXVECTOR3 position(n * tileWidth + tileWidth / 2, m * tileHeight + tileHeight / 2, 0);
 
                             Brick *brick = nullptr;
 
-                            if (layer->GetName() == "coin")
+                            if (layer->GetName() == "Tao")
                             {
-                                brick = new BrickGold(position);
-                                brick->Tag = Entity::EntityTypes::BrickGoldNormal;
+                                brick = new Apple(position);
+                                brick->Tag = Entity::EntityTypes::Apple;
                                 mListBricks.push_back(brick);
                             }
-                            else
-                            {
-                                brick = new BrickNormal(position);
-                                brick->Tag = Entity::EntityTypes::Brick;
-                                mListBricks.push_back(brick);
-                            }
+                            //else
+                            //{
+                            //    brick = new BrickNormal(position);
+                            //    brick->Tag = Entity::EntityTypes::Brick;
+                            //    mListBricks.push_back(brick);
+                            //}
 
 
                             if (brick)
@@ -120,7 +120,7 @@ void GameMap::LoadMap(char* filePath)
                     }
                 }
             }
-        }*/
+        }
     }
 
 #pragma endregion
@@ -150,6 +150,10 @@ void GameMap::LoadMap(char* filePath)
 			else if (object->GetName() == "HorizontalRope")
 			{
 				entity->Tag = Entity::EntityTypes::HorizontalRope;
+			}
+			else if (object->GetName() == "Fire")
+			{
+				entity->Tag = Entity::EntityTypes::Fire;
 			}
 			else
 			{

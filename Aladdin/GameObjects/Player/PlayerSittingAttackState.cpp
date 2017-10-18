@@ -1,6 +1,5 @@
 #include "PlayerSittingAttackState.h"
 #include "../../GameComponents/GameCollision.h"
-#include "../../GameDefines/GameDefine.h"
 
 PlayerSittingAttackState::PlayerSittingAttackState(PlayerData *playerData)
 {

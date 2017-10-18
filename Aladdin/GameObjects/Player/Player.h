@@ -54,7 +54,7 @@ public:
     bool allowMoveLeft;
     bool allowMoveRight;
 	bool allowMoveUp;
-
+	bool allowDeath;
 protected:
 
     Camera      *mCamera;
@@ -72,7 +72,8 @@ protected:
 				*mAnimationStandingAttack,
 				*mAnimationSittingAttack,
 				*mAnimationStandingThrowApple,
-				*mAnimationSittingThrowApple;
+				*mAnimationSittingThrowApple,
+				*mAnimationDeath;
 
     void changeAnimation(PlayerState::StateName state);
 
@@ -80,5 +81,6 @@ protected:
 
     //chi cho phep jump khi nhan nhim space, muon nhay lai phai tha phim space roi nhan lai
     bool allowJump, mCurrentReverse;
+	float timeDeath;
 };
 

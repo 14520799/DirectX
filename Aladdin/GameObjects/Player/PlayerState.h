@@ -20,7 +20,7 @@ public:
 		SittingAttack,
 		StandingThrowApple,
 		SittingThrowApple,
-        Die
+        Death
     };
 
     ~PlayerState();

@@ -163,9 +163,6 @@
     <ClCompile Include="GameObjects\MapObjects\Brick.cpp">
       <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\MapObjects\BrickGold.cpp">
-      <Filter>Framework\GameObjects\MapObjects</Filter>
-    </ClCompile>
     <ClCompile Include="GameObjects\MapObjects\BrickNormal.cpp">
       <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClCompile>
@@ -195,6 +192,12 @@
     </ClCompile>
     <ClCompile Include="Scenes\Scene1.cpp">
       <Filter>Framework\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\Apple.cpp">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerDeathState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -330,9 +333,6 @@
     <ClInclude Include="GameObjects\MapObjects\Brick.h">
       <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\MapObjects\BrickGold.h">
-      <Filter>Framework\GameObjects\MapObjects</Filter>
-    </ClInclude>
     <ClInclude Include="GameObjects\MapObjects\BrickNormal.h">
       <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClInclude>
@@ -359,6 +359,12 @@
     </ClInclude>
     <ClInclude Include="Scenes\Scene1.h">
       <Filter>Framework\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\Apple.h">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerDeathState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

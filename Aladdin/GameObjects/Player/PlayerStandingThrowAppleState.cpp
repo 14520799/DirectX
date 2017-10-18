@@ -1,6 +1,5 @@
 #include "PlayerStandingThrowAppleState.h"
 #include "../../GameComponents/GameCollision.h"
-#include "../../GameDefines/GameDefine.h"
 
 PlayerStandingThrowAppleState::PlayerStandingThrowAppleState(PlayerData *playerData)
 {

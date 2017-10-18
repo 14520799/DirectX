@@ -17,8 +17,6 @@ public:
     virtual StateName GetState();
 
 protected:
-    float acceleratorY;
-    float acceleratorX;
     bool noPressed;
     bool allowMoveRight, allowMoveLeft;
 };

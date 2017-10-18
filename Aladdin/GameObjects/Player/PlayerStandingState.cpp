@@ -1,8 +1,6 @@
 #include "PlayerStandingState.h"
-#include "Player.h"
-#include "PlayerFallingState.h"
-#include "PlayerSittingState.h"
-#include "../../GameDefines/GameDefine.h"
+#include "PlayerRunningState.h"
+#include "PlayerDeathState.h"
 
 PlayerStandingState::PlayerStandingState(PlayerData *playerData)
 {
@@ -23,6 +21,14 @@ void PlayerStandingState::HandleKeyboard(std::map<int, bool> keys)
         this->mPlayerData->player->SetState(new PlayerRunningState(this->mPlayerData));
         return;
     }
+}
+
+void PlayerStandingState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
+{
+	if (impactor->Tag == Entity::EntityTypes::Fire && this->mPlayerData->player->allowDeath)
+	{
+		this->mPlayerData->player->SetState(new PlayerDeathState(this->mPlayerData));
+	}
 }
 
 PlayerState::StateName PlayerStandingState::GetState()
