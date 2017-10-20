@@ -1,4 +1,5 @@
 #include "Brick.h"
+#include "Apple.h"
 #include "../../GameComponents/GameGlobal.h"
 
 
@@ -9,7 +10,11 @@ Brick::Brick()
 
 Brick::~Brick()
 {
-
+	if (mAnimation)
+	{
+		delete mAnimation;
+		mAnimation = nullptr;
+	}
 }
 
 bool Brick::init(D3DXVECTOR3 position)

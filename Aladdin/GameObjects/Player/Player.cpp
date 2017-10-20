@@ -32,6 +32,8 @@ Player::Player()
 	allowJump = true;
 	allowDeath = true;
 	timeDeath = 0; //time duoc mien sat thuong sau khi hoi sinh
+
+	collisionApple = false; //cham vao qua tao
 }
 
 Player::~Player()
@@ -171,6 +173,7 @@ void Player::SetState(PlayerState *newState)
 	allowMoveLeft = true;
 	allowMoveRight = true;
 	allowMoveUp = true;
+	collisionApple = false;
 
 	delete this->mPlayerData->state;
 

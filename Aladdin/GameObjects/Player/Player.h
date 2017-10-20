@@ -55,6 +55,8 @@ public:
     bool allowMoveRight;
 	bool allowMoveUp;
 	bool allowDeath;
+
+	bool collisionApple; //kiem tra xem player da cham apple hay chua
 protected:
 
     Camera      *mCamera;

@@ -111,6 +111,10 @@ void PlayerJumpingState::OnCollision(Entity *impactor, Entity::SideCollisions si
 		//this->mPlayerData->player->SetPosition(this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y + (this->mPlayerData->player->GetPosition().y - impactor->GetPosition().y));
 		this->mPlayerData->player->SetState(new PlayerHorizontalClimbingState(this->mPlayerData));
 	}
+	else if (impactor->Tag == Entity::EntityTypes::Apple)
+	{
+		this->mPlayerData->player->collisionApple = true;
+	}
 	else
 	{
 		switch (side)

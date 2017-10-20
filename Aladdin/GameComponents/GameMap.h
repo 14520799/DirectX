@@ -27,7 +27,10 @@ public:
     int GetHeight();
     int GetTileWidth();
     int GetTileHeight();
-    std::map<int, Sprite*> getListTileSet();
+    std::map<int, Sprite*> GetListTileSet();
+
+	//tao vat pham len map vd: tao, tien, ...
+	void createEntity(std::vector<Brick*> &entitiesOut, D3DXVECTOR3 position, int soTang);
 
     bool IsBoundLeft(); //kiem tra luc nay Camera o vi bien ben trai so voi WorldMap
     bool IsBoundRight(); // kiem tra xem co o vi tri bien ben phai worldmap khong
@@ -35,7 +38,11 @@ public:
     bool IsBoundBottom(); // kiem tra xem co o vi tri bien ben phai worldmap khong
     ~GameMap();
 
+	void SetListBrick(std::vector<Brick*> listBricks);
     std::vector<Brick*> GetListBrick();
+
+	Brick* GetBrick(std::vector<Brick*> entitiesIn, Brick *brick);
+	std::vector<Brick*> RemoveBrick(std::vector<Brick*> &entitiesIn, Brick *brick);
 
     QuadTree* GetQuadTree();
 

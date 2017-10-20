@@ -15,6 +15,7 @@ public:
     ~QuadTree();
     void Clear();
     void insertEntity(Entity *entity);
+	void removeEntity(Entity *entity);
     
     /*lay danh sach nhung Entity co kha nang xay ra va cham
     tra ve danh sach cac phan tu nam trong vung va cham */

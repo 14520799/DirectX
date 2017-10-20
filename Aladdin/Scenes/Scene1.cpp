@@ -133,6 +133,17 @@ void Scene1::checkCollision()
                 if (bot > widthBottom)
                     widthBottom = bot;
             }
+
+			if (mPlayer->collisionApple)
+			{
+				Brick* brick = mMap->GetBrick(mMap->GetListBrick(), (Brick*)listCollision.at(i));
+
+				mMap->SetListBrick(mMap->RemoveBrick(mMap->GetListBrick(), brick)); //setlistbrick lai sau khi xoa brick khoi list
+				mMap->GetQuadTree()->removeEntity(listCollision.at(i)); //clear brick khoi QuadTree
+				delete brick;
+				mPlayer->collisionApple = false;
+				break;
+			}
         }
     }
 

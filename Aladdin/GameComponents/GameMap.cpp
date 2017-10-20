@@ -50,78 +50,16 @@ void GameMap::LoadMap(char* filePath)
         mListTileset.insert(pair<int, Sprite*>(i, sprite));
     }
 
-    //khoi tao cac khoi Brick (vien gach)
-#pragma region -BRICK AND COIN LAYER-
-    for (size_t i = 0; i < GetMap()->GetNumTileLayers(); i++)
-    {
-        const Tmx::TileLayer *layer = mMap->GetTileLayer(i);
+    //khoi tao nhung tang qua tao
+#pragma region -APPLE LAYER-
+	createEntity(mListBricks, D3DXVECTOR3(425, 550, 0), 3);
+	createEntity(mListBricks, D3DXVECTOR3(705, 550, 0), 2);
+	createEntity(mListBricks, D3DXVECTOR3(850, 550, 0), 2);
 
-        if (layer->IsVisible())
-            continue;
-
-        //xac dinh layer Brick bi an di de tu do tao ra cac vien gach trong game, nhung vien gach khong phai la 1 physic static nos co the bi pha huy duoc
-
-        if (layer->GetName() == "Tao")
-        {
-            for (size_t j = 0; j < mMap->GetNumTilesets(); j++)
-            {
-                const Tmx::Tileset *tileSet = mMap->GetTileset(j);
-
-                int tileWidth = mMap->GetTileWidth();
-                int tileHeight = mMap->GetTileHeight();
-
-                //int tileSetWidth = tileSet->GetImage()->GetWidth() / tileWidth;
-                //int tileSetHeight = tileSet->GetImage()->GetHeight() / tileHeight;
-
-                for (size_t m = 0; m < layer->GetHeight(); m++)
-                {
-                    for (size_t n = 0; n < layer->GetWidth(); n++)
-                    {
-                        if (layer->GetTileTilesetIndex(n, m) != -1)
-                        {
-                            //int tileID = layer->GetTileId(n, m);
-
-                            //int y = tileID / tileSetWidth;
-                            //int x = tileID - y * tileSetWidth;
-
-                            //RECT sourceRECT;
-                            //sourceRECT.top = y * tileHeight;
-                            //sourceRECT.bottom = sourceRECT.top + tileHeight;
-                            //sourceRECT.left = x * tileWidth;
-                            //sourceRECT.right = sourceRECT.left + tileWidth;
-
-                            //RECT bound;
-                            //bound.left = n * tileWidth;
-                            //bound.top = m * tileHeight;
-                            //bound.right = bound.left + tileWidth;
-                            //bound.bottom = bound.top + tileHeight;
-
-                            D3DXVECTOR3 position(n * tileWidth + tileWidth / 2, m * tileHeight + tileHeight / 2, 0);
-
-                            Brick *brick = nullptr;
-
-                            if (layer->GetName() == "Tao")
-                            {
-                                brick = new Apple(position);
-                                brick->Tag = Entity::EntityTypes::Apple;
-                                mListBricks.push_back(brick);
-                            }
-                            //else
-                            //{
-                            //    brick = new BrickNormal(position);
-                            //    brick->Tag = Entity::EntityTypes::Brick;
-                            //    mListBricks.push_back(brick);
-                            //}
-
-
-                            if (brick)
-                                mQuadTree->insertEntity(brick);
-                        }
-                    }
-                }
-            }
-        }
-    }
+	for (auto child : mListBricks)
+	{
+		mQuadTree->insertEntity(child);
+	}
 
 #pragma endregion
 
@@ -164,6 +102,49 @@ void GameMap::LoadMap(char* filePath)
         }
     }
 #pragma endregion
+}
+
+void GameMap::createEntity(std::vector<Brick*> &entitiesOut, D3DXVECTOR3 position, int soTang)
+{
+	if (soTang < 1 || soTang > 3)
+	{
+		return;
+	}
+
+	Brick *brick = nullptr;
+
+	for (size_t i = 1; i <= soTang; i++)
+	{
+		switch (i)
+		{
+		case 1:
+			brick = new Apple(position);
+			entitiesOut.push_back(brick);
+			break;
+
+		case 2:
+			brick = new Apple(D3DXVECTOR3(position.x - 30, position.y + 20, 0));
+			entitiesOut.push_back(brick);
+			brick = new Apple(D3DXVECTOR3(position.x + 30, position.y + 20, 0));
+			entitiesOut.push_back(brick);
+			break;
+
+		case 3:
+			brick = new Apple(D3DXVECTOR3(position.x - 60, position.y + 40, 0));
+			entitiesOut.push_back(brick);
+			brick = new Apple(D3DXVECTOR3(position.x + 60, position.y + 40, 0));
+			entitiesOut.push_back(brick);
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	for (auto child : entitiesOut)
+	{
+		child->Tag = Entity::EntityTypes::Apple;
+	}
 }
 
 void GameMap::SetCamera(Camera* camera)
@@ -316,14 +297,45 @@ void GameMap::Draw()
 #pragma endregion
 }
 
-std::map<int, Sprite*> GameMap::getListTileSet()
+std::map<int, Sprite*> GameMap::GetListTileSet()
 {
     return mListTileset;
+}
+
+void GameMap::SetListBrick(std::vector<Brick*> listBricks)
+{
+	mListBricks = listBricks;
 }
 
 std::vector<Brick*> GameMap::GetListBrick()
 {
     return mListBricks;
+}
+
+Brick* GameMap::GetBrick(std::vector<Brick*> entitiesIn, Brick *brick)
+{
+	for (auto child : entitiesIn)
+	{
+		if (child->GetPosition() == brick->GetPosition())
+		{
+			return brick;
+		}
+	}
+}
+
+std::vector<Brick*> GameMap::RemoveBrick(std::vector<Brick*> &entitiesIn, Brick *brick)
+{
+	//lay ra vi tri cua brick o trong mang
+	for (size_t i = 0; i < entitiesIn.size(); i++)
+	{
+		if (entitiesIn.at(i)->GetPosition() == brick->GetPosition())
+		{
+			//xoa brick khoi mang
+			entitiesIn.erase(entitiesIn.begin() + i);
+			return entitiesIn;
+		}
+	}
+
 }
 
 QuadTree * GameMap::GetQuadTree()
