@@ -27,7 +27,7 @@ Player::Player()
 	this->mPlayerData->player = this;
 	this->vx = 0;
 	this->vy = 0;
-	this->SetState(new PlayerFallingState(this->mPlayerData));
+	this->SetState(new PlayerStandingState(this->mPlayerData));
 
 	allowJump = true;
 	allowDeath = true;
@@ -119,6 +119,10 @@ void Player::OnKeyUp(int key)
 	if (key == VK_SPACE)
 	{
 		allowJump = true;
+	}
+	else if (key == VK_DOWN)
+	{
+		this->SetState(new PlayerStandingState(this->mPlayerData));
 	}
 	else if (key == 0x41)
 	{

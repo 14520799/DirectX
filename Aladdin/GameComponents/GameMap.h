@@ -13,6 +13,7 @@
 #include "GameCollision.h"
 #include "QuadTree.h"
 #include "../GameObjects/MapObjects/Brick.h"
+#include "../GameObjects/Boss/Boss.h"
 
 class GameMap
 {
@@ -30,8 +31,8 @@ public:
     std::map<int, Sprite*> GetListTileSet();
 
 	//tao vat pham len map vd: tao, tien, ...
-	void createEntity(std::vector<Brick*> &entitiesOut, D3DXVECTOR3 position, int soTang);
-
+	void createApple(std::vector<Brick*> &entitiesOut, D3DXVECTOR3 position, int soTang);
+	void createGuard(std::vector<Boss*> &entitiesOut, D3DXVECTOR3 position, int guardType);
     bool IsBoundLeft(); //kiem tra luc nay Camera o vi bien ben trai so voi WorldMap
     bool IsBoundRight(); // kiem tra xem co o vi tri bien ben phai worldmap khong
     bool IsBoundTop(); // kiem tra xem co o vi tri bien ben trai worldmap khong
@@ -41,7 +42,11 @@ public:
 	void SetListBrick(std::vector<Brick*> listBricks);
     std::vector<Brick*> GetListBrick();
 
+	void SetListGuard(std::vector<Boss*> listGuards);
+	std::vector<Boss*> GetListGuard();
+
 	Brick* GetBrick(std::vector<Brick*> entitiesIn, Brick *brick);
+	Boss* GetBoss(std::vector<Boss*> entitiesIn, Boss *boss);
 	std::vector<Brick*> RemoveBrick(std::vector<Brick*> &entitiesIn, Brick *brick);
 
     QuadTree* GetQuadTree();
@@ -55,6 +60,7 @@ private:
     Camera                          *mCamera;
     QuadTree                        *mQuadTree;
     std::vector<Brick*>             mListBricks;
+	std::vector<Boss*>              mListGuards;
 
     Sprite                          *mSpriteBricks, *mSpriteBrickGold;
 };

@@ -1,6 +1,7 @@
-#include "GameMap.h"
+﻿#include "GameMap.h"
 #include "../GameObjects/MapObjects/Apple.h"
-#include "../GameObjects/MapObjects/BrickNormal.h"
+#include "../GameObjects/Boss/ThinGuard.h"
+#include "../GameObjects/Boss/FatGuard.h"
 
 GameMap::GameMap(char* filePath)
 {
@@ -52,11 +53,23 @@ void GameMap::LoadMap(char* filePath)
 
     //khoi tao nhung tang qua tao
 #pragma region -APPLE LAYER-
-	createEntity(mListBricks, D3DXVECTOR3(425, 550, 0), 3);
-	createEntity(mListBricks, D3DXVECTOR3(705, 550, 0), 2);
-	createEntity(mListBricks, D3DXVECTOR3(850, 550, 0), 2);
+	createApple(mListBricks, D3DXVECTOR3(425, 550, 0), 3);
+	createApple(mListBricks, D3DXVECTOR3(705, 550, 0), 2);
+	createApple(mListBricks, D3DXVECTOR3(850, 550, 0), 2);
 
 	for (auto child : mListBricks)
+	{
+		mQuadTree->insertEntity(child);
+	}
+
+#pragma endregion
+
+/////////////////////////////////////////////////////////  Tạo lính gầy + béo
+#pragma region
+	createGuard(mListGuards, D3DXVECTOR3(755, 640, 0), 1);
+	createGuard(mListGuards, D3DXVECTOR3(1400, 676, 0), 2);
+
+	for (auto child : mListGuards)
 	{
 		mQuadTree->insertEntity(child);
 	}
@@ -104,7 +117,7 @@ void GameMap::LoadMap(char* filePath)
 #pragma endregion
 }
 
-void GameMap::createEntity(std::vector<Brick*> &entitiesOut, D3DXVECTOR3 position, int soTang)
+void GameMap::createApple(std::vector<Brick*> &entitiesOut, D3DXVECTOR3 position, int soTang)
 {
 	if (soTang < 1 || soTang > 3)
 	{
@@ -144,6 +157,30 @@ void GameMap::createEntity(std::vector<Brick*> &entitiesOut, D3DXVECTOR3 positio
 	for (auto child : entitiesOut)
 	{
 		child->Tag = Entity::EntityTypes::Apple;
+	}
+}
+
+void GameMap::createGuard(std::vector<Boss*> &entitiesOut, D3DXVECTOR3 position, int guardType)
+{
+	Boss *boss = nullptr;
+
+	switch (guardType)
+	{
+		case 1:
+			boss = new ThinGuard(position);
+			entitiesOut.push_back(boss);
+			break;
+		case 2:
+			boss = new FatGuard(position);
+			entitiesOut.push_back(boss);
+			break;
+		default:
+			break;
+	}
+	
+	for (auto child : entitiesOut)
+	{
+		child->Tag = Entity::EntityTypes::Guard;
 	}
 }
 
@@ -213,6 +250,12 @@ void GameMap::Update(float dt)
     {
         mListBricks[i]->Update(dt);
     }
+	
+	//////////////////////////////////////////////////////////////////////////
+	for (size_t i = 0; i < mListGuards.size(); i++)
+	{
+		mListGuards[i]->Update(dt);
+	}
 }
 
 void GameMap::Draw()
@@ -295,6 +338,14 @@ void GameMap::Draw()
     }
 
 #pragma endregion
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma region DRAW GUARD
+	for (size_t i = 0; i < mListGuards.size(); i++)
+	{
+		mListGuards[i]->Draw(trans);
+	}
+#pragma endregion
 }
 
 std::map<int, Sprite*> GameMap::GetListTileSet()
@@ -312,6 +363,17 @@ std::vector<Brick*> GameMap::GetListBrick()
     return mListBricks;
 }
 
+//////////////////////////////////////////////////////////////////////////
+void GameMap::SetListGuard(std::vector<Boss*> listGuards)
+{
+	mListGuards = listGuards;
+}
+
+std::vector<Boss*> GameMap::GetListGuard()
+{
+	return mListGuards;
+}
+
 Brick* GameMap::GetBrick(std::vector<Brick*> entitiesIn, Brick *brick)
 {
 	for (auto child : entitiesIn)
@@ -319,6 +381,17 @@ Brick* GameMap::GetBrick(std::vector<Brick*> entitiesIn, Brick *brick)
 		if (child->GetPosition() == brick->GetPosition())
 		{
 			return brick;
+		}
+	}
+}
+
+Boss* GameMap::GetBoss(std::vector<Boss*> entitiesIn, Boss *boss)
+{
+	for (auto child : entitiesIn)
+	{
+		if (child->GetPosition() == boss->GetPosition())
+		{
+			return boss;
 		}
 	}
 }
