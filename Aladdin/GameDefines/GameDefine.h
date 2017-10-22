@@ -12,4 +12,6 @@ namespace Define
 	const float PLAYER_JUMP_SPEED_Y = 50.0f; //toc do nhay player
 	const float PLAYER_FALL_SPEED_Y = 70.0f; //toc do nhay player
 	const float PLAYER_CLIM_SPPED = 15.0f; //toc do leo player
+	const float APPLE_MAX_SPEED = 2500.0f; //toc do bay max cua apple
+	const float APPLE_SPEED = 100.0f;//toc do bay cua apple
 }

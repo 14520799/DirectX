@@ -4,6 +4,7 @@
 #include "PlayerSittingState.h"
 #include "PlayerJumpingState.h"
 #include "PlayerDeathState.h"
+#include "PlayerDefaultState..h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 
@@ -60,7 +61,7 @@ void PlayerRunningState::HandleKeyboard(std::map<int, bool> keys)
     }
     else
     {
-        this->mPlayerData->player->SetState(new PlayerStandingState(this->mPlayerData));
+        this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
         return;
     }
 }
@@ -78,6 +79,10 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 		//giam toc do khi player chay vao bai lua
 		acceletoryX = Define::PLAYER_HURT_SPEED_X;
 	}
+	else if (impactor->Tag == Entity::EntityTypes::Guard)
+	{
+
+	}
 	else
 	{
 		switch (side)
@@ -90,7 +95,7 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 
 				//day Player ra phia ben phai de cho player khong bi xuyen qua object
 				this->mPlayerData->player->AddPosition(data.RegionCollision.right - data.RegionCollision.left, 0);
-				this->mPlayerData->player->SetState(new PlayerStandingState(this->mPlayerData));
+				this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
 			}
 			break;
 
@@ -100,7 +105,7 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 			{
 				this->mPlayerData->player->allowMoveRight = false;
 				this->mPlayerData->player->AddPosition(-(data.RegionCollision.right - data.RegionCollision.left), 0);
-				this->mPlayerData->player->SetState(new PlayerStandingState(this->mPlayerData));
+				this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
 			}
 			break;
 

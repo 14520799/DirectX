@@ -64,8 +64,8 @@
   <object id="20" x="1420" y="377" width="186" height="11"/>
   <object id="19" x="1758" y="151" width="32" height="585"/>
   <object id="18" x="1177" y="713" width="579" height="21"/>
-  <object id="17" x="1151" y="573" width="25" height="160"/>
-  <object id="2" x="916.333" y="635.533" width="33.1715" height="37.9935"/>
+  <object id="17" x="1151" y="577" width="25" height="156"/>
+  <object id="2" x="916.333" y="635.533" width="37.1715" height="33.9935"/>
   <object id="1" x="0" y="668.667" width="954" height="65.3333"/>
   <object id="53" x="1120" y="1" width="21" height="382"/>
   <object id="56" x="1791" y="586" width="34" height="14"/>
@@ -85,9 +85,9 @@
   <object id="88" x="1043" y="590.167" width="32" height="11"/>
   <object id="89" x="1074.33" y="579.5" width="32" height="11"/>
   <object id="90" x="1105.67" y="566.167" width="83" height="11"/>
-  <object id="91" name="Fire" x="377.333" y="667.333" width="83" height="17"/>
-  <object id="99" name="Fire" x="670.5" y="671.333" width="83" height="22"/>
-  <object id="100" name="Fire" x="810.5" y="670" width="83" height="22"/>
+  <object id="91" name="Fire" x="377.333" y="666" width="83" height="17"/>
+  <object id="99" name="Fire" x="670.5" y="666" width="83" height="22"/>
+  <object id="100" name="Fire" x="810.5" y="666" width="83" height="22"/>
   <object id="101" name="Fire" x="1613.5" y="709" width="83" height="22"/>
  </objectgroup>
 </map>

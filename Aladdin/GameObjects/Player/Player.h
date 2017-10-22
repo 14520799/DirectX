@@ -5,6 +5,7 @@
 #include "../../GameComponents/Animation.h"
 #include "../../GameComponents/GameGlobal.h"
 #include "../../GameComponents/Camera.h"
+#include "../../GameObjects/MapObjects/Brick.h"
 #include "PlayerData.h"
 #include "PlayerState.h"
 #include "PlayerRunningState.h"
@@ -34,6 +35,8 @@ public:
 
     void OnNoCollisionWithBottom();
 
+	void AddListApple(Brick *brick);
+
     MoveDirection getMoveDirection();
 
     RECT GetBound();     
@@ -55,6 +58,7 @@ public:
     bool allowMoveRight;
 	bool allowMoveUp;
 	bool allowDeath;
+	bool allowDelayState;
 
 	bool collisionApple; //kiem tra xem player da cham apple hay chua
 protected:
@@ -63,7 +67,8 @@ protected:
 
     PlayerData *mPlayerData;
 
-    Animation   *mCurrentAnimation,
+    Animation	*mCurrentAnimation,
+				*mAnimationDefault,
                 *mAnimationStanding,
                 *mAnimationRunning,
                 *mAnimationJumping,
@@ -77,6 +82,9 @@ protected:
 				*mAnimationSittingThrowApple,
 				*mAnimationDeath;
 
+	std::vector<Brick*> mListApplePlayer; //apple cua player dang so huu
+	std::vector<Brick*> mListAppleFly; //apple da duoc player nem di
+
     void changeAnimation(PlayerState::StateName state);
 
     PlayerState::StateName mCurrentState;
@@ -84,5 +92,8 @@ protected:
     //chi cho phep jump khi nhan nhim space, muon nhay lai phai tha phim space roi nhan lai
     bool allowJump, mCurrentReverse;
 	float timeDeath;
+	float timeDelayStates;
+
+	Brick *apple;
 };
 

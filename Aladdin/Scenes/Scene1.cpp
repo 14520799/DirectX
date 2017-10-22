@@ -20,7 +20,7 @@ void Scene1::LoadContent()
     mMap->SetCamera(mCamera);
 
     mPlayer = new Player();
-    mPlayer->SetPosition(GameGlobal::GetWidth() / 4, 640);
+    mPlayer->SetPosition(GameGlobal::GetWidth() / 4, GameGlobal::GetHeight() / 2);
     mPlayer->SetCamera(mCamera);
 }
 
@@ -136,10 +136,9 @@ void Scene1::checkCollision()
 			if (mPlayer->collisionApple)
 			{
 				Brick* brick = mMap->GetBrick(mMap->GetListBrick(), (Brick*)listCollision.at(i));
-
 				mMap->SetListBrick(mMap->RemoveBrick(mMap->GetListBrick(), brick)); //setlistbrick lai sau khi xoa brick khoi list
 				mMap->GetQuadTree()->removeEntity(listCollision.at(i)); //clear brick khoi QuadTree
-				delete brick;
+				mPlayer->AddListApple(brick); //them apple sau khi an vao listapple cua player de nem apple
 				mPlayer->collisionApple = false;
 				break;
 			}

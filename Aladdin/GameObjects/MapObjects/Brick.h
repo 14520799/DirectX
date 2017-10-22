@@ -15,12 +15,12 @@ public:
 	void Draw(D3DXVECTOR3 position = D3DXVECTOR3(), RECT sourceRect = RECT(), D3DXVECTOR2 scale = D3DXVECTOR2(), D3DXVECTOR2 transform = D3DXVECTOR2(), float angle = 0, D3DXVECTOR2 rotationCenter = D3DXVECTOR2(), D3DXCOLOR colorKey = D3DCOLOR_XRGB(255, 255, 255));
     
 	void Draw(D3DXVECTOR2 transform);
+
+	void OnSetPosition(D3DXVECTOR3 poks);
 protected:
     Brick();
 
     bool init(D3DXVECTOR3 position);
-
-    void OnSetPosition(D3DXVECTOR3 poks);
 
     virtual const char* FileName() = 0; // bat buoc phai override ham nay
     virtual int TotalFrame() = 0; //so frame cua animation

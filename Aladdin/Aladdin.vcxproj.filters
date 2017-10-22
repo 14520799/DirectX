@@ -211,6 +211,9 @@
     <ClCompile Include="GameObjects\Boss\Boss.cpp">
       <Filter>Framework\GameObjects\Boss</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerDefaultState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameComponents\Game.h">
@@ -386,6 +389,9 @@
     </ClInclude>
     <ClInclude Include="GameObjects\Boss\Boss.h">
       <Filter>Framework\GameObjects\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerDefaultState..h">
+      <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

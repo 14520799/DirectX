@@ -9,6 +9,7 @@ class PlayerState
 public:
 	enum StateName
 	{
+		Default,
 		Standing,
 		Running,
 		Falling,

@@ -4,6 +4,7 @@
 #include "PlayerSittingState.h"
 #include "PlayerVerticalClimbingState.h"
 #include "PlayerDeathState.h"
+#include "PlayerDefaultState..h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 
@@ -95,6 +96,10 @@ void PlayerFallingState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	{
 		this->mPlayerData->player->collisionApple = true;
 	}
+	else if (impactor->Tag == Entity::EntityTypes::Guard)
+	{
+
+	}
 	else
 	{
 		switch (side)
@@ -131,7 +136,7 @@ void PlayerFallingState::OnCollision(Entity *impactor, Entity::SideCollisions si
 					}
 					else
 					{
-						this->mPlayerData->player->SetState(new PlayerStandingState(this->mPlayerData));
+						this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
 					}
 				}
 				return;

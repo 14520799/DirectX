@@ -32,7 +32,7 @@ public:
 
     enum EntityTypes
     {
-        None, VerticalRope, HorizontalRope, Fire, Apple, Enemy, Mario, Static, BrickGoldNormal, BrickGoldEated, Guard
+        None, VerticalRope, HorizontalRope, Fire, Apple, Static, Guard
     };
 
     EntityTypes Tag; //Tag de nhan vien loai Entity
@@ -79,13 +79,12 @@ public:
     //khi xay ra va cham voi 1 thuc the nao do thi ham nay se dc goi de xu ly
     virtual void OnCollision(Entity *impactor, CollisionReturn data, SideCollisions side);
 
+	//vi tri tam position x va y
+	float posX, posY;
 protected:
 
     //duoc goi khi set position cua Entity, dung cho ke thua
     virtual void OnSetPosition(D3DXVECTOR3 pos);
-
-    //vi tri tam position x va y
-    float posX, posY;
 
     //phan toc vx, vy
     float vx, vy;

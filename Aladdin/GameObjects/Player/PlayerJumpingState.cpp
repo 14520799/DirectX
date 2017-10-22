@@ -5,6 +5,7 @@
 #include "PlayerHorizontalClimbingState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
+#include "../../GameObjects/MapObjects/Brick.h"
 
 PlayerJumpingState::PlayerJumpingState(PlayerData *playerData)
 {
@@ -114,6 +115,10 @@ void PlayerJumpingState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	else if (impactor->Tag == Entity::EntityTypes::Apple)
 	{
 		this->mPlayerData->player->collisionApple = true;
+	}
+	else if (impactor->Tag == Entity::EntityTypes::Guard)
+	{
+
 	}
 	else
 	{
