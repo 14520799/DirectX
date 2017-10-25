@@ -6,6 +6,7 @@
 #include "PlayerSittingState.h"
 #include "PlayerVerticalClimbingState.h"
 #include "PlayerHorizontalClimbingState.h"
+#include "PlayerHorizontalClimbingDefaultState.h"
 #include "PlayerStandingAttackState.h"
 #include "PlayerSittingAttackState.h"
 #include "PlayerJumpingAttackState.h"
@@ -27,6 +28,7 @@ Player::Player()
 	mAnimationSitting = new Animation("Resources/Aladdin/Sitting.png", 1, 1, 1, 0.0f);
 	mAnimationVerticalClimbing = new Animation("Resources/Aladdin/VerticalClimbing.png", 10, 1, 10, 0.05f);
 	mAnimationHorizontalClimbing = new Animation("Resources/Aladdin/HorizontalClimbing.png", 10, 1, 10, 0.05f);
+	mAnimationHorizontalClimbingDefault = new Animation("Resources/Aladdin/HorizontalClimbingDefault.png", 5, 1, 5, 0.5f);
 
 	mAnimationStandingAttack = new Animation("Resources/Aladdin/Attack/StandingAttack.png", 5, 1, 5, 0.03f);
 	mAnimationSittingAttack = new Animation("Resources/Aladdin/Attack/SittingAttack.png", 6, 1, 6, 0.02f);
@@ -128,7 +130,7 @@ void Player::Update(float dt)
 
 		case PlayerState::StandingAttack:
 			timeDelayStates += dt;
-			if (timeDelayStates > 0.17f)			
+			if (timeDelayStates > 0.15f)			
 				this->SetState(new PlayerDefaultState(this->mPlayerData));
 			break;
 
@@ -140,14 +142,14 @@ void Player::Update(float dt)
 
 		case PlayerState::JumpingAttack:
 			timeDelayStates += dt;
-			if (timeDelayStates > 0.2f)
+			if (timeDelayStates > 0.15f)
 				this->SetState(new PlayerFallingState(this->mPlayerData));
 			break;
 
 		case PlayerState::HorizontalClimbingAttack:
 			timeDelayStates += dt;
 			if (timeDelayStates > 0.2f)
-				this->SetState(new PlayerHorizontalClimbingState(this->mPlayerData));
+				this->SetState(new PlayerHorizontalClimbingDefaultState(this->mPlayerData));
 			break;
 
 		case PlayerState::StandingThrowApple:
@@ -171,7 +173,7 @@ void Player::Update(float dt)
 		case PlayerState::HorizontalClimbingThrowApple:
 			timeDelayStates += dt;
 			if (timeDelayStates > 0.17f)
-				this->SetState(new PlayerHorizontalClimbingState(this->mPlayerData));
+				this->SetState(new PlayerHorizontalClimbingDefaultState(this->mPlayerData));
 			break;
 
 		default:
@@ -293,7 +295,7 @@ void Player::OnKeyPressed(int key)
 		{
 			this->SetState(new PlayerJumpingAttackState(this->mPlayerData));
 		}
-		else if (mCurrentState == PlayerState::HorizontalClimbing || mCurrentState == PlayerState::HorizontalClimbingThrowApple)
+		else if (mCurrentState == PlayerState::HorizontalClimbingDefault || mCurrentState == PlayerState::HorizontalClimbing || mCurrentState == PlayerState::HorizontalClimbingThrowApple)
 		{
 			this->SetState(new PlayerHorizontalClimbingAttackState(this->mPlayerData));
 		}
@@ -313,7 +315,7 @@ void Player::OnKeyPressed(int key)
 		{
 			this->SetState(new PlayerJumpingThrowAppleState(this->mPlayerData));
 		}
-		else if (mCurrentState == PlayerState::HorizontalClimbing || mCurrentState == PlayerState::HorizontalClimbingAttack)
+		else if (mCurrentState == PlayerState::HorizontalClimbingDefault || mCurrentState == PlayerState::HorizontalClimbing || mCurrentState == PlayerState::HorizontalClimbingAttack)
 		{
 			this->SetState(new PlayerHorizontalClimbingThrowAppleState(this->mPlayerData));
 		}
@@ -476,6 +478,10 @@ void Player::changeAnimation(PlayerState::StateName state)
 		mCurrentAnimation = mAnimationHorizontalClimbing;
 		break;
 
+	case PlayerState::HorizontalClimbingDefault:
+		mCurrentAnimation = mAnimationHorizontalClimbingDefault;
+		break;
+
 	case PlayerState::StandingAttack:
 		mCurrentAnimation = mAnimationStandingAttack;
 		break;
@@ -537,7 +543,7 @@ Player::MoveDirection Player::getMoveDirection()
 void Player::OnNoCollisionWithBottom()
 {
 	if (mCurrentState != PlayerState::Jumping && mCurrentState != PlayerState::Falling && 
-		mCurrentState != PlayerState::VerticalClimbing && mCurrentState != PlayerState::HorizontalClimbing &&
+		mCurrentState != PlayerState::VerticalClimbing && mCurrentState != PlayerState::HorizontalClimbing && mCurrentState != PlayerState::HorizontalClimbingDefault &&
 		mCurrentState != PlayerState::JumpingAttack && mCurrentState != PlayerState::JumpingThrowApple &&
 		mCurrentState != PlayerState::HorizontalClimbingAttack && mCurrentState != PlayerState::HorizontalClimbingThrowApple)
 	{

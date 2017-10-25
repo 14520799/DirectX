@@ -108,6 +108,7 @@
     <ClCompile Include="GameObjects\Player\PlayerDeathState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerDefaultState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerHorizontalClimbingAttackState.cpp" />
+    <ClCompile Include="GameObjects\Player\PlayerHorizontalClimbingDefaultState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerHorizontalClimbingState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerHorizontalClimbingThrowAppleState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerJumpingAttackState.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="GameObjects\Player\PlayerDeathState.h" />
     <ClInclude Include="GameObjects\Player\PlayerDefaultState.h" />
     <ClInclude Include="GameObjects\Player\PlayerHorizontalClimbingAttackState.h" />
+    <ClInclude Include="GameObjects\Player\PlayerHorizontalClimbingDefaultState.h" />
     <ClInclude Include="GameObjects\Player\PlayerHorizontalClimbingState.h" />
     <ClInclude Include="GameObjects\Player\PlayerHorizontalClimbingThrowAppleState.h" />
     <ClInclude Include="GameObjects\Player\PlayerJumpingAttackState.h" />

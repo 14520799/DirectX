@@ -1,11 +1,11 @@
 #include "Player.h"
 #include "PlayerState.h"
 
-class PlayerStandingAttackState : public PlayerState
+class PlayerHorizontalClimbingDefaultState : public PlayerState
 {
 public:
-	PlayerStandingAttackState(PlayerData *playerData);
-	~PlayerStandingAttackState();
+	PlayerHorizontalClimbingDefaultState(PlayerData *playerData);
+	~PlayerHorizontalClimbingDefaultState();
 
 	void HandleKeyboard(std::map<int, bool> keys);
 
@@ -13,5 +13,4 @@ public:
 
 	virtual PlayerState::StateName GetState();
 protected:
-	float acceletoryX;
 };

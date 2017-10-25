@@ -80,6 +80,7 @@ protected:
 				*mAnimationSitting,
 				*mAnimationVerticalClimbing,
 				*mAnimationHorizontalClimbing,
+				*mAnimationHorizontalClimbingDefault,
 				*mAnimationStandingAttack,
 				*mAnimationSittingAttack,
 				*mAnimationJumpingAttack,

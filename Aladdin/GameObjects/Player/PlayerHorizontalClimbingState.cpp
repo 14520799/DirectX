@@ -1,4 +1,5 @@
 #include "PlayerHorizontalClimbingState.h"
+#include "PlayerHorizontalClimbingDefaultState.h"
 #include "PlayerFallingState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
@@ -63,8 +64,7 @@ void PlayerHorizontalClimbingState::HandleKeyboard(std::map<int, bool> keys)
 	}
 	else
 	{
-		this->mPlayerData->player->SetVx(0);
-
+		this->mPlayerData->player->SetState(new PlayerHorizontalClimbingDefaultState(this->mPlayerData));
 	}
 }
 

@@ -1,8 +1,4 @@
 #include "PlayerRunningState.h"
-#include "PlayerStandingState.h"
-#include "PlayerFallingState.h"
-#include "PlayerSittingState.h"
-#include "PlayerJumpingState.h"
 #include "PlayerDeathState.h"
 #include "PlayerDefaultState.h"
 #include "../../GameComponents/GameCollision.h"

@@ -229,6 +229,9 @@
     <ClCompile Include="GameObjects\Player\PlayerJumpingThowAppleState.cpp">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerHorizontalClimbingDefaultState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameComponents\Game.h">
@@ -421,6 +424,9 @@
       <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\Player\PlayerDefaultState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerHorizontalClimbingDefaultState.h">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
   </ItemGroup>

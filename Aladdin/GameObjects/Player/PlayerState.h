@@ -17,6 +17,7 @@ public:
 		Sitting,
 		VerticalClimbing,
 		HorizontalClimbing,
+		HorizontalClimbingDefault,
 		StandingAttack,
 		JumpingAttack,
 		SittingAttack,
