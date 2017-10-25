@@ -4,7 +4,7 @@
 #include "PlayerSittingState.h"
 #include "PlayerJumpingState.h"
 #include "PlayerDeathState.h"
-#include "PlayerDefaultState..h"
+#include "PlayerDefaultState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 

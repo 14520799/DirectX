@@ -54,6 +54,10 @@ public:
     //true thi se lat nguoc anh theo truc y
     void SetReverse(bool flag);
 
+	//set huong bay cua apple sau khi duoc nem ra
+	void SetAppleFlyLeft(std::vector<Brick*> &listAppleFly, Brick *brick, int i, float dt);
+	void SetAppleFlyRight(std::vector<Brick*> &listAppleFly, Brick *brick, int i, float dt);
+
     bool allowMoveLeft;
     bool allowMoveRight;
 	bool allowMoveUp;
@@ -78,8 +82,12 @@ protected:
 				*mAnimationHorizontalClimbing,
 				*mAnimationStandingAttack,
 				*mAnimationSittingAttack,
+				*mAnimationJumpingAttack,
+				*mAnimationHorizontalClimbingAttack,
 				*mAnimationStandingThrowApple,
 				*mAnimationSittingThrowApple,
+				*mAnimationJumpingThrowApple,
+				*mAnimationHorizontalClimbingThrowApple,
 				*mAnimationDeath;
 
 	std::vector<Brick*> mListApplePlayer; //apple cua player dang so huu
@@ -90,7 +98,7 @@ protected:
     PlayerState::StateName mCurrentState;
 
     //chi cho phep jump khi nhan nhim space, muon nhay lai phai tha phim space roi nhan lai
-    bool allowJump, mCurrentReverse;
+    bool allowJump, removedApple, mCurrentReverse;
 	float timeDeath;
 	float timeDelayStates;
 

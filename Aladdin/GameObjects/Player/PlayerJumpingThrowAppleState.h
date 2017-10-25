@@ -1,11 +1,13 @@
 #include "Player.h"
 #include "PlayerState.h"
 
-class PlayerSittingThrowAppleState : public PlayerState
+class PlayerJumpingThrowAppleState : public PlayerState
 {
 public:
-	PlayerSittingThrowAppleState(PlayerData *playerData);
-	~PlayerSittingThrowAppleState();
+	PlayerJumpingThrowAppleState(PlayerData *playerData);
+	~PlayerJumpingThrowAppleState();
+
+	void Update(float dt);
 
 	void HandleKeyboard(std::map<int, bool> keys);
 
@@ -13,4 +15,6 @@ public:
 
 	virtual PlayerState::StateName GetState();
 protected:
+	bool noPressed;
+	bool allowMoveRight, allowMoveLeft;
 };

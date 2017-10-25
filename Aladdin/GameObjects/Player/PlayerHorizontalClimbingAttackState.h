@@ -1,11 +1,11 @@
 #include "Player.h"
 #include "PlayerState.h"
 
-class PlayerSittingThrowAppleState : public PlayerState
+class PlayerHorizontalClimbingAttackState: public PlayerState
 {
 public:
-	PlayerSittingThrowAppleState(PlayerData *playerData);
-	~PlayerSittingThrowAppleState();
+	PlayerHorizontalClimbingAttackState(PlayerData *playerData);
+	~PlayerHorizontalClimbingAttackState();
 
 	void HandleKeyboard(std::map<int, bool> keys);
 

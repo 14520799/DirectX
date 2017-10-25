@@ -20,6 +20,7 @@ PlayerVerticalClimbingState::~PlayerVerticalClimbingState()
 
 void PlayerVerticalClimbingState::Update(float dt)
 {
+	//sau khi cham vao day thi se delay khoang 1 time, sau khoang time do thi moi co the thuc thi cac key input
 	if (allowDelayClimb)
 	{
 		timeDelayClimb += dt;
@@ -67,6 +68,8 @@ void PlayerVerticalClimbingState::HandleKeyboard(std::map<int, bool> keys)
 		if (!allowDelayClimb)
 		{
 			this->mPlayerData->player->AddPosition(this->mPlayerData->player->GetBound().left - this->mPlayerData->player->GetBound().right, 0);
+			//tranh vx = 0 de khi chuyen qua falling thi se khong nhan input left, right
+			this->mPlayerData->player->AddVx(-1);
 			this->mPlayerData->player->SetState(new PlayerFallingState(this->mPlayerData));
 		}
 	}
@@ -75,6 +78,7 @@ void PlayerVerticalClimbingState::HandleKeyboard(std::map<int, bool> keys)
 		if (!allowDelayClimb)
 		{
 			this->mPlayerData->player->AddPosition(this->mPlayerData->player->GetBound().right - this->mPlayerData->player->GetBound().left, 0);
+			this->mPlayerData->player->AddVx(1);
 			this->mPlayerData->player->SetState(new PlayerFallingState(this->mPlayerData));
 		}
 	}

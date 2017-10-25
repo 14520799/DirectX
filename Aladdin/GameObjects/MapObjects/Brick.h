@@ -28,5 +28,7 @@ protected:
     virtual int Column() = 0; // so cot cua resource hinh anh animation
     virtual float SecondPerFrame() = 0; //so giay de chuyen frame cua animation
 
+	bool mReverse;
+
     Animation *mAnimation;
 };

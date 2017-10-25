@@ -18,9 +18,13 @@ public:
 		VerticalClimbing,
 		HorizontalClimbing,
 		StandingAttack,
+		JumpingAttack,
 		SittingAttack,
+		HorizontalClimbingAttack,
 		StandingThrowApple,
+		JumpingThrowApple,
 		SittingThrowApple,
+		HorizontalClimbingThrowApple,
         Death
     };
 

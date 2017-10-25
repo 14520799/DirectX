@@ -81,6 +81,9 @@ public:
 
 	//vi tri tam position x va y
 	float posX, posY;
+
+	bool mSettedRightReserve;
+	bool mSettedLeftReserve;
 protected:
 
     //duoc goi khi set position cua Entity, dung cho ke thua

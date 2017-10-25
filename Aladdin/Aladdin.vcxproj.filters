@@ -214,6 +214,21 @@
     <ClCompile Include="GameObjects\Player\PlayerDefaultState.cpp">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerHorizontalClimbingAttackState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerHorizontalClimbingThrowAppleState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerSittingThrowAppleState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerJumpingAttackState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerJumpingThowAppleState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameComponents\Game.h">
@@ -390,7 +405,22 @@
     <ClInclude Include="GameObjects\Boss\Boss.h">
       <Filter>Framework\GameObjects\Boss</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\Player\PlayerDefaultState..h">
+    <ClInclude Include="GameObjects\Player\PlayerHorizontalClimbingAttackState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerHorizontalClimbingThrowAppleState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerSittingThrowAppleState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerJumpingAttackState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerJumpingThrowAppleState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerDefaultState.h">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
   </ItemGroup>

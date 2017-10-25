@@ -1,13 +1,19 @@
 #include "Player.h"
-#include "PlayerDefaultState..h"
+#include "PlayerDefaultState.h"
 #include "PlayerFallingState.h"
 #include "PlayerJumpingState.h"
 #include "PlayerStandingState.h"
 #include "PlayerSittingState.h"
 #include "PlayerVerticalClimbingState.h"
+#include "PlayerHorizontalClimbingState.h"
 #include "PlayerStandingAttackState.h"
 #include "PlayerSittingAttackState.h"
+#include "PlayerJumpingAttackState.h"
+#include "PlayerHorizontalClimbingAttackState.h"
 #include "PlayerStandingThrowAppleState.h"
+#include "PlayerSittingThrowAppleState.h"
+#include "PlayerJumpingThrowAppleState.h"
+#include "PlayerHorizontalClimbingThrowAppleState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 
@@ -21,9 +27,17 @@ Player::Player()
 	mAnimationSitting = new Animation("Resources/Aladdin/Sitting.png", 1, 1, 1, 0.0f);
 	mAnimationVerticalClimbing = new Animation("Resources/Aladdin/VerticalClimbing.png", 10, 1, 10, 0.05f);
 	mAnimationHorizontalClimbing = new Animation("Resources/Aladdin/HorizontalClimbing.png", 10, 1, 10, 0.05f);
+
 	mAnimationStandingAttack = new Animation("Resources/Aladdin/Attack/StandingAttack.png", 5, 1, 5, 0.03f);
-	mAnimationSittingAttack = new Animation("Resources/Aladdin/Attack/SittingAttack.png", 6, 1, 6, 0.03f);
+	mAnimationSittingAttack = new Animation("Resources/Aladdin/Attack/SittingAttack.png", 6, 1, 6, 0.02f);
+	mAnimationJumpingAttack = new Animation("Resources/Aladdin/Attack/JumpingAttack.png", 6, 1, 6, 0.02f);
+	mAnimationHorizontalClimbingAttack = new Animation("Resources/Aladdin/Attack/HorizontalClimbingAttack.png", 7, 1, 7, 0.02f);
+		
 	mAnimationStandingThrowApple = new Animation("Resources/Aladdin/Attack/StandingThrowApple.png", 6, 1, 6, 0.02f);
+	mAnimationSittingThrowApple = new Animation("Resources/Aladdin/Attack/SittingThrowApple.png", 5, 1, 5, 0.03f);
+	mAnimationJumpingThrowApple = new Animation("Resources/Aladdin/Attack/JumpingThrowApple.png", 5, 1, 5, 0.03f);
+	mAnimationHorizontalClimbingThrowApple = new Animation("Resources/Aladdin/Attack/HorizontalClimbingThrowApple.png", 5, 1, 5, 0.03f);
+
 	mAnimationDeath = new Animation("Resources/Aladdin/Death.png", 13, 1, 13, 0.1f);
 
 	this->mPlayerData = new PlayerData();
@@ -36,7 +50,7 @@ Player::Player()
 	allowDeath = true;
 	allowDelayState = true;
 	timeDeath = 0; //time duoc mien sat thuong sau khi hoi sinh
-	timeDelayStates = 0; //time delay de thuc thi xong state nay roi chuyen sang state khac
+	timeDelayStates = 0; //time delay thuc thi xong state nay roi chuyen sang state khac
 
 	collisionApple = false; //cham vao qua tao
 }
@@ -49,30 +63,58 @@ void Player::Update(float dt)
 {
 	//animation cua player chay
 	mCurrentAnimation->Update(dt);
+
 	//them toc do cho player tuy vao state
 	if (this->mPlayerData->state)
 	{
 		this->mPlayerData->state->Update(dt);
 	}
+
 	//player di chuyen sau khi tang toc do
 	Entity::Update(dt);
+
 	// neu list co qua tao dang duoc nem di thi set toc do cho qua tao
 	if (mListAppleFly.size() > 0)
 	{
 		for (size_t i = 0; i < mListAppleFly.size(); i++)
 		{
-			mListAppleFly.at(i)->AddVx(Define::APPLE_SPEED);
-			mListAppleFly.at(i)->Entity::Update(dt);
-			//sau khi apple bay toc do max se bien mat
-			if (mListAppleFly.at(i)->GetVx() >= Define::APPLE_MAX_SPEED)
+			if (mCurrentState == PlayerState::HorizontalClimbingThrowApple)
 			{
-				Brick *temp = mListAppleFly.at(i);
-				mListAppleFly.erase(mListAppleFly.begin() + i);
-				delete temp;
+				if (!mCurrentReverse)
+				{
+					//bay sang ben trai
+					SetAppleFlyLeft(mListAppleFly, mListAppleFly.at(i), i, dt);
+				}
+				else
+				{
+					//bay sang ben phai
+					SetAppleFlyRight(mListAppleFly, mListAppleFly.at(i), i, dt);
+				}
+			}
+			else
+			{
+				//khi qua tao bay theo huong nao thi no se bay theo huong do, no se khong doi huong theo huong cua player nua
+				//vd: khi player huong sang ben trai nem tao thi qua tao se bay sang ben trai cho du sau do minh co doi huong cua player sang ben phai
+				if (mCurrentReverse)
+				{
+					//bay sang ben trai
+					SetAppleFlyLeft(mListAppleFly, mListAppleFly.at(i), i, dt);
+				}
+				else
+				{
+					//bay sang ben phai
+					SetAppleFlyRight(mListAppleFly, mListAppleFly.at(i), i, dt);
+				}		
+			}
+			//khi delete apple thi vong lap se lui lai vi listapple da mat 1 apple
+			if (removedApple)
+			{				
 				i--;
+				removedApple = false;
 			}
 		}
 	}
+
 	//state phai duoc thuc hien xong moi chuyen sang state khac sau khi tha phim ra
 	if (allowDelayState)
 	{
@@ -96,16 +138,47 @@ void Player::Update(float dt)
 				this->SetState(new PlayerSittingState(this->mPlayerData));
 			break;
 
+		case PlayerState::JumpingAttack:
+			timeDelayStates += dt;
+			if (timeDelayStates > 0.2f)
+				this->SetState(new PlayerFallingState(this->mPlayerData));
+			break;
+
+		case PlayerState::HorizontalClimbingAttack:
+			timeDelayStates += dt;
+			if (timeDelayStates > 0.2f)
+				this->SetState(new PlayerHorizontalClimbingState(this->mPlayerData));
+			break;
+
 		case PlayerState::StandingThrowApple:
 			timeDelayStates += dt;
-			if (timeDelayStates > 0.17f)			
+			if (timeDelayStates > 0.2f)			
 				this->SetState(new PlayerDefaultState(this->mPlayerData));
+			break;
+
+		case PlayerState::SittingThrowApple:
+			timeDelayStates += dt;
+			if (timeDelayStates > 0.17f)
+				this->SetState(new PlayerSittingState(this->mPlayerData));
+			break;
+
+		case PlayerState::JumpingThrowApple:
+			timeDelayStates += dt;
+			if (timeDelayStates > 0.17f)
+				this->SetState(new PlayerFallingState(this->mPlayerData));
+			break;
+
+		case PlayerState::HorizontalClimbingThrowApple:
+			timeDelayStates += dt;
+			if (timeDelayStates > 0.17f)
+				this->SetState(new PlayerHorizontalClimbingState(this->mPlayerData));
 			break;
 
 		default:
 			break;
 		}
 	}
+
 	//duoc mien sat thuong sau khi hoi sinh
 	if (!allowDeath)
 	{
@@ -116,6 +189,62 @@ void Player::Update(float dt)
 			allowDeath = true;
 			timeDeath = 0;
 		}
+	}
+}
+
+void Player::SetAppleFlyLeft(std::vector<Brick*> &listAppleFly, Brick *brick, int i, float dt)
+{
+	//khi di chuyen player sang trai ma apple da duoc nem sang phai thi no se van bay sang phai
+	if (brick->mSettedRightReserve)
+	{
+		brick->AddVx(Define::APPLE_SPEED);
+		brick->Entity::Update(dt);
+		//sau khi apple bay toc do max se bien mat
+		if (brick->GetVx() >= Define::APPLE_MAX_SPEED)
+		{
+			listAppleFly.erase(listAppleFly.begin() + i);
+			delete brick;
+			removedApple = true;
+		}
+		return;
+	}
+	brick->mSettedLeftReserve = true;
+	brick->AddVx(-Define::APPLE_SPEED);
+	brick->Entity::Update(dt);
+	//sau khi apple bay toc do max se bien mat
+	if (brick->GetVx() <= -Define::APPLE_MAX_SPEED)
+	{
+		listAppleFly.erase(listAppleFly.begin() + i);
+		delete brick;
+		removedApple = true;
+	}
+}
+
+void Player::SetAppleFlyRight(std::vector<Brick*> &listAppleFly, Brick *brick, int i, float dt)
+{
+	//khi di chuyen player sang phai ma apple da duoc nem sang trai thi no se van bay sang trai
+	if (brick->mSettedLeftReserve)
+	{
+		brick->AddVx(-Define::APPLE_SPEED);
+		brick->Entity::Update(dt);
+		//sau khi apple bay toc do max se bien mat
+		if (brick->GetVx() <= -Define::APPLE_MAX_SPEED)
+		{
+			listAppleFly.erase(listAppleFly.begin() + i);
+			delete brick;
+			removedApple = true;
+		}
+		return;
+	}
+	brick->mSettedRightReserve = true;
+	brick->AddVx(Define::APPLE_SPEED);
+	brick->Entity::Update(dt);
+	//sau khi apple bay toc do max se bien mat
+	if (brick->GetVx() >= Define::APPLE_MAX_SPEED)
+	{
+		listAppleFly.erase(listAppleFly.begin() + i);
+		delete brick;
+		removedApple = true;
 	}
 }
 
@@ -138,7 +267,6 @@ void Player::OnKeyPressed(int key)
 			{
 				this->SetState(new PlayerJumpingState(this->mPlayerData));
 			}
-
 			allowJump = false;
 		}
 	}
@@ -152,13 +280,22 @@ void Player::OnKeyPressed(int key)
 	}
 	else if (key == 0x41) //tan cong bang phim A
 	{
-		if (mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::Running || mCurrentState == PlayerState::Default)
+		if (mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::Running || 
+			mCurrentState == PlayerState::Default || mCurrentState == PlayerState::StandingThrowApple)
 		{
 			this->SetState(new PlayerStandingAttackState(this->mPlayerData));
 		}
-		else if (mCurrentState == PlayerState::Sitting)
+		else if (mCurrentState == PlayerState::Sitting || mCurrentState == PlayerState::SittingThrowApple)
 		{
 			this->SetState(new PlayerSittingAttackState(this->mPlayerData));
+		}
+		else if (mCurrentState == PlayerState::Jumping || mCurrentState == PlayerState::JumpingThrowApple || mCurrentState == PlayerState::Falling)
+		{
+			this->SetState(new PlayerJumpingAttackState(this->mPlayerData));
+		}
+		else if (mCurrentState == PlayerState::HorizontalClimbing || mCurrentState == PlayerState::HorizontalClimbingThrowApple)
+		{
+			this->SetState(new PlayerHorizontalClimbingAttackState(this->mPlayerData));
 		}
 	}
 	else if (key == 0x53) //tan cong bang phim S
@@ -168,7 +305,19 @@ void Player::OnKeyPressed(int key)
 		{
 			this->SetState(new PlayerStandingThrowAppleState(this->mPlayerData));
 		}
-
+		else if (mCurrentState == PlayerState::Sitting || mCurrentState == PlayerState::SittingAttack)
+		{
+			this->SetState(new PlayerSittingThrowAppleState(this->mPlayerData));
+		}
+		else if (mCurrentState == PlayerState::Jumping || mCurrentState == PlayerState::JumpingAttack || mCurrentState == PlayerState::Falling)
+		{
+			this->SetState(new PlayerJumpingThrowAppleState(this->mPlayerData));
+		}
+		else if (mCurrentState == PlayerState::HorizontalClimbing || mCurrentState == PlayerState::HorizontalClimbingAttack)
+		{
+			this->SetState(new PlayerHorizontalClimbingThrowAppleState(this->mPlayerData));
+		}
+		//khi an phim s thi qua tao se bay ra
 		if (mListApplePlayer.size() > 0)
 		{
 			apple = mListApplePlayer.at(mListApplePlayer.size() - 1);
@@ -191,7 +340,8 @@ void Player::OnKeyUp(int key)
 	}
 	else if (key == 0x41 || key == 0x53)
 	{
-		if (mCurrentState == PlayerState::SittingAttack || mCurrentState == PlayerState::StandingAttack || mCurrentState == PlayerState::StandingThrowApple)
+		if (mCurrentState == PlayerState::SittingAttack || mCurrentState == PlayerState::StandingAttack || mCurrentState == PlayerState::HorizontalClimbingAttack || mCurrentState == PlayerState::JumpingAttack ||
+			mCurrentState == PlayerState::StandingThrowApple || mCurrentState == PlayerState::SittingThrowApple || mCurrentState == PlayerState::JumpingThrowApple || mCurrentState == PlayerState::HorizontalClimbingThrowApple)
 		{
 			allowDelayState = true;
 		}
@@ -334,8 +484,28 @@ void Player::changeAnimation(PlayerState::StateName state)
 		mCurrentAnimation = mAnimationSittingAttack;
 		break;
 
+	case PlayerState::JumpingAttack:
+		mCurrentAnimation = mAnimationJumpingAttack;
+		break;
+
+	case PlayerState::HorizontalClimbingAttack:
+		mCurrentAnimation = mAnimationHorizontalClimbingAttack;
+		break;
+
 	case PlayerState::StandingThrowApple:
 		mCurrentAnimation = mAnimationStandingThrowApple;
+		break;
+
+	case PlayerState::SittingThrowApple:
+		mCurrentAnimation = mAnimationSittingThrowApple;
+		break;
+
+	case PlayerState::JumpingThrowApple:
+		mCurrentAnimation = mAnimationJumpingThrowApple;
+		break;
+
+	case PlayerState::HorizontalClimbingThrowApple:
+		mCurrentAnimation = mAnimationHorizontalClimbingThrowApple;
 		break;
 
 	case PlayerState::Death:
@@ -367,7 +537,9 @@ Player::MoveDirection Player::getMoveDirection()
 void Player::OnNoCollisionWithBottom()
 {
 	if (mCurrentState != PlayerState::Jumping && mCurrentState != PlayerState::Falling && 
-		mCurrentState != PlayerState::VerticalClimbing && mCurrentState != PlayerState::HorizontalClimbing)
+		mCurrentState != PlayerState::VerticalClimbing && mCurrentState != PlayerState::HorizontalClimbing &&
+		mCurrentState != PlayerState::JumpingAttack && mCurrentState != PlayerState::JumpingThrowApple &&
+		mCurrentState != PlayerState::HorizontalClimbingAttack && mCurrentState != PlayerState::HorizontalClimbingThrowApple)
 	{
 		this->SetState(new PlayerFallingState(this->mPlayerData));
 	}

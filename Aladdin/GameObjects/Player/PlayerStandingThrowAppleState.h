@@ -13,5 +13,4 @@ public:
 
 	virtual PlayerState::StateName GetState();
 protected:
-
 };

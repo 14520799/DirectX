@@ -1,9 +1,9 @@
-#include "PlayerHorizontalClimbingState.h"
+#include "PlayerHorizontalClimbingAttackState.h"
 #include "PlayerFallingState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 
-PlayerHorizontalClimbingState::PlayerHorizontalClimbingState(PlayerData *playerData)
+PlayerHorizontalClimbingAttackState::PlayerHorizontalClimbingAttackState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
 	this->mPlayerData->player->SetVx(0);
@@ -13,12 +13,12 @@ PlayerHorizontalClimbingState::PlayerHorizontalClimbingState(PlayerData *playerD
 	this->mPlayerData->player->allowMoveRight = true;
 }
 
-PlayerHorizontalClimbingState::~PlayerHorizontalClimbingState()
+PlayerHorizontalClimbingAttackState::~PlayerHorizontalClimbingAttackState()
 {
 
 }
 
-void PlayerHorizontalClimbingState::HandleKeyboard(std::map<int, bool> keys)
+void PlayerHorizontalClimbingAttackState::HandleKeyboard(std::map<int, bool> keys)
 {
 	if (keys[VK_LEFT])
 	{
@@ -68,35 +68,35 @@ void PlayerHorizontalClimbingState::HandleKeyboard(std::map<int, bool> keys)
 	}
 }
 
-void PlayerHorizontalClimbingState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
+void PlayerHorizontalClimbingAttackState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
 	switch (side)
 	{
-		case Entity::Left:
-			//va cham phia ben trai player
-			if (this->mPlayerData->player->getMoveDirection() == Player::MoveToLeft)
-			{
-				this->mPlayerData->player->allowMoveLeft = false;
-				//day Player ra phia ben phai de cho player khong bi xuyen qua object
-				this->mPlayerData->player->AddPosition(data.RegionCollision.right - data.RegionCollision.left, 0);
-			}
-			break;
+	case Entity::Left:
+		//va cham phia ben trai player
+		if (this->mPlayerData->player->getMoveDirection() == Player::MoveToLeft)
+		{
+			this->mPlayerData->player->allowMoveLeft = false;
+			//day Player ra phia ben phai de cho player khong bi xuyen qua object
+			this->mPlayerData->player->AddPosition(data.RegionCollision.right - data.RegionCollision.left, 0);
+		}
+		break;
 
-		case Entity::Right:
-			//va cham phia ben phai player
-			if (this->mPlayerData->player->getMoveDirection() == Player::MoveToRight)
-			{
-				this->mPlayerData->player->allowMoveRight = false;
-				this->mPlayerData->player->AddPosition(-(data.RegionCollision.right - data.RegionCollision.left), 0);
-			}
-			break;
+	case Entity::Right:
+		//va cham phia ben phai player
+		if (this->mPlayerData->player->getMoveDirection() == Player::MoveToRight)
+		{
+			this->mPlayerData->player->allowMoveRight = false;
+			this->mPlayerData->player->AddPosition(-(data.RegionCollision.right - data.RegionCollision.left), 0);
+		}
+		break;
 
-		default:
-			break;
+	default:
+		break;
 	}
 }
 
-PlayerState::StateName PlayerHorizontalClimbingState::GetState()
+PlayerState::StateName PlayerHorizontalClimbingAttackState::GetState()
 {
-	return PlayerState::HorizontalClimbing;
+	return PlayerState::HorizontalClimbingAttack;
 }
