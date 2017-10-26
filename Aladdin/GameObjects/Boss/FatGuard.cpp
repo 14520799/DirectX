@@ -36,5 +36,5 @@ int FatGuard::Column()
 
 float FatGuard::SecondPerFrame()
 {
-    return 0.001f;
+    return 0.01f;
 }
