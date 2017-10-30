@@ -11,6 +11,7 @@
 #include "../GameComponents/GameMap.h"
 #include "../GameComponents/Camera.h"
 #include "../GameObjects/Player/Player.h"
+#include "../GameObjects/Orokus/Oroku.h"
 
 class Scene1 : public Scene
 {
@@ -30,8 +31,8 @@ protected:
     void CheckCameraAndWorldMap();
 
     GameMap *mMap;
-    Camera *mCamera;
-    Player *mPlayer;
+    Camera	*mCamera;
+    Player	*mPlayer;
 
     std::map<int, bool> keys;
 };

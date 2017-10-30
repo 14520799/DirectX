@@ -1,7 +1,8 @@
 ﻿#include "GameMap.h"
 #include "../GameObjects/MapObjects/Apple.h"
-#include "../GameObjects/Boss/ThinGuard.h"
-#include "../GameObjects/Boss/FatGuard.h"
+#include "../GameObjects/Orokus/Guards/ThinGuard.h"
+#include "../GameObjects/Orokus/Guards/FatGuard.h"
+#include "../GameObjects/Orokus/Guards/StrongGuard.h"
 
 GameMap::GameMap(char* filePath)
 {
@@ -20,6 +21,13 @@ GameMap::~GameMap()
     }
     mListBricks.clear();
 
+	for (size_t i = 0; i < mListOrokus.size(); i++)
+	{
+		if (mListOrokus[i])
+			delete mListOrokus[i];
+	}
+	mListOrokus.clear();
+
     for (size_t i = 0; i < mListTileset.size(); i++)
     {
         if (mListTileset[i])
@@ -35,13 +43,7 @@ void GameMap::LoadMap(char* filePath)
     mMap = new Tmx::Map();
     mMap->ParseFile(filePath);
 
-    RECT r;
-    r.left = 0;
-    r.top = 0;
-    r.right = this->GetWidth();
-    r.bottom = this->GetHeight();
-
-    mQuadTree = new QuadTree(1, r);
+    mQuadTree = new QuadTree(1, this->GetWorldMapBound());
 
     for (size_t i = 0; i < mMap->GetNumTilesets(); i++)
     {
@@ -61,21 +63,22 @@ void GameMap::LoadMap(char* filePath)
 	{
 		mQuadTree->insertEntity(child);
 	}
-
 #pragma endregion
 
-/////////////////////////////////////////////////////////  Tạo lính gầy + béo
-#pragma region
-	createGuard(mListGuards, D3DXVECTOR3(755, 640, 0), 1);
-	createGuard(mListGuards, D3DXVECTOR3(1400, 676, 0), 2);
+	//tao oroku
+#pragma region -OROKU-
+	createOroku(mListOrokus, D3DXVECTOR3(576, 630, 0), 0, 0);
+	createOroku(mListOrokus, D3DXVECTOR3(1440, 665, 0), 0, 1);
+	createOroku(mListOrokus, D3DXVECTOR3(676, 630, 0), 1, 3);
+	createOroku(mListOrokus, D3DXVECTOR3(776, 630, 0), 2, 6);
 
-	for (auto child : mListGuards)
+	for (auto child : mListOrokus)
 	{
 		mQuadTree->insertEntity(child);
 	}
-
 #pragma endregion
 
+	//tao oject cho map
 #pragma region -OBJECTGROUP, STATIC OBJECT-
 
     for (size_t i = 0; i < mMap->GetNumObjectGroups(); i++)
@@ -160,27 +163,69 @@ void GameMap::createApple(std::vector<Brick*> &entitiesOut, D3DXVECTOR3 position
 	}
 }
 
-void GameMap::createGuard(std::vector<Boss*> &entitiesOut, D3DXVECTOR3 position, int guardType)
+void GameMap::createOroku(std::vector<Oroku*> &entitiesOut, D3DXVECTOR3 position, int orokuType, int orokuId)
 {
-	Boss *boss = nullptr;
+	Oroku *oroku = nullptr;
 
-	switch (guardType)
+	switch (orokuType)
 	{
+		case 0:
+			oroku = new ThinGuard(position);
+			oroku->Tag = Entity::EntityTypes::Guard;
+			entitiesOut.push_back(oroku);
+			break;
 		case 1:
-			boss = new ThinGuard(position);
-			entitiesOut.push_back(boss);
+			oroku = new FatGuard(position);
+			oroku->Tag = Entity::EntityTypes::Guard;
+			entitiesOut.push_back(oroku);
 			break;
 		case 2:
-			boss = new FatGuard(position);
-			entitiesOut.push_back(boss);
+			oroku = new StrongGuard(position);
+			oroku->Tag = Entity::EntityTypes::Guard;
+			entitiesOut.push_back(oroku);
 			break;
+
 		default:
 			break;
 	}
-	
+
 	for (auto child : entitiesOut)
 	{
-		child->Tag = Entity::EntityTypes::Guard;
+		if (child->Tag == Entity::EntityTypes::Guard)
+		{
+			switch (orokuId)
+			{
+			case 0:
+				child->Id = Entity::EntityId::ThinGuard_1;
+				break;
+			case 1:
+				child->Id = Entity::EntityId::ThinGuard_2;
+				break;
+			case 2:
+				child->Id = Entity::EntityId::ThinGuard_3;
+				break;
+			case 3:
+				child->Id = Entity::EntityId::FatGuard_1;
+				break;
+			case 4:
+				child->Id = Entity::EntityId::FatGuard_2;
+				break;
+			case 5:
+				child->Id = Entity::EntityId::FatGuard_3;
+				break;
+			case 6:
+				child->Id = Entity::EntityId::StrongGuard_1;
+				break;
+			case 7:
+				child->Id = Entity::EntityId::StrongGuard_2;
+				break;
+			case 8:
+				child->Id = Entity::EntityId::StrongGuard_3;
+				break;
+			default:
+				break;
+			}
+		}
 	}
 }
 
@@ -251,10 +296,18 @@ void GameMap::Update(float dt)
         mListBricks[i]->Update(dt);
     }
 	
-	//////////////////////////////////////////////////////////////////////////
-	for (size_t i = 0; i < mListGuards.size(); i++)
+	for (size_t i = 0; i < mListOrokus.size(); i++)
 	{
-		mListGuards[i]->Update(dt);
+		/*neu oroku chua set player thi se set player
+		set player duoc dat o update vi khi khoi tao thi map duoc khoi tao truoc roi moi toi player 
+		nen chung ta k the set player cho oroku luc khoi tao vi luc do player == NULL
+		va chung ta can set player cho oroku truoc khi oroku goi update*/
+		if (!mListOrokus[i]->settedPlayer)
+		{
+			mListOrokus[i]->SetPlayer(this->GetPlayer());
+			mListOrokus[i]->settedPlayer = true;
+		}
+		mListOrokus[i]->Update(dt);
 	}
 }
 
@@ -339,11 +392,10 @@ void GameMap::Draw()
 
 #pragma endregion
 
-////////////////////////////////////////////////////////////////////////////////
-#pragma region DRAW GUARD
-	for (size_t i = 0; i < mListGuards.size(); i++)
+#pragma region DRAW OROKU
+	for (size_t i = 0; i < mListOrokus.size(); i++)
 	{
-		mListGuards[i]->Draw(trans);
+		mListOrokus[i]->Draw(trans);
 	}
 #pragma endregion
 }
@@ -353,6 +405,7 @@ std::map<int, Sprite*> GameMap::GetListTileSet()
     return mListTileset;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
 void GameMap::SetListBrick(std::vector<Brick*> listBricks)
 {
 	mListBricks = listBricks;
@@ -363,17 +416,6 @@ std::vector<Brick*> GameMap::GetListBrick()
     return mListBricks;
 }
 
-//////////////////////////////////////////////////////////////////////////
-void GameMap::SetListGuard(std::vector<Boss*> listGuards)
-{
-	mListGuards = listGuards;
-}
-
-std::vector<Boss*> GameMap::GetListGuard()
-{
-	return mListGuards;
-}
-
 Brick* GameMap::GetBrick(std::vector<Brick*> entitiesIn, Brick *brick)
 {
 	for (auto child : entitiesIn)
@@ -381,17 +423,6 @@ Brick* GameMap::GetBrick(std::vector<Brick*> entitiesIn, Brick *brick)
 		if (child->GetPosition() == brick->GetPosition())
 		{
 			return brick;
-		}
-	}
-}
-
-Boss* GameMap::GetBoss(std::vector<Boss*> entitiesIn, Boss *boss)
-{
-	for (auto child : entitiesIn)
-	{
-		if (child->GetPosition() == boss->GetPosition())
-		{
-			return boss;
 		}
 	}
 }
@@ -409,6 +440,53 @@ std::vector<Brick*> GameMap::RemoveBrick(std::vector<Brick*> &entitiesIn, Brick 
 		}
 	}
 
+}
+//-------------------------------------------------------------------------------------//
+void GameMap::SetListOroku(std::vector<Oroku*> listOrokus)
+{
+	mListOrokus = listOrokus;
+}
+
+std::vector<Oroku*> GameMap::GetListOroku()
+{
+	return mListOrokus;
+}
+
+Oroku* GameMap::GetOroku(std::vector<Oroku*> entitiesIn, Oroku *oroku)
+{
+	for (auto child : entitiesIn)
+	{
+		if (child->Id == oroku->Id)
+		{
+			return oroku;
+		}
+	}
+}
+
+std::vector<Oroku*> GameMap::RemoveOroku(std::vector<Oroku*> &entitiesIn, Oroku *oroku)
+{
+	//lay ra vi tri cua oroku o trong mang
+	for (size_t i = 0; i < entitiesIn.size(); i++)
+	{
+		if (entitiesIn.at(i)->Id == oroku->Id)
+		{
+			//xoa oroku khoi mang
+			entitiesIn.erase(entitiesIn.begin() + i);
+			return entitiesIn;
+		}
+	}
+
+}
+/////////////////////////////////////////////////////////////////////////////////////////
+
+void GameMap::SetPlayer(Player* player)
+{
+	mPlayer = player;
+}
+
+Player* GameMap::GetPlayer()
+{
+	return mPlayer;
 }
 
 QuadTree * GameMap::GetQuadTree()

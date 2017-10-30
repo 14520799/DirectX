@@ -32,10 +32,19 @@ public:
 
     enum EntityTypes
     {
-        None, VerticalRope, HorizontalRope, Fire, Apple, Static, Guard
+        None, VerticalRope, HorizontalRope, Fire, Apple, Static, Guard,
     };
 
-    EntityTypes Tag; //Tag de nhan vien loai Entity
+	enum EntityId
+	{
+		ThinGuard_1, ThinGuard_2, ThinGuard_3,
+		FatGuard_1, FatGuard_2, FatGuard_3,
+		StrongGuard_1, StrongGuard_2, StrongGuard_3
+	};
+
+    EntityTypes Tag; //Tag de nhan dien loai Entity
+
+	EntityId Id; //Id de nhan dien Entity
 
     virtual RECT GetBound();
 
@@ -81,9 +90,12 @@ public:
 
 	//vi tri tam position x va y
 	float posX, posY;
-
+	//huong nem qua tao da duoc nem ra se khong doi huong
 	bool mSettedRightReserve;
 	bool mSettedLeftReserve;
+	//huong tan cong cua oroku
+	bool mSettedRightRunning;
+	bool mSettedLeftRunning;
 protected:
 
     //duoc goi khi set position cua Entity, dung cho ke thua

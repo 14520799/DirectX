@@ -41,8 +41,11 @@
     <Filter Include="Framework\GameDefines">
       <UniqueIdentifier>{9b5a9b8a-da07-445e-8ec2-51c3cb648f6e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\GameObjects\Boss">
-      <UniqueIdentifier>{1ebd140a-0003-4bff-ab80-9920e063a45d}</UniqueIdentifier>
+    <Filter Include="Framework\GameObjects\Orokus">
+      <UniqueIdentifier>{f2d57632-df88-4c12-927d-80b3a6eb9815}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\GameObjects\Orokus\Guards">
+      <UniqueIdentifier>{7a14dc18-730c-47c6-a546-69c87666cabd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -169,9 +172,6 @@
     <ClCompile Include="GameObjects\MapObjects\BrickNormal.cpp">
       <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\MapObjects\GameObject.cpp">
-      <Filter>Framework\GameObjects\MapObjects</Filter>
-    </ClCompile>
     <ClCompile Include="GameObjects\Player\PlayerSittingState.cpp">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
@@ -202,15 +202,6 @@
     <ClCompile Include="GameObjects\Player\PlayerDeathState.cpp">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\Boss\ThinGuard.cpp">
-      <Filter>Framework\GameObjects\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObjects\Boss\FatGuard.cpp">
-      <Filter>Framework\GameObjects\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObjects\Boss\Boss.cpp">
-      <Filter>Framework\GameObjects\Boss</Filter>
-    </ClCompile>
     <ClCompile Include="GameObjects\Player\PlayerDefaultState.cpp">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
@@ -231,6 +222,39 @@
     </ClCompile>
     <ClCompile Include="GameObjects\Player\PlayerHorizontalClimbingDefaultState.cpp">
       <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Oroku.cpp">
+      <Filter>Framework\GameObjects\Orokus</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\OrokuData.cpp">
+      <Filter>Framework\GameObjects\Orokus</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\OrokuState.cpp">
+      <Filter>Framework\GameObjects\Orokus</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Guards\FatGuard.cpp">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Guards\FatGuardStandingState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Guards\StrongGuard.cpp">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Guards\StrongGuardStandingState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Guards\ThinGuard.cpp">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Guards\ThinGuardStandingState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Guards\ThinGuardAttackState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Guards\ThinGuardRunningState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -369,9 +393,6 @@
     <ClInclude Include="GameObjects\MapObjects\BrickNormal.h">
       <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\MapObjects\GameObject.h">
-      <Filter>Framework\GameObjects\MapObjects</Filter>
-    </ClInclude>
     <ClInclude Include="GameObjects\Player\PlayerSittingState.h">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
@@ -399,15 +420,6 @@
     <ClInclude Include="GameObjects\Player\PlayerDeathState.h">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\Boss\ThinGuard.h">
-      <Filter>Framework\GameObjects\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObjects\Boss\FatGuard.h">
-      <Filter>Framework\GameObjects\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObjects\Boss\Boss.h">
-      <Filter>Framework\GameObjects\Boss</Filter>
-    </ClInclude>
     <ClInclude Include="GameObjects\Player\PlayerHorizontalClimbingAttackState.h">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
@@ -428,6 +440,39 @@
     </ClInclude>
     <ClInclude Include="GameObjects\Player\PlayerHorizontalClimbingDefaultState.h">
       <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Oroku.h">
+      <Filter>Framework\GameObjects\Orokus</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\OrokuData.h">
+      <Filter>Framework\GameObjects\Orokus</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\OrokuState.h">
+      <Filter>Framework\GameObjects\Orokus</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Guards\FatGuard.h">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Guards\FatGuardStandingState.h">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Guards\StrongGuard.h">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Guards\StrongGuardStandingState.h">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Guards\ThinGuard.h">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Guards\ThinGuardStandingState.h">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Guards\ThinGuardAttackState.h">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Guards\ThinGuardRunningState.h">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

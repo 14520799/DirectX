@@ -7,11 +7,7 @@ Apple::Apple(D3DXVECTOR3 position)
 
 Apple::~Apple()
 {
-	if (mAnimation)
-	{
-		delete mAnimation;
-		mAnimation = nullptr;
-	}
+
 }
 
 const char * Apple::FileName()

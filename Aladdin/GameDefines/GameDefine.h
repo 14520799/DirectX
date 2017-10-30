@@ -1,6 +1,7 @@
 #pragma once
 namespace Define
 {
+#pragma region PLAYER
     const float PLAYER_MAX_JUMP_VELOCITY = 800.0f; //van toc nhay lon nhat
     const float PLAYER_MIN_JUMP_VELOCITY = -800.0f; //van toc nhay thap nhat
     const float PLAYER_MAX_RUNNING_SPEED = 500.0f; //toc do chay nhanh nhat cua player
@@ -13,6 +14,19 @@ namespace Define
 	const float PLAYER_JUMP_SPEED_Y = 50.0f; //toc do nhay player
 	const float PLAYER_FALL_SPEED_Y = 70.0f; //toc do nhay player
 	const float PLAYER_CLIM_SPPED = 15.0f; //toc do leo player
+#pragma endregion
+
+#pragma region APPLE
 	const float APPLE_MAX_SPEED = 2500.0f; //toc do bay max cua apple
-	const float APPLE_SPEED = 100.0f;//toc do bay cua apple
+	const float APPLE_SPEED = 100.0f; //toc do bay cua apple
+#pragma endregion
+
+	const float DANGEROUS_AREA_MIN = 0.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
+	const float DANGEROUS_AREA_MAX = 200.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
+
+#pragma region OROKU
+	const float OROKU_MAX_RUNNING_SPEED = 100.0f;
+	const float OROKU_NORMAL_SPPED_X = 10.0f;
+#pragma endregion
+
 }

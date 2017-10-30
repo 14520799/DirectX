@@ -7,9 +7,10 @@
 PlayerStandingAttackState::PlayerStandingAttackState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
-	acceletoryX = Define::PLAYER_HURT_SPEED_X;
-	this->mPlayerData->player->allowMoveLeft = true;
-	this->mPlayerData->player->allowMoveRight = true;
+	this->mPlayerData->player->SetVx(0);
+	//acceletoryX = Define::PLAYER_HURT_SPEED_X;
+	//this->mPlayerData->player->allowMoveLeft = true;
+	//this->mPlayerData->player->allowMoveRight = true;
 }
 
 PlayerStandingAttackState::~PlayerStandingAttackState()
@@ -19,42 +20,42 @@ PlayerStandingAttackState::~PlayerStandingAttackState()
 
 void PlayerStandingAttackState::HandleKeyboard(std::map<int, bool> keys)
 {
-	if (keys[VK_RIGHT])
-	{
-		if (mPlayerData->player->allowMoveRight)
-		{
-			mPlayerData->player->SetReverse(false);
+	//if (keys[VK_RIGHT])
+	//{
+	//	if (mPlayerData->player->allowMoveRight)
+	//	{
+	//		mPlayerData->player->SetReverse(false);
 
-			//di chuyen sang phai
-			if (this->mPlayerData->player->GetVx() < Define::PLAYER_MAX_HURT_SPEED)
-			{
-				this->mPlayerData->player->AddVx(acceletoryX);
+	//		//di chuyen sang phai
+	//		if (this->mPlayerData->player->GetVx() < Define::PLAYER_MAX_HURT_SPEED)
+	//		{
+	//			this->mPlayerData->player->AddVx(acceletoryX);
 
-				if (this->mPlayerData->player->GetVx() >= Define::PLAYER_MAX_HURT_SPEED)
-				{
-					this->mPlayerData->player->SetVx(Define::PLAYER_MAX_RUNNING_SPEED);
-				}
-			}
-		}
-	}
-	else if (keys[VK_LEFT])
-	{
-		if (mPlayerData->player->allowMoveLeft)
-		{
-			mPlayerData->player->SetReverse(true);
+	//			if (this->mPlayerData->player->GetVx() >= Define::PLAYER_MAX_HURT_SPEED)
+	//			{
+	//				this->mPlayerData->player->SetVx(Define::PLAYER_MAX_RUNNING_SPEED);
+	//			}
+	//		}
+	//	}
+	//}
+	//else if (keys[VK_LEFT])
+	//{
+	//	if (mPlayerData->player->allowMoveLeft)
+	//	{
+	//		mPlayerData->player->SetReverse(true);
 
-			//di chuyen sang trai
-			if (this->mPlayerData->player->GetVx() > -Define::PLAYER_MAX_HURT_SPEED)
-			{
-				this->mPlayerData->player->AddVx(-acceletoryX);
+	//		//di chuyen sang trai
+	//		if (this->mPlayerData->player->GetVx() > -Define::PLAYER_MAX_HURT_SPEED)
+	//		{
+	//			this->mPlayerData->player->AddVx(-acceletoryX);
 
-				if (this->mPlayerData->player->GetVx() < -Define::PLAYER_MAX_HURT_SPEED)
-				{
-					this->mPlayerData->player->SetVx(-Define::PLAYER_MAX_RUNNING_SPEED);
-				}
-			}
-		}
-	}
+	//			if (this->mPlayerData->player->GetVx() < -Define::PLAYER_MAX_HURT_SPEED)
+	//			{
+	//				this->mPlayerData->player->SetVx(-Define::PLAYER_MAX_RUNNING_SPEED);
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 void PlayerStandingAttackState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)

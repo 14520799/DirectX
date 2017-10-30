@@ -73,7 +73,7 @@ void Player::Update(float dt)
 	}
 
 	//player di chuyen sau khi tang toc do
-	Entity::Update(dt);
+	this->Entity::Update(dt);
 
 	// neu list co qua tao dang duoc nem di thi set toc do cho qua tao
 	if (mListAppleFly.size() > 0)
