@@ -11,7 +11,8 @@ ThinGuard::ThinGuard(D3DXVECTOR3 position)
 	mAnimationRunning = new Animation("Resources/Orokus/Guards/ThinGuardRunning.png", 8, 1, 8, 0.1f);
 	mAnimationAttack = new Animation("Resources/Orokus/Guards/ThinGuardAttack.png", 6, 1, 6, 0.05f);
 
-	this->SetPosition(position);
+	this->mOriginPosition = position;
+	this->SetPosition(mOriginPosition);
 
 	this->mOrokuData = new OrokuData();
 	this->mOrokuData->thinGuard = this;
@@ -19,6 +20,8 @@ ThinGuard::ThinGuard(D3DXVECTOR3 position)
 	this->vy = 0;
 
 	this->SetState(new ThinGuardStandingState(this->mOrokuData));
+
+	Mode = RunMode::None;
 
 	if (!mPlayer)
 	{
@@ -42,11 +45,13 @@ void ThinGuard::Update(float dt)
 
 	this->Entity::Update(dt);
 
-#pragma region OROKU RUNNING
+#pragma region OROKU RUN TO ATTACK PLAYER
 	// khi co khoang cach voi player -30 < player < 200 thi oroku se chay toi tan cong player
 	if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN &&
 		this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX && !settedAttack)
 	{
+		Mode = RunMode::RunAttack;
+
 		if (mSettedRightRunning)
 			mSettedRightRunning = false;
 		//neu oroku dang di sang ben trai thi return k can set state lai nua
@@ -61,6 +66,8 @@ void ThinGuard::Update(float dt)
 	else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX &&
 			(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN && !settedAttack)
 	{
+		Mode = RunMode::RunAttack;
+
 		if (mSettedLeftRunning)
 			mSettedLeftRunning = false;
 		//neu oroku dang di sang ben phai thi return k can set state lai nua
@@ -71,6 +78,28 @@ void ThinGuard::Update(float dt)
 		this->SetReverse(true);
 		this->SetState(new ThinGuardRunningState(this->mOrokuData));
 		this->mSettedRightRunning = true;
+	}
+#pragma endregion
+
+#pragma region OROKU RUN AROUND
+	// khi co khoang cach voi player -400 --> 400 thi oroku se di xung quanh
+	else if (this->GetPosition().x - this->mPlayer->GetPosition().x > (-Define::DANGEROUS_AREA_MAX * 2) &&
+			 this->GetPosition().x - this->mPlayer->GetPosition().x < (Define::DANGEROUS_AREA_MAX * 2) && 
+			 Mode == Oroku::RunMode::None)
+	{
+		Mode = Oroku::RunMode::RunAround;
+		this->SetState(new ThinGuardRunningState(this->mOrokuData));
+	}
+#pragma endregion
+
+#pragma region OROKU RUN COMEBACK
+	// khi co khoang cach voi player -600 --> 600 thi oroku se quay ve cho cu
+	else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < (-Define::DANGEROUS_AREA_MAX * 2) ||
+			 this->GetPosition().x - this->mPlayer->GetPosition().x > (Define::DANGEROUS_AREA_MAX * 2)) &&
+			 Mode == Oroku::RunMode::RunAttack)
+	{
+		Mode = Oroku::RunMode::RunComeback;
+		this->SetState(new ThinGuardRunningState(this->mOrokuData));
 	}
 #pragma endregion
 }

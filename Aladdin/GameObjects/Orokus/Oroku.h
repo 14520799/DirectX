@@ -12,6 +12,16 @@ public:
 	Oroku();
     ~Oroku();
 
+	enum RunMode
+	{
+		None,
+		RunAttack,
+		RunAround,
+		RunComeback
+	};
+
+	RunMode Mode;
+
     virtual void Update(float dt);
         
 	virtual void Draw(D3DXVECTOR2 transform);
@@ -31,6 +41,8 @@ public:
 	bool mCurrentReverse, settedPlayer, settedAttack;
 
 	Player *mPlayer;
+
+	D3DXVECTOR3 mOriginPosition;
 protected:
 	OrokuData *mOrokuData;
 
