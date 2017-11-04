@@ -8,8 +8,8 @@
 ThinGuard::ThinGuard(D3DXVECTOR3 position)
 {
 	mAnimationStanding = new Animation("Resources/Orokus/Guards/ThinGuardStanding.png", 9, 1, 9, 0.1f);
-	mAnimationRunning = new Animation("Resources/Orokus/Guards/ThinGuardRunning.png", 8, 1, 8, 0.1f);
-	mAnimationAttack = new Animation("Resources/Orokus/Guards/ThinGuardAttack.png", 6, 1, 6, 0.05f);
+	mAnimationRunning = new Animation("Resources/Orokus/Guards/ThinGuardRunning.png", 8, 1, 8, 0.01f);
+	mAnimationAttack = new Animation("Resources/Orokus/Guards/ThinGuardAttack.png", 6, 1, 6, 0.01f);
 
 	this->mOriginPosition = position;
 	this->SetPosition(mOriginPosition);

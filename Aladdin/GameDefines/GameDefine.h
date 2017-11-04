@@ -27,7 +27,7 @@ namespace Define
 
 #pragma region OROKU
 	const float OROKU_MAX_RUNNING_SPEED = 100.0f;
-	const float OROKU_NORMAL_SPPED_X = 5.0f;
+	const float OROKU_NORMAL_SPPED_X = 15.0f;
 #pragma endregion
 
 }
