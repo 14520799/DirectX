@@ -45,3 +45,8 @@ void Oroku::SetPlayer(Player *player)
 	this->mPlayer = player;
 }
 
+void Oroku::OnNoCollisionWithBottom()
+{
+
+}
+

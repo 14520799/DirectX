@@ -67,10 +67,10 @@ void GameMap::LoadMap(char* filePath)
 
 	//tao oroku
 #pragma region -OROKU-
-	createOroku(mListOrokus, D3DXVECTOR3(576, 630, 0), 0, 0);
+	createOroku(mListOrokus, D3DXVECTOR3(576, 635, 0), 0, 0);
 	createOroku(mListOrokus, D3DXVECTOR3(1440, 665, 0), 0, 1);
-	createOroku(mListOrokus, D3DXVECTOR3(676, 630, 0), 1, 3);
-	createOroku(mListOrokus, D3DXVECTOR3(776, 630, 0), 2, 6);
+	createOroku(mListOrokus, D3DXVECTOR3(676, 635, 0), 1, 3);
+	createOroku(mListOrokus, D3DXVECTOR3(776, 635, 0), 2, 6);
 
 	for (auto child : mListOrokus)
 	{
@@ -183,6 +183,7 @@ void GameMap::createOroku(std::vector<Oroku*> &entitiesOut, D3DXVECTOR3 position
 			oroku = new StrongGuard(position);
 			oroku->Tag = Entity::EntityTypes::Guard;
 			entitiesOut.push_back(oroku);
+			mListStrongGuards.push_back(oroku);
 			break;
 
 		default:
@@ -450,6 +451,11 @@ void GameMap::SetListOroku(std::vector<Oroku*> listOrokus)
 std::vector<Oroku*> GameMap::GetListOroku()
 {
 	return mListOrokus;
+}
+
+std::vector<Oroku*> GameMap::GetListStrongGuard()
+{
+	return mListStrongGuards;
 }
 
 Oroku* GameMap::GetOroku(std::vector<Oroku*> entitiesIn, Oroku *oroku)

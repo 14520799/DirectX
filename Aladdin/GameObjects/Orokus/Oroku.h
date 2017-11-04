@@ -38,6 +38,8 @@ public:
 
 	virtual void SetPlayer(Player *player);
 
+	virtual void OnNoCollisionWithBottom();
+
 	bool mCurrentReverse, settedPlayer, settedAttack;
 
 	Player *mPlayer;

@@ -45,6 +45,7 @@ public:
 
 	void SetListOroku(std::vector<Oroku*> listOrokus);
 	std::vector<Oroku*> GetListOroku();
+	std::vector<Oroku*> GetListStrongGuard();
 
 	Brick* GetBrick(std::vector<Brick*> entitiesIn, Brick *brick);
 	Oroku* GetOroku(std::vector<Oroku*> entitiesIn, Oroku *oroku);
@@ -68,6 +69,7 @@ private:
     QuadTree                        *mQuadTree;
     std::vector<Brick*>             mListBricks;
 	std::vector<Oroku*>             mListOrokus;
+	std::vector<Oroku*>				mListStrongGuards;
 
     Sprite                          *mSpriteBricks, *mSpriteBrickGold;
 };

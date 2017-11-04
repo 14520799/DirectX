@@ -101,16 +101,18 @@ void Scene1::checkCollision()
 {
     /*su dung de kiem tra xem khi nao mario khong dung tren 1 object hoac
     dung qua sat mep trai hoac phai cua object do thi se chuyen state la falling*/ 
-    int widthBottom = 0;
+    int widthBottomPlayer = 0;
+	int WidthBottomStrongGuard = 0;
 
-    vector<Entity*> listCollision;
+    vector<Entity*> listCollisionPlayer;
+	vector<Entity*> listCollisionStrongGuard;
+	//----------------------------Player-----------------------------------//
+    mMap->GetQuadTree()->getEntitiesCollideAble(listCollisionPlayer, mPlayer);
 
-    mMap->GetQuadTree()->getEntitiesCollideAble(listCollision, mPlayer);
-
-    for (size_t i = 0; i < listCollision.size(); i++)
+    for (size_t i = 0; i < listCollisionPlayer.size(); i++)
     {
         Entity::CollisionReturn r = GameCollision::RecteAndRect(mPlayer->GetBound(), 
-                                                    listCollision.at(i)->GetBound());
+                                                    listCollisionPlayer.at(i)->GetBound());
 
         if (r.IsCollided)
         {
@@ -118,11 +120,11 @@ void Scene1::checkCollision()
             Entity::SideCollisions sidePlayer = GameCollision::getSideCollision(mPlayer, r);
 
             //lay phia va cham cua Player so voi Entity
-            Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(listCollision.at(i), r);
+            Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(listCollisionPlayer.at(i), r);
 
             //goi den ham xu ly collision cua Player va Entity
-            mPlayer->OnCollision(listCollision.at(i), r, sidePlayer);
-            listCollision.at(i)->OnCollision(mPlayer, r, sideImpactor);
+            mPlayer->OnCollision(listCollisionPlayer.at(i), r, sidePlayer);
+            listCollisionPlayer.at(i)->OnCollision(mPlayer, r, sideImpactor);
 
             //kiem tra neu va cham voi phia duoi cua Player 
             if (sidePlayer == Entity::Bottom || sidePlayer == Entity::BottomLeft 
@@ -131,15 +133,15 @@ void Scene1::checkCollision()
                 //kiem cha do dai ma mario tiep xuc phia duoi day
                 int bot = r.RegionCollision.right - r.RegionCollision.left;
 
-                if (bot > widthBottom)
-                    widthBottom = bot;
+                if (bot > widthBottomPlayer)
+                    widthBottomPlayer = bot;
             }
 
 			if (mPlayer->collisionApple)
 			{
-				Brick* brick = mMap->GetBrick(mMap->GetListBrick(), (Brick*)listCollision.at(i));
+				Brick* brick = mMap->GetBrick(mMap->GetListBrick(), (Brick*)listCollisionPlayer.at(i));
 				mMap->SetListBrick(mMap->RemoveBrick(mMap->GetListBrick(), brick)); //setlistbrick lai sau khi xoa brick khoi list
-				mMap->GetQuadTree()->removeEntity(listCollision.at(i)); //clear brick khoi QuadTree
+				mMap->GetQuadTree()->removeEntity(listCollisionPlayer.at(i)); //clear brick khoi QuadTree
 				mPlayer->AddListApple(brick); //them apple sau khi an vao listapple cua player de nem apple
 				mPlayer->collisionApple = false;
 				break;
@@ -148,8 +150,33 @@ void Scene1::checkCollision()
     }
 
     //Neu mario dung ngoai mep thi luc nay cho mario rot xuong duoi dat    
-    if (widthBottom < Define::PLAYER_BOTTOM_RANGE_FALLING)
+    if (widthBottomPlayer < Define::PLAYER_BOTTOM_RANGE_FALLING)
     {
         mPlayer->OnNoCollisionWithBottom();
     }
+
+	//----------------------------StrongGuard-----------------------------------//
+	for (auto child : mMap->GetListStrongGuard())
+	{
+		mMap->GetQuadTree()->getEntitiesCollideAble(listCollisionStrongGuard, child);
+
+		for (size_t i = 0; i < listCollisionStrongGuard.size(); i++)
+		{
+			Entity::CollisionReturn r = GameCollision::RecteAndRect(child->GetBound(),
+				listCollisionStrongGuard.at(i)->GetBound());
+
+			if (r.IsCollided)
+			{
+				//lay phia va cham cua Entity so voi StrongGuard
+				Entity::SideCollisions sideStrongGuard = GameCollision::getSideCollision(child, r);
+
+				//lay phia va cham cua StrongGuard so voi Entity
+				Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(listCollisionStrongGuard.at(i), r);
+
+				//goi den ham xu ly collision cua StrongGuard va Entity
+				child->OnCollision(listCollisionStrongGuard.at(i), r, sideStrongGuard);
+				listCollisionStrongGuard.at(i)->OnCollision(child, r, sideImpactor);
+			}
+		}
+	}
 }

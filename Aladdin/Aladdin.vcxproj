@@ -103,6 +103,9 @@
     <ClCompile Include="GameObjects\Orokus\Guards\FatGuard.cpp" />
     <ClCompile Include="GameObjects\Orokus\Guards\FatGuardStandingState.cpp" />
     <ClCompile Include="GameObjects\Orokus\Guards\StrongGuard.cpp" />
+    <ClCompile Include="GameObjects\Orokus\Guards\StrongGuardAttackState.cpp" />
+    <ClCompile Include="GameObjects\Orokus\Guards\StrongGuardHurtingState.cpp" />
+    <ClCompile Include="GameObjects\Orokus\Guards\StrongGuardRunningState.cpp" />
     <ClCompile Include="GameObjects\Orokus\Guards\StrongGuardStandingState.cpp" />
     <ClCompile Include="GameObjects\Orokus\Guards\ThinGuard.cpp" />
     <ClCompile Include="GameObjects\Orokus\Guards\ThinGuardAttackState.cpp" />
@@ -175,6 +178,9 @@
     <ClInclude Include="GameObjects\Orokus\Guards\FatGuard.h" />
     <ClInclude Include="GameObjects\Orokus\Guards\FatGuardStandingState.h" />
     <ClInclude Include="GameObjects\Orokus\Guards\StrongGuard.h" />
+    <ClInclude Include="GameObjects\Orokus\Guards\StrongGuardAttackState.h" />
+    <ClInclude Include="GameObjects\Orokus\Guards\StrongGuardHurtingState.h" />
+    <ClInclude Include="GameObjects\Orokus\Guards\StrongGuardRunningState.h" />
     <ClInclude Include="GameObjects\Orokus\Guards\StrongGuardStandingState.h" />
     <ClInclude Include="GameObjects\Orokus\Guards\ThinGuard.h" />
     <ClInclude Include="GameObjects\Orokus\Guards\ThinGuardAttackState.h" />

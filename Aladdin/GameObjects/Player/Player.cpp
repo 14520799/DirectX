@@ -42,6 +42,8 @@ Player::Player()
 
 	mAnimationDeath = new Animation("Resources/Aladdin/Death.png", 13, 1, 13, 0.1f);
 
+	this->Tag = Entity::EntityTypes::Aladdin;
+
 	this->mPlayerData = new PlayerData();
 	this->mPlayerData->player = this;
 	this->vx = 0;

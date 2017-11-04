@@ -18,11 +18,17 @@ public:
 
 	void SetReverse(bool flag);
 
+	void SetPlayer(Player *player);
+
 	void OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side);
 
 	RECT GetBound();
 
 	OrokuState::StateName StrongGuard::getState();
+
+	bool runningFire;
 protected:
+	Animation *mAnimationHurting;
+
 	void changeAnimation(OrokuState::StateName state);
 };
