@@ -12,6 +12,7 @@ public:
 		ThinGuardStanding,
 		ThinGuardRunning,
 		ThinGuardAttack,
+		FatGuardDefault,
 		FatGuardStanding,
 		FatGuardRunning,
 		FatGuardAttack,

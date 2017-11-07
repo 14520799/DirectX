@@ -18,33 +18,26 @@ StrongGuardRunningState::~StrongGuardRunningState()
 void StrongGuardRunningState::Update(float dt)
 {
 	//xac dinh huong
-	//if (this->mOrokuData->strongGuard->Mode == Oroku::RunMode::RunAround)
-	//{
-	//	//oroku di qua di lai trong 1 vung bang Define::AREA_OROKU_RUNAROUND 
-	//	if (this->mOrokuData->strongGuard->GetPosition().x < originPosX - Define::AREA_OROKU_RUNAROUND)
-	//	{
-	//		this->mOrokuData->strongGuard->SetReverse(true);
-	//	}
-	//	else if (this->mOrokuData->strongGuard->GetPosition().x >= originPosX)
-	//	{
-	//		this->mOrokuData->strongGuard->SetReverse(false);
-	//	}
-	//}
 	if (this->mOrokuData->strongGuard->Mode == Oroku::RunMode::RunComeback)
 	{
 		//oroku quay lai cho cu
-		if (this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mOriginPosition.x == 0)
-		{
-			this->mOrokuData->strongGuard->Mode = Oroku::RunMode::None;
-			this->mOrokuData->strongGuard->SetState(new StrongGuardStandingState(this->mOrokuData));
-		}
-		else if (this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mOriginPosition.x < 0)
+		if (this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mOriginPosition.x < -1)
 		{
 			this->mOrokuData->strongGuard->SetReverse(true);
 		}
-		else if (this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mOriginPosition.x > 0)
+		else if (this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mOriginPosition.x > 1)
 		{
 			this->mOrokuData->strongGuard->SetReverse(false);
+		}
+		else
+		{
+			this->mOrokuData->strongGuard->Mode = Oroku::RunMode::None;
+			if(this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mPlayer->GetPosition().x > 0)
+				this->mOrokuData->strongGuard->SetReverse(false);
+			else
+				this->mOrokuData->strongGuard->SetReverse(true);
+			this->mOrokuData->strongGuard->SetState(new StrongGuardStandingState(this->mOrokuData));
+			return;
 		}
 	}
 	//tang van toc sau khi xac dinh huong
@@ -90,13 +83,7 @@ void StrongGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisio
 	{
 		switch (side)
 		{
-		case Entity::BottomLeft:
-			this->mOrokuData->strongGuard->SetReverse(false);
-			this->mOrokuData->strongGuard->SetState(new StrongGuardHurtingState(this->mOrokuData));
-			break;
-
-		case Entity::BottomRight:
-			this->mOrokuData->strongGuard->SetReverse(true);
+		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
 			this->mOrokuData->strongGuard->SetState(new StrongGuardHurtingState(this->mOrokuData));
 			break;
 
@@ -104,9 +91,9 @@ void StrongGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisio
 			break;
 		}
 	}
-	else
+	else if (impactor->Tag != Entity::EntityTypes::Guard)
 	{
-		switch (side)
+ 		switch (side)
 		{
 		case Entity::Left:
 			this->mOrokuData->strongGuard->AddPosition(data.RegionCollision.right - data.RegionCollision.left, 0);
@@ -115,7 +102,7 @@ void StrongGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisio
 		case Entity::Right:
 			this->mOrokuData->strongGuard->AddPosition(-(data.RegionCollision.right - data.RegionCollision.left), 0);
 			break;
-		
+
 		default:
 			break;
 		}

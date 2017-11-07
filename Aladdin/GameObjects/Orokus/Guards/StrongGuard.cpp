@@ -49,7 +49,7 @@ void StrongGuard::Update(float dt)
 #pragma region OROKU RUN TO ATTACK PLAYER
 	// khi co khoang cach voi player -30 < player < 200 thi oroku se chay toi tan cong player
 	if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN &&
-		this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX && !settedAttack)
+		this->GetPosition().x - this->mPlayer->GetPosition().x <= Define::DANGEROUS_AREA_MAX && !settingAttack)
 	{
 		Mode = RunMode::RunAttack;
 
@@ -73,7 +73,7 @@ void StrongGuard::Update(float dt)
 		}
 	}
 	else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX &&
-			 (this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN && !settedAttack)
+			 (this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN && !settingAttack)
 	{
 		Mode = RunMode::RunAttack;
 
@@ -98,17 +98,6 @@ void StrongGuard::Update(float dt)
 	}
 #pragma endregion
 
-//#pragma region OROKU RUN AROUND
-//	//khi co khoang cach voi player -400 --> 400 thi oroku se di xung quanh
-//	else if (this->GetPosition().x - this->mPlayer->GetPosition().x > (-Define::DANGEROUS_AREA_MAX * 2) &&
-//			 this->GetPosition().x - this->mPlayer->GetPosition().x < (Define::DANGEROUS_AREA_MAX * 2) &&
-//			 Mode == Oroku::RunMode::None)
-//	{
-//		Mode = Oroku::RunMode::RunAround;
-//		this->SetState(new StrongGuardRunningState(this->mOrokuData));
-//	}
-//#pragma endregion
-
 #pragma region OROKU RUN COMEBACK
 	// khi co khoang cach voi player -600 --> 600 thi oroku se quay ve cho cu
 	else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < (-Define::DANGEROUS_AREA_MAX * 2) ||
@@ -116,7 +105,16 @@ void StrongGuard::Update(float dt)
 			  Mode == Oroku::RunMode::RunAttack)
 	{
 		Mode = Oroku::RunMode::RunComeback;
-		this->SetState(new StrongGuardRunningState(this->mOrokuData));
+		mSettedRightRunning = false;
+		mSettedLeftRunning = false;
+		if (runningFire)
+		{
+			this->SetState(new StrongGuardHurtingState(this->mOrokuData));
+		}
+		else
+		{
+			this->SetState(new StrongGuardRunningState(this->mOrokuData));
+		}
 	}
 #pragma endregion
 }

@@ -5,6 +5,7 @@
 #include "OrokuData.h"
 #include "OrokuState.h"
 #include "../Player/Player.h"
+#include "../../GameComponents/QuadTree.h"
 
 class Oroku : public Entity
 {
@@ -38,11 +39,16 @@ public:
 
 	virtual void SetPlayer(Player *player);
 
+	virtual void SetQuadTree(QuadTree *quadTree);
+
 	virtual void OnNoCollisionWithBottom();
 
-	bool mCurrentReverse, settedPlayer, settedAttack;
+	bool mCurrentReverse, settedPlayer, settingAttack;
+	bool allowDrawSword, allowDefault;
 
 	Player *mPlayer;
+
+	QuadTree *mQuadTree;
 
 	D3DXVECTOR3 mOriginPosition;
 protected:

@@ -5,7 +5,7 @@
 StrongGuardAttackState::StrongGuardAttackState(OrokuData *orokuData)
 {
 	this->mOrokuData = orokuData;
-	this->mOrokuData->strongGuard->settedAttack = true;
+	this->mOrokuData->strongGuard->settingAttack = true;
 	this->mOrokuData->strongGuard->mSettedLeftRunning = false;
 	this->mOrokuData->strongGuard->mSettedRightRunning = false;
 	this->mOrokuData->strongGuard->SetVx(0);
@@ -29,7 +29,7 @@ void StrongGuardAttackState::Update(float dt)
 		{
 			this->mOrokuData->strongGuard->SetReverse(false);
 			this->mOrokuData->strongGuard->mSettedLeftRunning = true;
-			this->mOrokuData->strongGuard->settedAttack = false;
+			this->mOrokuData->strongGuard->settingAttack = false;
 			this->mOrokuData->strongGuard->SetState(new StrongGuardRunningState(this->mOrokuData));
 		}
 		else if ((this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX &&
@@ -37,7 +37,7 @@ void StrongGuardAttackState::Update(float dt)
 		{
 			this->mOrokuData->strongGuard->SetReverse(true);
 			this->mOrokuData->strongGuard->mSettedRightRunning = true;
-			this->mOrokuData->strongGuard->settedAttack = false;
+			this->mOrokuData->strongGuard->settingAttack = false;
 			this->mOrokuData->strongGuard->SetState(new StrongGuardRunningState(this->mOrokuData));
 		}
 	}

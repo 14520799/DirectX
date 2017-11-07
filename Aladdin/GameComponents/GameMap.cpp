@@ -67,10 +67,10 @@ void GameMap::LoadMap(char* filePath)
 
 	//tao oroku
 #pragma region -OROKU-
-	createOroku(mListOrokus, D3DXVECTOR3(576, 635, 0), 0, 0);
+	createOroku(mListOrokus, D3DXVECTOR3(576, 632, 0), 0, 0);
 	createOroku(mListOrokus, D3DXVECTOR3(1440, 665, 0), 0, 1);
-	createOroku(mListOrokus, D3DXVECTOR3(676, 635, 0), 1, 3);
-	createOroku(mListOrokus, D3DXVECTOR3(776, 635, 0), 2, 6);
+	createOroku(mListOrokus, D3DXVECTOR3(676, 634.5f, 0), 1, 3);
+	createOroku(mListOrokus, D3DXVECTOR3(776, 630.5f, 0), 2, 6);
 
 	for (auto child : mListOrokus)
 	{
@@ -93,7 +93,7 @@ void GameMap::LoadMap(char* filePath)
 
             Entity *entity = new Entity();
             entity->SetPosition(object->GetX() + object->GetWidth() / 2, 
-                                    object->GetY() + object->GetHeight() / 2);
+                                object->GetY() + object->GetHeight() / 2);
             entity->SetWidth(object->GetWidth());
             entity->SetHeight(object->GetHeight());
 
@@ -177,6 +177,7 @@ void GameMap::createOroku(std::vector<Oroku*> &entitiesOut, D3DXVECTOR3 position
 		case 1:
 			oroku = new FatGuard(position);
 			oroku->Tag = Entity::EntityTypes::Guard;
+			oroku->SetQuadTree(this->GetQuadTree());
 			entitiesOut.push_back(oroku);
 			break;
 		case 2:
@@ -315,7 +316,7 @@ void GameMap::Update(float dt)
 void GameMap::Draw()
 {
     D3DXVECTOR2 trans = D3DXVECTOR2(GameGlobal::GetWidth() / 2 - mCamera->GetPosition().x,
-        GameGlobal::GetHeight() / 2 - mCamera->GetPosition().y);
+									GameGlobal::GetHeight() / 2 - mCamera->GetPosition().y);
 
 #pragma region DRAW TILESET
     for (size_t i = 0; i < mMap->GetNumTileLayers(); i++)

@@ -93,9 +93,12 @@ public:
 	//huong nem qua tao da duoc nem ra se khong doi huong
 	bool mSettedRightReserve;
 	bool mSettedLeftReserve;
-	//huong tan cong cua oroku
+	//huong chay toi tan cong cua oroku
 	bool mSettedRightRunning;
 	bool mSettedLeftRunning;
+	//huong tan cong cua oroku
+	bool mSettedRightAttack;
+	bool mSettedLeftAttack;
 protected:
 
     //duoc goi khi set position cua Entity, dung cho ke thua

@@ -70,8 +70,6 @@ private:
     std::vector<Brick*>             mListBricks;
 	std::vector<Oroku*>             mListOrokus;
 	std::vector<Oroku*>				mListStrongGuards;
-
-    Sprite                          *mSpriteBricks, *mSpriteBrickGold;
 };
 
 #endif

@@ -169,9 +169,6 @@
     <ClCompile Include="GameObjects\MapObjects\Brick.cpp">
       <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\MapObjects\BrickNormal.cpp">
-      <Filter>Framework\GameObjects\MapObjects</Filter>
-    </ClCompile>
     <ClCompile Include="GameObjects\Player\PlayerSittingState.cpp">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
@@ -264,6 +261,18 @@
     </ClCompile>
     <ClCompile Include="GameObjects\Orokus\Guards\StrongGuardRunningState.cpp">
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Guards\FatGuardAttackState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Guards\FatGuardRunningState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Guards\FatGuardDefaultState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\SwordFatGuard.cpp">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -399,9 +408,6 @@
     <ClInclude Include="GameObjects\MapObjects\Brick.h">
       <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\MapObjects\BrickNormal.h">
-      <Filter>Framework\GameObjects\MapObjects</Filter>
-    </ClInclude>
     <ClInclude Include="GameObjects\Player\PlayerSittingState.h">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
@@ -491,6 +497,18 @@
     </ClInclude>
     <ClInclude Include="GameObjects\Orokus\Guards\StrongGuardRunningState.h">
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Guards\FatGuardAttackState.h">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Guards\FatGuardRunningState.h">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Guards\FatGuardDefaultState.h">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\SwordFatGuard.h">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

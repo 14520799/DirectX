@@ -18,6 +18,8 @@ bool Brick::init(D3DXVECTOR3 position)
     mAnimation = new Animation(FileName(), TotalFrame(), Row(), Column(), SecondPerFrame());
 
     SetPosition(position);
+	SetVx(0);
+	SetVy(0);
 
     Entity::SetWidth(mAnimation->GetWidth());
     Entity::SetHeight(mAnimation->GetHeight());
@@ -40,7 +42,12 @@ void Brick::Draw(D3DXVECTOR3 position, RECT sourceRect, D3DXVECTOR2 scale, D3DXV
     mAnimation->Draw(position, sourceRect, scale, transform, angle, rotationCenter, colorKey);
 }
 
+void Brick::Draw(D3DXVECTOR3 position, D3DXVECTOR2 transform)
+{
+	mAnimation->Draw(position, transform);
+}
+
 void Brick::Draw(D3DXVECTOR2 transform)
 {
-    mAnimation->Draw(D3DXVECTOR2(transform));
+    mAnimation->Draw(transform);
 }

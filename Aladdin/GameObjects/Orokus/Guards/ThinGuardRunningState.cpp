@@ -32,18 +32,20 @@ void ThinGuardRunningState::Update(float dt)
 	else if (this->mOrokuData->thinGuard->Mode == Oroku::RunMode::RunComeback)
 	{
 		//oroku quay lai cho cu
-		if (this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mOriginPosition.x == 0)
-		{
-			this->mOrokuData->thinGuard->Mode = Oroku::RunMode::None;
-			this->mOrokuData->thinGuard->SetState(new ThinGuardStandingState(this->mOrokuData));
-		}
-		else if (this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mOriginPosition.x < 0)
+		if (this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mOriginPosition.x < -1)
 		{
 			this->mOrokuData->thinGuard->SetReverse(true);
 		}
-		else if(this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mOriginPosition.x > 0)
+		else if(this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mOriginPosition.x > 1)
 		{
 			this->mOrokuData->thinGuard->SetReverse(false);
+		}
+		else
+		{
+			this->mOrokuData->thinGuard->Mode = Oroku::RunMode::None;
+			this->mOrokuData->thinGuard->mCurrentReverse = !this->mOrokuData->thinGuard->mCurrentReverse;
+			this->mOrokuData->thinGuard->SetState(new ThinGuardStandingState(this->mOrokuData));
+			return;
 		}
 	}
 	//tang van toc sau khi xac dinh huong
@@ -67,20 +69,39 @@ void ThinGuardRunningState::Update(float dt)
 
 void ThinGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
-	switch (side)
+	if (impactor->Tag == Entity::EntityTypes::Aladdin)
 	{
-	case Entity::Left:
-		this->mOrokuData->thinGuard->SetReverse(false);
-		this->mOrokuData->thinGuard->SetState(new ThinGuardAttackState(this->mOrokuData));
-		break;
+		switch (side)
+		{
+		case Entity::Left:
+			this->mOrokuData->thinGuard->SetReverse(false);
+			this->mOrokuData->thinGuard->SetState(new ThinGuardAttackState(this->mOrokuData));
+			break;
 
-	case Entity::Right:
-		this->mOrokuData->thinGuard->SetReverse(true);
-		this->mOrokuData->thinGuard->SetState(new ThinGuardAttackState(this->mOrokuData));
-		break;
+		case Entity::Right:
+			this->mOrokuData->thinGuard->SetReverse(true);
+			this->mOrokuData->thinGuard->SetState(new ThinGuardAttackState(this->mOrokuData));
+			break;
 
-	default:
-		break;
+		default:
+			break;
+		}
+	}
+	else if(impactor->Tag != Entity::EntityTypes::Guard)
+	{
+		switch (side)
+		{
+		case Entity::Left:
+			this->mOrokuData->thinGuard->AddPosition(data.RegionCollision.right - data.RegionCollision.left, 0);
+			break;
+
+		case Entity::Right:
+			this->mOrokuData->thinGuard->AddPosition(-(data.RegionCollision.right - data.RegionCollision.left), 0);
+			break;
+
+		default:
+			break;
+		}
 	}
 }
 

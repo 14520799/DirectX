@@ -1,11 +1,11 @@
 #pragma once
 #include "Brick.h"
-class BrickNormal : public Brick
+class SwordFatGuard : public Brick
 {
 public:
-    ~BrickNormal();
+    ~SwordFatGuard();
 
-    BrickNormal(D3DXVECTOR3 position);
+	SwordFatGuard(D3DXVECTOR3 position);
 
     virtual const char* FileName();
     virtual int TotalFrame();

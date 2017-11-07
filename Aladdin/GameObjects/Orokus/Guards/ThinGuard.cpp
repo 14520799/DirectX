@@ -48,7 +48,7 @@ void ThinGuard::Update(float dt)
 #pragma region OROKU RUN TO ATTACK PLAYER
 	// khi co khoang cach voi player -30 < player < 200 thi oroku se chay toi tan cong player
 	if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN &&
-		this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX && !settedAttack)
+		this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX && !settingAttack)
 	{
 		Mode = RunMode::RunAttack;
 
@@ -64,7 +64,7 @@ void ThinGuard::Update(float dt)
 		this->mSettedLeftRunning = true;
 	}
 	else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX &&
-			(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN && !settedAttack)
+			(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN && !settingAttack)
 	{
 		Mode = RunMode::RunAttack;
 
@@ -99,6 +99,8 @@ void ThinGuard::Update(float dt)
 			 Mode == Oroku::RunMode::RunAttack)
 	{
 		Mode = Oroku::RunMode::RunComeback;
+		mSettedRightRunning = false;
+		mSettedLeftRunning = false;
 		this->SetState(new ThinGuardRunningState(this->mOrokuData));
 	}
 #pragma endregion

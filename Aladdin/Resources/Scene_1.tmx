@@ -56,17 +56,17 @@
 </data>
  </layer>
  <objectgroup name="Object Layer">
-  <object id="25" name="VerticalRope" x="1235" y="46" height="146"/>
+  <object id="25" name="VerticalRope" x="1235" y="80" height="112"/>
   <object id="24" x="1176" y="298.333" width="20.6667" height="12"/>
   <object id="23" x="1177.67" y="371.667" width="69" height="10"/>
-  <object id="22" name="VerticalRope" x="1666" y="214" height="363"/>
+  <object id="22" name="VerticalRope" x="1666" y="272" height="305"/>
   <object id="21" x="1280.33" y="131.334" width="521.333" height="19.6666"/>
   <object id="20" x="1406.67" y="371.667" width="210" height="16.3333"/>
   <object id="19" x="1758" y="151" width="32" height="585"/>
   <object id="18" x="1177" y="709" width="579" height="25"/>
   <object id="17" x="1151" y="577" width="25" height="156"/>
-  <object id="2" x="916.333" y="632.866" width="37.1715" height="32.6602"/>
-  <object id="1" x="0" y="668.667" width="954" height="65.3333"/>
+  <object id="2" x="927.333" y="634.866" width="29.1715" height="32.6602"/>
+  <object id="1" x="3" y="668" width="954" height="65.3333"/>
   <object id="53" x="1125.33" y="-0.333333" width="50.3333" height="358"/>
   <object id="56" x="1791" y="586" width="34" height="14"/>
   <object id="69" name="HorizontalRope" x="1312" y="30" width="467"/>
@@ -82,10 +82,10 @@
   <object id="84" x="948.333" y="622" width="34.6667" height="12.3333"/>
   <object id="85" x="980" y="610.5" width="32" height="12.3333"/>
   <object id="90" x="1107" y="563.5" width="79" height="11"/>
-  <object id="91" name="Fire" x="377.333" y="662" width="83" height="26.3333"/>
-  <object id="99" name="Fire" x="670.5" y="662" width="83" height="26"/>
-  <object id="100" name="Fire" x="810.5" y="662" width="83" height="26"/>
-  <object id="101" name="Fire" x="1613.5" y="703.667" width="83" height="27.3333"/>
+  <object id="91" name="Fire" x="387.333" y="665" width="60" height="26.3333"/>
+  <object id="99" name="Fire" x="679.5" y="665" width="60" height="26"/>
+  <object id="100" name="Fire" x="820.5" y="665" width="60" height="26"/>
+  <object id="101" name="Fire" x="1628.5" y="706" width="60" height="27.3333"/>
   <object id="102" x="1010.83" y="596.917" width="34.6667" height="12.3333"/>
   <object id="103" x="1042.5" y="585.417" width="32" height="12.3333"/>
   <object id="104" x="1076" y="575.167" width="32" height="12.3333"/>
@@ -94,13 +94,13 @@
   <object id="110" x="2249.33" y="347.333" width="198.667" height="17.3333"/>
   <object id="111" x="2214.67" y="155.333" width="314.667" height="17.3333"/>
   <object id="112" x="2681.33" y="203.333" width="198.667" height="17.3333"/>
-  <object id="117" name="Fire" x="2457.33" y="708" width="104" height="25.3333"/>
+  <object id="117" name="Fire" x="2478.33" y="710" width="60" height="25.3333"/>
   <object id="127" x="3472" y="682.667" width="36" height="53.3333"/>
   <object id="129" x="3509.33" y="670.667" width="26.6667" height="21.3333"/>
   <object id="130" x="3538.67" y="658.667" width="34.6667" height="17.3333"/>
   <object id="131" x="3573.33" y="646.667" width="202.667" height="18.6667"/>
   <object id="134" x="2081.33" y="0" width="26.6667" height="341.333"/>
-  <object id="135" x="2245.33" y="713.333" width="1226.67" height="24"/>
+  <object id="135" x="2245.33" y="713" width="1226.67" height="24"/>
   <object id="137" x="2440" y="444" width="621.333" height="20"/>
   <object id="138" x="2406.67" y="364" width="33.3333" height="100"/>
   <object id="139" x="3061.33" y="416" width="57.3333" height="48"/>
@@ -120,4 +120,5 @@
   <object id="156" x="2637.33" y="176" width="44" height="44"/>
   <object id="157" name="VerticalRope" x="2153.33" y="9.83333" height="197.667"/>
  </objectgroup>
+ <objectgroup name="Object Layer 2"/>
 </map>

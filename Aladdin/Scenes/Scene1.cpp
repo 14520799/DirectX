@@ -15,7 +15,7 @@ void Scene1::LoadContent()
 
     mCamera = new Camera(GameGlobal::GetWidth(), GameGlobal::GetHeight());
     mCamera->SetPosition(GameGlobal::GetWidth() / 2, 
-                            mMap->GetHeight() - mCamera->GetHeight());
+                         mMap->GetHeight() - mCamera->GetHeight());
 
     mMap->SetCamera(mCamera);
 

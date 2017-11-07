@@ -3,6 +3,7 @@
 #include "../Oroku.h"
 #include "../OrokuData.h"
 #include "../OrokuState.h"
+#include "../../MapObjects/Brick.h"
 
 class FatGuard : public Oroku
 {
@@ -23,6 +24,10 @@ public:
 	RECT GetBound();
 	
 	OrokuState::StateName FatGuard::getState();
+
+	Brick *sword;
 protected:
+	Animation *mAnimationDefault;
+
 	void changeAnimation(OrokuState::StateName state);
 };
