@@ -17,9 +17,12 @@ public:
 
 	void Draw(D3DXVECTOR2 transform);
 
+	virtual void OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side);
+
 	void OnSetPosition(D3DXVECTOR3 poks);
 
-	bool mReverse;
+	bool collisionWithOroku;
+	bool collisionWithPlayer;
 protected:
     Brick();
 

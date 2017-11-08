@@ -32,7 +32,8 @@ public:
 
     enum EntityTypes
     {
-        None, Aladdin, VerticalRope, HorizontalRope, Fire, Apple, Static, Guard,
+        None, Aladdin, VerticalRope, HorizontalRope, Fire, Apple, AppleFly, Static, Guard,
+		Sword
     };
 
 	enum EntityId

@@ -75,7 +75,12 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 		//giam toc do khi player chay vao bai lua
 		acceletoryX = Define::PLAYER_HURT_SPEED_X;
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Guard)
+	//bi thuong khi trung kiem
+	else if (impactor->Tag == Entity::EntityTypes::Sword && this->mPlayerData->player->allowDeath)
+	{
+		this->mPlayerData->player->SetState(new PlayerDeathState(this->mPlayerData));
+	}
+	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard)
 	{
 
 	}

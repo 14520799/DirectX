@@ -69,7 +69,6 @@ private:
     QuadTree                        *mQuadTree;
     std::vector<Brick*>             mListBricks;
 	std::vector<Oroku*>             mListOrokus;
-	std::vector<Oroku*>				mListStrongGuards;
 };
 
 #endif

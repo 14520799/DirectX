@@ -9,9 +9,6 @@ FatGuardAttackState::FatGuardAttackState(OrokuData *orokuData)
 	//set lai huong chay cua fatguard thanh false
 	this->mOrokuData->fatGuard->mSettedLeftRunning = false;
 	this->mOrokuData->fatGuard->mSettedRightRunning = false;
-	//set lai huong bay cua cay kiem thanh false
-	this->mOrokuData->fatGuard->sword->mSettedLeftReserve = false;
-	this->mOrokuData->fatGuard->sword->mSettedRightReserve = false;
 	this->mOrokuData->fatGuard->SetVx(0);
 	this->mOrokuData->fatGuard->SetVy(0);
 	this->mOrokuData->fatGuard->sword->SetPosition(this->mOrokuData->fatGuard->GetPosition());
@@ -26,10 +23,11 @@ FatGuardAttackState::~FatGuardAttackState()
 void FatGuardAttackState::Update(float dt)
 {
 	//cho phep oroku thuc hien xong state attack roi moi co the sang state khac
-	timeDelayState += dt;
+	this->mOrokuData->fatGuard->timeDelayDefaultState += dt;
 
-	if (timeDelayState > 0.5f)
+	if (this->mOrokuData->fatGuard->timeDelayDefaultState > 0.5f)
 	{
+		this->mOrokuData->fatGuard->timeDelayDefaultState = 0;
 		this->mOrokuData->fatGuard->SetState(new FatGuardDefaultState(this->mOrokuData));
 		return;
 	}

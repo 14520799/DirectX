@@ -77,6 +77,29 @@ void Player::Update(float dt)
 	//player di chuyen sau khi tang toc do
 	this->Entity::Update(dt);
 
+	//neu qua tao bay trung vao oroku thi qua tao se bien mat
+	if (mListAppleFly.size() > 0)
+	{
+		for (size_t i = 0; i < mListAppleFly.size(); i++)
+		{
+			if (mListAppleFly.at(i)->collisionWithOroku)
+			{
+				delete mListAppleFly.at(i);
+				 mListAppleFly.at(i) = nullptr;
+				mListAppleFly.erase(mListAppleFly.begin() + i);
+				if (mListAppleFly.size() <= 0)
+					break;
+				else
+					removedApple = true;				
+			}
+			if (removedApple)
+			{
+				i--;
+				removedApple = false;
+			}
+		}
+	}
+
 	// neu list co qua tao dang duoc nem di thi set toc do cho qua tao
 	if (mListAppleFly.size() > 0)
 	{
@@ -110,6 +133,7 @@ void Player::Update(float dt)
 					SetAppleFlyRight(mListAppleFly, mListAppleFly.at(i), i, dt);
 				}		
 			}
+
 			//khi delete apple thi vong lap se lui lai vi listapple da mat 1 apple
 			if (removedApple)
 			{				
@@ -204,10 +228,10 @@ void Player::SetAppleFlyLeft(std::vector<Brick*> &listAppleFly, Brick *brick, in
 		brick->AddVx(Define::APPLE_SPEED);
 		brick->Entity::Update(dt);
 		//sau khi apple bay toc do max se bien mat
-		if (brick->GetVx() >= Define::APPLE_MAX_SPEED)
+		if (brick->GetVx() >= Define::APPLE_MAX_SPEED && brick != nullptr)
 		{
 			listAppleFly.erase(listAppleFly.begin() + i);
-			delete brick;
+			//delete brick;
 			removedApple = true;
 		}
 		return;
@@ -216,7 +240,7 @@ void Player::SetAppleFlyLeft(std::vector<Brick*> &listAppleFly, Brick *brick, in
 	brick->AddVx(-Define::APPLE_SPEED);
 	brick->Entity::Update(dt);
 	//sau khi apple bay toc do max se bien mat
-	if (brick->GetVx() <= -Define::APPLE_MAX_SPEED)
+	if (brick->GetVx() <= -Define::APPLE_MAX_SPEED && brick != nullptr)
 	{
 		listAppleFly.erase(listAppleFly.begin() + i);
 		delete brick;
@@ -229,7 +253,7 @@ void Player::SetAppleFlyRight(std::vector<Brick*> &listAppleFly, Brick *brick, i
 	//khi di chuyen player sang phai ma apple da duoc nem sang trai thi no se van bay sang trai
 	if (brick->mSettedLeftReserve)
 	{
-		brick->AddVx(-Define::APPLE_SPEED);
+		brick->AddVx(-Define::APPLE_SPEED && brick != nullptr);
 		brick->Entity::Update(dt);
 		//sau khi apple bay toc do max se bien mat
 		if (brick->GetVx() <= -Define::APPLE_MAX_SPEED)
@@ -244,12 +268,17 @@ void Player::SetAppleFlyRight(std::vector<Brick*> &listAppleFly, Brick *brick, i
 	brick->AddVx(Define::APPLE_SPEED);
 	brick->Entity::Update(dt);
 	//sau khi apple bay toc do max se bien mat
-	if (brick->GetVx() >= Define::APPLE_MAX_SPEED)
+	if (brick->GetVx() >= Define::APPLE_MAX_SPEED && brick != nullptr)
 	{
 		listAppleFly.erase(listAppleFly.begin() + i);
 		delete brick;
 		removedApple = true;
 	}
+}
+
+std::vector<Brick*> Player::GetListAppleFly()
+{
+	return mListAppleFly;
 }
 
 void Player::HandleKeyboard(std::map<int, bool> keys)
@@ -326,6 +355,7 @@ void Player::OnKeyPressed(int key)
 		{
 			apple = mListApplePlayer.at(mListApplePlayer.size() - 1);
 			apple->SetPosition(this->GetPosition());
+			apple->Tag == Entity::EntityTypes::AppleFly;
 			mListAppleFly.push_back(apple); //lay ra qua tao trong player roi dua vao listapple quan ly viec bay ra ngoai
 			mListApplePlayer.pop_back(); //lay qua tao ra khoi listapple cua player sau khi nem ra ngoai
 		}

@@ -51,3 +51,10 @@ void Brick::Draw(D3DXVECTOR2 transform)
 {
     mAnimation->Draw(transform);
 }
+
+void Brick::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)
+
+{
+	
+}
+

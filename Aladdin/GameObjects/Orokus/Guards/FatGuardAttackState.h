@@ -15,5 +15,4 @@ public:
 	virtual StateName GetState();
 
 protected:
-	float timeDelayState;
 };

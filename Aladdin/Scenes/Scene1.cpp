@@ -105,14 +105,15 @@ void Scene1::checkCollision()
 	int WidthBottomStrongGuard = 0;
 
     vector<Entity*> listCollisionPlayer;
-	vector<Entity*> listCollisionStrongGuard;
-	//----------------------------Player-----------------------------------//
+	vector<Entity*> listCollisionGuards;
+	vector<Entity*> listCollisionApple;
+#pragma region --PLAYER--
     mMap->GetQuadTree()->getEntitiesCollideAble(listCollisionPlayer, mPlayer);
 
     for (size_t i = 0; i < listCollisionPlayer.size(); i++)
     {
         Entity::CollisionReturn r = GameCollision::RecteAndRect(mPlayer->GetBound(), 
-                                                    listCollisionPlayer.at(i)->GetBound());
+																listCollisionPlayer.at(i)->GetBound());
 
         if (r.IsCollided)
         {
@@ -154,29 +155,75 @@ void Scene1::checkCollision()
     {
         mPlayer->OnNoCollisionWithBottom();
     }
+#pragma endregion
 
-	//----------------------------StrongGuard-----------------------------------//
-	for (auto child : mMap->GetListStrongGuard())
+#pragma region --APPLE--
+	for (auto child : mPlayer->GetListAppleFly())
 	{
-		mMap->GetQuadTree()->getEntitiesCollideAble(listCollisionStrongGuard, child);
+		if (child != nullptr)
+		{
+			listCollisionApple.clear();
+			mMap->GetQuadTree()->getEntitiesCollideAble(listCollisionApple, child);
 
-		for (size_t i = 0; i < listCollisionStrongGuard.size(); i++)
+			for (size_t i = 0; i < listCollisionApple.size(); i++)
+			{
+				Entity::CollisionReturn r = GameCollision::RecteAndRect(child->GetBound(),
+					listCollisionApple.at(i)->GetBound());
+
+				if (r.IsCollided)
+				{
+					//lay phia va cham cua Entity so voi StrongGuard
+					Entity::SideCollisions sideApple = GameCollision::getSideCollision(child, r);
+
+					//lay phia va cham cua StrongGuard so voi Entity
+					Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(listCollisionApple.at(i), r);
+
+					//goi den ham xu ly collision cua StrongGuard va Entity
+					child->OnCollision(listCollisionApple.at(i), r, sideApple);
+					listCollisionApple.at(i)->OnCollision(child, r, sideImpactor);
+				}
+
+				if (child->collisionWithOroku)
+				{
+					Oroku *oroku = mMap->GetOroku(mMap->GetListOroku(), (Oroku*)listCollisionApple.at(i));
+					mMap->SetListOroku(mMap->RemoveOroku(mMap->GetListOroku(), oroku));//xoa oroku khoi listoroku trong map
+					mMap->GetQuadTree()->removeEntity(listCollisionApple.at(i)); //xoa oroku ra khoi quadtree
+					if(oroku->sword != nullptr)
+						mMap->GetQuadTree()->removeEntity(oroku->sword); //xoa sword khoi quadtree
+					break;
+				}
+			}
+		}	
+	}
+#pragma endregion
+
+#pragma region --OROKU--
+	for (auto child : mMap->GetListOroku())
+	{
+		listCollisionGuards.clear();
+		mMap->GetQuadTree()->getEntitiesCollideAble(listCollisionGuards, child);
+
+		for (size_t i = 0; i < listCollisionGuards.size(); i++)
 		{
 			Entity::CollisionReturn r = GameCollision::RecteAndRect(child->GetBound(),
-				listCollisionStrongGuard.at(i)->GetBound());
+																	listCollisionGuards.at(i)->GetBound());
 
 			if (r.IsCollided)
 			{
 				//lay phia va cham cua Entity so voi StrongGuard
-				Entity::SideCollisions sideStrongGuard = GameCollision::getSideCollision(child, r);
+				Entity::SideCollisions sideGuard = GameCollision::getSideCollision(child, r);
 
 				//lay phia va cham cua StrongGuard so voi Entity
-				Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(listCollisionStrongGuard.at(i), r);
+				Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(listCollisionGuards.at(i), r);
 
 				//goi den ham xu ly collision cua StrongGuard va Entity
-				child->OnCollision(listCollisionStrongGuard.at(i), r, sideStrongGuard);
-				listCollisionStrongGuard.at(i)->OnCollision(child, r, sideImpactor);
+				child->OnCollision(listCollisionGuards.at(i), r, sideGuard);
+				listCollisionGuards.at(i)->OnCollision(child, r, sideImpactor);
 			}
 		}
 	}
+#pragma endregion
+
+
+
 }

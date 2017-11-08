@@ -6,20 +6,20 @@
 
 GameMap::GameMap(char* filePath)
 {
-    mCamera = new Camera(GameGlobal::GetWidth(), GameGlobal::GetHeight());
-    LoadMap(filePath);
+	mCamera = new Camera(GameGlobal::GetWidth(), GameGlobal::GetHeight());
+	LoadMap(filePath);
 }
 
 GameMap::~GameMap()
 {
-    delete mMap;
+	delete mMap;
 
-    for (size_t i = 0; i < mListBricks.size(); i++)
-    {
-        if (mListBricks[i])
-            delete mListBricks[i];
-    }
-    mListBricks.clear();
+	for (size_t i = 0; i < mListBricks.size(); i++)
+	{
+		if (mListBricks[i])
+			delete mListBricks[i];
+	}
+	mListBricks.clear();
 
 	for (size_t i = 0; i < mListOrokus.size(); i++)
 	{
@@ -28,32 +28,32 @@ GameMap::~GameMap()
 	}
 	mListOrokus.clear();
 
-    for (size_t i = 0; i < mListTileset.size(); i++)
-    {
-        if (mListTileset[i])
-            delete mListTileset[i];
-    }
-    mListTileset.clear();
+	for (size_t i = 0; i < mListTileset.size(); i++)
+	{
+		if (mListTileset[i])
+			delete mListTileset[i];
+	}
+	mListTileset.clear();
 
-    delete mQuadTree;
+	delete mQuadTree;
 }
 
 void GameMap::LoadMap(char* filePath)
 {
-    mMap = new Tmx::Map();
-    mMap->ParseFile(filePath);
+	mMap = new Tmx::Map();
+	mMap->ParseFile(filePath);
 
-    mQuadTree = new QuadTree(1, this->GetWorldMapBound());
+	mQuadTree = new QuadTree(1, this->GetWorldMapBound());
 
-    for (size_t i = 0; i < mMap->GetNumTilesets(); i++)
-    {
-        const Tmx::Tileset *tileset = mMap->GetTileset(i);
+	for (size_t i = 0; i < mMap->GetNumTilesets(); i++)
+	{
+		const Tmx::Tileset *tileset = mMap->GetTileset(i);
 
-        Sprite *sprite = new Sprite(tileset->GetImage()->GetSource().c_str());
-        mListTileset.insert(pair<int, Sprite*>(i, sprite));
-    }
+		Sprite *sprite = new Sprite(tileset->GetImage()->GetSource().c_str());
+		mListTileset.insert(pair<int, Sprite*>(i, sprite));
+	}
 
-    //khoi tao nhung tang qua tao
+	//khoi tao nhung tang qua tao
 #pragma region -APPLE LAYER-
 	createApple(mListBricks, D3DXVECTOR3(425, 550, 0), 3);
 	createApple(mListBricks, D3DXVECTOR3(705, 550, 0), 2);
@@ -81,21 +81,21 @@ void GameMap::LoadMap(char* filePath)
 	//tao oject cho map
 #pragma region -OBJECTGROUP, STATIC OBJECT-
 
-    for (size_t i = 0; i < mMap->GetNumObjectGroups(); i++)
-    {
-        const Tmx::ObjectGroup *objectGroup = mMap->GetObjectGroup(i);
+	for (size_t i = 0; i < mMap->GetNumObjectGroups(); i++)
+	{
+		const Tmx::ObjectGroup *objectGroup = mMap->GetObjectGroup(i);
 
-        for (size_t j = 0; j < objectGroup->GetNumObjects(); j++)
-        {
-            //lay object group chu khong phai layer
-            //object group se chua nhung body
-            Tmx::Object *object = objectGroup->GetObjects().at(j);
+		for (size_t j = 0; j < objectGroup->GetNumObjects(); j++)
+		{
+			//lay object group chu khong phai layer
+			//object group se chua nhung body
+			Tmx::Object *object = objectGroup->GetObjects().at(j);
 
-            Entity *entity = new Entity();
-            entity->SetPosition(object->GetX() + object->GetWidth() / 2, 
-                                object->GetY() + object->GetHeight() / 2);
-            entity->SetWidth(object->GetWidth());
-            entity->SetHeight(object->GetHeight());
+			Entity *entity = new Entity();
+			entity->SetPosition(object->GetX() + object->GetWidth() / 2,
+				object->GetY() + object->GetHeight() / 2);
+			entity->SetWidth(object->GetWidth());
+			entity->SetHeight(object->GetHeight());
 
 			if (object->GetName() == "VerticalRope")
 			{
@@ -114,9 +114,9 @@ void GameMap::LoadMap(char* filePath)
 				entity->Tag = Entity::EntityTypes::Static;
 			}
 
-            mQuadTree->insertEntity(entity);
-        }
-    }
+			mQuadTree->insertEntity(entity);
+		}
+	}
 #pragma endregion
 }
 
@@ -169,139 +169,135 @@ void GameMap::createOroku(std::vector<Oroku*> &entitiesOut, D3DXVECTOR3 position
 
 	switch (orokuType)
 	{
-		case 0:
-			oroku = new ThinGuard(position);
-			oroku->Tag = Entity::EntityTypes::Guard;
-			entitiesOut.push_back(oroku);
-			break;
-		case 1:
-			oroku = new FatGuard(position);
-			oroku->Tag = Entity::EntityTypes::Guard;
-			oroku->SetQuadTree(this->GetQuadTree());
-			entitiesOut.push_back(oroku);
-			break;
-		case 2:
-			oroku = new StrongGuard(position);
-			oroku->Tag = Entity::EntityTypes::Guard;
-			entitiesOut.push_back(oroku);
-			mListStrongGuards.push_back(oroku);
-			break;
+	case 0:
+		oroku = new ThinGuard(position);
+		oroku->Tag = Entity::EntityTypes::Guard;
+		entitiesOut.push_back(oroku);
+		break;
+	case 1:
+		oroku = new FatGuard(position);
+		oroku->Tag = Entity::EntityTypes::Guard;
+		oroku->SetQuadTree(this->GetQuadTree());
+		entitiesOut.push_back(oroku);
+		break;
+	case 2:
+		oroku = new StrongGuard(position);
+		oroku->Tag = Entity::EntityTypes::Guard;
+		entitiesOut.push_back(oroku);
+		break;
 
-		default:
-			break;
+	default:
+		break;
 	}
 
-	for (auto child : entitiesOut)
+	if (oroku->Tag == Entity::EntityTypes::Guard)
 	{
-		if (child->Tag == Entity::EntityTypes::Guard)
+		switch (orokuId)
 		{
-			switch (orokuId)
-			{
-			case 0:
-				child->Id = Entity::EntityId::ThinGuard_1;
-				break;
-			case 1:
-				child->Id = Entity::EntityId::ThinGuard_2;
-				break;
-			case 2:
-				child->Id = Entity::EntityId::ThinGuard_3;
-				break;
-			case 3:
-				child->Id = Entity::EntityId::FatGuard_1;
-				break;
-			case 4:
-				child->Id = Entity::EntityId::FatGuard_2;
-				break;
-			case 5:
-				child->Id = Entity::EntityId::FatGuard_3;
-				break;
-			case 6:
-				child->Id = Entity::EntityId::StrongGuard_1;
-				break;
-			case 7:
-				child->Id = Entity::EntityId::StrongGuard_2;
-				break;
-			case 8:
-				child->Id = Entity::EntityId::StrongGuard_3;
-				break;
-			default:
-				break;
-			}
+		case 0:
+			oroku->Id = Entity::EntityId::ThinGuard_1;
+			break;
+		case 1:
+			oroku->Id = Entity::EntityId::ThinGuard_2;
+			break;
+		case 2:
+			oroku->Id = Entity::EntityId::ThinGuard_3;
+			break;
+		case 3:
+			oroku->Id = Entity::EntityId::FatGuard_1;
+			break;
+		case 4:
+			oroku->Id = Entity::EntityId::FatGuard_2;
+			break;
+		case 5:
+			oroku->Id = Entity::EntityId::FatGuard_3;
+			break;
+		case 6:
+			oroku->Id = Entity::EntityId::StrongGuard_1;
+			break;
+		case 7:
+			oroku->Id = Entity::EntityId::StrongGuard_2;
+			break;
+		case 8:
+			oroku->Id = Entity::EntityId::StrongGuard_3;
+			break;
+		default:
+			break;
 		}
 	}
 }
 
 void GameMap::SetCamera(Camera* camera)
 {
-    mCamera = camera;
+	mCamera = camera;
 }
 
 Tmx::Map* GameMap::GetMap()
 {
-    return mMap;
+	return mMap;
 }
 
 RECT GameMap::GetWorldMapBound()
 {
-    RECT bound;
-    bound.left = bound.top = 0;
-    bound.right = mMap->GetWidth() * mMap->GetTileWidth();
-    bound.bottom = mMap->GetHeight() * mMap->GetTileHeight();
+	RECT bound;
+	bound.left = bound.top = 0;
+	bound.right = mMap->GetWidth() * mMap->GetTileWidth();
+	bound.bottom = mMap->GetHeight() * mMap->GetTileHeight();
 
-    return bound;
+	return bound;
 }
 
 int GameMap::GetWidth()
 {
-    return mMap->GetWidth() * mMap->GetTileWidth();
+	return mMap->GetWidth() * mMap->GetTileWidth();
 }
 
 int GameMap::GetHeight()
 {
-    return mMap->GetHeight() * mMap->GetTileHeight();
+	return mMap->GetHeight() * mMap->GetTileHeight();
 }
 
 int GameMap::GetTileWidth()
 {
-    return mMap->GetTileWidth();
+	return mMap->GetTileWidth();
 }
 
 int GameMap::GetTileHeight()
 {
-    return mMap->GetTileHeight();
+	return mMap->GetTileHeight();
 }
 
 bool GameMap::IsBoundLeft()
 {
-    return (mCamera->GetBound().left == 0);
+	return (mCamera->GetBound().left == 0);
 }
 
 bool GameMap::IsBoundRight()
 {
-    return (mCamera->GetBound().right == this->GetWidth());
+	return (mCamera->GetBound().right == this->GetWidth());
 }
 
 bool GameMap::IsBoundTop()
 {
-    return (mCamera->GetBound().top == 0);
+	return (mCamera->GetBound().top == 0);
 }
 
 bool GameMap::IsBoundBottom()
 {
-    return (mCamera->GetBound().bottom == this->GetHeight());
+	return (mCamera->GetBound().bottom == this->GetHeight());
 }
 
 void GameMap::Update(float dt)
 {
-    for (size_t i = 0; i < mListBricks.size(); i++)
-    {
-        mListBricks[i]->Update(dt);
-    }
-	
+	for (size_t i = 0; i < mListBricks.size(); i++)
+	{
+		mListBricks[i]->Update(dt);
+	}
+
 	for (size_t i = 0; i < mListOrokus.size(); i++)
 	{
 		/*neu oroku chua set player thi se set player
-		set player duoc dat o update vi khi khoi tao thi map duoc khoi tao truoc roi moi toi player 
+		set player duoc dat o update vi khi khoi tao thi map duoc khoi tao truoc roi moi toi player
 		nen chung ta k the set player cho oroku luc khoi tao vi luc do player == NULL
 		va chung ta can set player cho oroku truoc khi oroku goi update*/
 		if (!mListOrokus[i]->settedPlayer)
@@ -315,82 +311,82 @@ void GameMap::Update(float dt)
 
 void GameMap::Draw()
 {
-    D3DXVECTOR2 trans = D3DXVECTOR2(GameGlobal::GetWidth() / 2 - mCamera->GetPosition().x,
-									GameGlobal::GetHeight() / 2 - mCamera->GetPosition().y);
+	D3DXVECTOR2 trans = D3DXVECTOR2(GameGlobal::GetWidth() / 2 - mCamera->GetPosition().x,
+		GameGlobal::GetHeight() / 2 - mCamera->GetPosition().y);
 
 #pragma region DRAW TILESET
-    for (size_t i = 0; i < mMap->GetNumTileLayers(); i++)
-    {
-        const Tmx::TileLayer *layer = mMap->GetTileLayer(i);
+	for (size_t i = 0; i < mMap->GetNumTileLayers(); i++)
+	{
+		const Tmx::TileLayer *layer = mMap->GetTileLayer(i);
 
-        if (!layer->IsVisible())
-        {
-            continue;
-        }
+		if (!layer->IsVisible())
+		{
+			continue;
+		}
 
-        for (size_t j = 0; j < mMap->GetNumTilesets(); j++)
-        {
-            const Tmx::Tileset *tileSet = mMap->GetTileset(j);
+		for (size_t j = 0; j < mMap->GetNumTilesets(); j++)
+		{
+			const Tmx::Tileset *tileSet = mMap->GetTileset(j);
 
-            RECT sourceRECT;
+			RECT sourceRECT;
 
-            int tileWidth = mMap->GetTileWidth();
-            int tileHeight = mMap->GetTileHeight();
+			int tileWidth = mMap->GetTileWidth();
+			int tileHeight = mMap->GetTileHeight();
 
-            int tileSetWidth = tileSet->GetImage()->GetWidth() / tileWidth;
-            int tileSetHeight = tileSet->GetImage()->GetHeight() / tileHeight;
+			int tileSetWidth = tileSet->GetImage()->GetWidth() / tileWidth;
+			int tileSetHeight = tileSet->GetImage()->GetHeight() / tileHeight;
 
-            for (size_t m = 0; m < layer->GetHeight(); m++)
-            {
-                for (size_t n = 0; n < layer->GetWidth(); n++)
-                {
-                    if (layer->GetTileTilesetIndex(n, m) != -1)
-                    {
-                        int tileID = layer->GetTileId(n, m);
+			for (size_t m = 0; m < layer->GetHeight(); m++)
+			{
+				for (size_t n = 0; n < layer->GetWidth(); n++)
+				{
+					if (layer->GetTileTilesetIndex(n, m) != -1)
+					{
+						int tileID = layer->GetTileId(n, m);
 
-                        int y = tileID / tileSetWidth;
-                        int x = tileID - y * tileSetWidth;
+						int y = tileID / tileSetWidth;
+						int x = tileID - y * tileSetWidth;
 
-                        sourceRECT.top = y * tileHeight;
-                        sourceRECT.bottom = sourceRECT.top + tileHeight;
-                        sourceRECT.left = x * tileWidth;
-                        sourceRECT.right = sourceRECT.left + tileWidth;
+						sourceRECT.top = y * tileHeight;
+						sourceRECT.bottom = sourceRECT.top + tileHeight;
+						sourceRECT.left = x * tileWidth;
+						sourceRECT.right = sourceRECT.left + tileWidth;
 
-                        Sprite* sprite = mListTileset[j];
+						Sprite* sprite = mListTileset[j];
 
-                        //tru tilewidth/2 va tileheight/2 vi Sprite ve o vi tri giua hinh anh cho nen doi hinh de cho
-                        //dung toa do (0,0) cua the gioi thuc la (0,0) neu khong thi se la (-tilewidth/2, -tileheigth/2);
-                        D3DXVECTOR3 position(n * tileWidth + tileWidth / 2, m * tileHeight + tileHeight / 2, 0);
+						//tru tilewidth/2 va tileheight/2 vi Sprite ve o vi tri giua hinh anh cho nen doi hinh de cho
+						//dung toa do (0,0) cua the gioi thuc la (0,0) neu khong thi se la (-tilewidth/2, -tileheigth/2);
+						D3DXVECTOR3 position(n * tileWidth + tileWidth / 2, m * tileHeight + tileHeight / 2, 0);
 
-                        if (mCamera != NULL)
-                        {
-                            RECT objRECT;
-                            objRECT.left = position.x - tileWidth / 2;
-                            objRECT.top = position.y - tileHeight / 2;
-                            objRECT.right = objRECT.left + tileWidth;
-                            objRECT.bottom = objRECT.top + tileHeight;
+						if (mCamera != NULL)
+						{
+							RECT objRECT;
+							objRECT.left = position.x - tileWidth / 2;
+							objRECT.top = position.y - tileHeight / 2;
+							objRECT.right = objRECT.left + tileWidth;
+							objRECT.bottom = objRECT.top + tileHeight;
 
-                            if (!GameCollision::RecteAndRect(mCamera->GetBound(), objRECT).IsCollided)
-                                continue;
-                        }
+							if (!GameCollision::RecteAndRect(mCamera->GetBound(), objRECT).IsCollided)
+								continue;
+						}
 
-                        sprite->SetWidth(tileWidth);
-                        sprite->SetHeight(tileHeight);
+						sprite->SetWidth(tileWidth);
+						sprite->SetHeight(tileHeight);
 
-                        sprite->Draw(position, sourceRECT, D3DXVECTOR2(), trans);
-                    }
-                }
-            }
-        }
-    }
+						sprite->Draw(position, sourceRECT, D3DXVECTOR2(), trans);
+					}
+				}
+			}
+		}
+	}
 #pragma endregion
 
 #pragma region DRAW BRICK
 
-    for (size_t i = 0; i < mListBricks.size(); i++)
-    {
-        mListBricks[i]->Draw(trans);
-    }
+	for (size_t i = 0; i < mListBricks.size(); i++)
+	{
+		mListBricks[i]->Draw(trans);
+	}
 
 #pragma endregion
 
@@ -404,7 +400,7 @@ void GameMap::Draw()
 
 std::map<int, Sprite*> GameMap::GetListTileSet()
 {
-    return mListTileset;
+	return mListTileset;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -415,7 +411,7 @@ void GameMap::SetListBrick(std::vector<Brick*> listBricks)
 
 std::vector<Brick*> GameMap::GetListBrick()
 {
-    return mListBricks;
+	return mListBricks;
 }
 
 Brick* GameMap::GetBrick(std::vector<Brick*> entitiesIn, Brick *brick)
@@ -452,11 +448,6 @@ void GameMap::SetListOroku(std::vector<Oroku*> listOrokus)
 std::vector<Oroku*> GameMap::GetListOroku()
 {
 	return mListOrokus;
-}
-
-std::vector<Oroku*> GameMap::GetListStrongGuard()
-{
-	return mListStrongGuards;
 }
 
 Oroku* GameMap::GetOroku(std::vector<Oroku*> entitiesIn, Oroku *oroku)
@@ -498,5 +489,5 @@ Player* GameMap::GetPlayer()
 
 QuadTree * GameMap::GetQuadTree()
 {
-    return mQuadTree;
+	return mQuadTree;
 }

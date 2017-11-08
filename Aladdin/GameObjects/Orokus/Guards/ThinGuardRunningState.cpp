@@ -87,7 +87,8 @@ void ThinGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisions
 			break;
 		}
 	}
-	else if(impactor->Tag != Entity::EntityTypes::Guard)
+	else if(impactor->Tag != Entity::EntityTypes::Guard && impactor->Tag != Entity::EntityTypes::Sword &&
+			impactor->Tag != Entity::EntityTypes::Apple)
 	{
 		switch (side)
 		{

@@ -34,3 +34,11 @@ float Apple::SecondPerFrame()
 {
     return 0.0f;
 }
+
+void Apple::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)
+{
+	if (impactor->Tag == Entity::EntityTypes::Guard)
+	{
+		this->collisionWithOroku = true;
+	}
+}

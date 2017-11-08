@@ -90,7 +90,7 @@ void FatGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisions 
 			break;
 		}
 	}
-	else if (impactor->Tag != Entity::EntityTypes::Guard)
+	else if (impactor->Tag != Entity::EntityTypes::Guard && impactor->Tag != Entity::EntityTypes::Aladdin)
 	{
 		switch (side)
 		{

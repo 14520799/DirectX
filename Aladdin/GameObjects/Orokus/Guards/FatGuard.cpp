@@ -2,6 +2,7 @@
 #include "FatGuardStandingState.h"
 #include "FatGuardRunningState.h"
 #include "FatGuardAttackState.h"
+#include "FatGuardDefaultState.h"
 #include "../../Player/Player.h"
 #include "../../../GameDefines/GameDefine.h"
 #include "../../MapObjects/SwordFatGuard.h"
@@ -31,6 +32,8 @@ FatGuard::FatGuard(D3DXVECTOR3 position)
 	}
 
 	sword = new SwordFatGuard(mOriginPosition);
+	sword->Tag = Entity::EntityTypes::Sword;
+	addSwordQuadTree = true;
 }
 
 FatGuard::~FatGuard()
@@ -40,6 +43,13 @@ FatGuard::~FatGuard()
 
 void FatGuard::Update(float dt)
 {
+	//them sword vao quadtree
+	if (addSwordQuadTree)
+	{
+		addSwordQuadTree = false;
+		this->mQuadTree->insertEntity(sword);
+	}
+
 	mCurrentAnimation->Update(dt);
 
 	if (this->mOrokuData->state)
@@ -54,6 +64,36 @@ void FatGuard::Update(float dt)
 
 	this->Entity::Update(dt);
 
+	//neu sword va cham voi player thi se bien mat
+	if (sword->collisionWithPlayer)
+	{
+		allowDrawSword = false;
+		sword->collisionWithPlayer = false;
+	}
+
+	//khi cay kiem dang bay ra va state doi sang running thi cay kiem van tiep tuc bay
+	if (settingRunning)
+	{
+		if (this->sword->mSettedLeftReserve)
+		{
+			this->sword->AddVx(-Define::SWORDFATGUARD_SPEED);
+		}
+		else if (this->sword->mSettedRightReserve)
+		{
+			this->sword->AddVx(Define::SWORDFATGUARD_SPEED);
+		}
+
+		this->timeDelayDefaultState += dt;
+		if (this->timeDelayDefaultState > 0.5f)
+		{
+			this->timeDelayDefaultState = 0;
+			this->sword->mSettedLeftReserve = false;
+			this->sword->mSettedRightReserve = false;
+			this->allowDrawSword = false;
+		}
+	}
+
+	//delay 1 khoang time de thuc hien statedefault
 	if (!allowDefault)
 	{
 #pragma region OROKU ATTACK PLAYER
@@ -61,6 +101,32 @@ void FatGuard::Update(float dt)
 		if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN &&
 			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX)
 		{
+			this->settingRunning = false;
+			//khi cay kiem dang bay ra theo huong nao thi se tiep tuc bay theo huong do 
+			//cho du player co di qua phia ben kia cua fatguard
+			if (this->sword->mSettedLeftReserve)
+			{
+				this->sword->AddVx(-Define::SWORDFATGUARD_SPEED);
+				this->timeDelayDefaultState += dt;
+				if (this->timeDelayDefaultState > 0.5f)
+				{
+					this->timeDelayDefaultState = 0;
+					this->SetState(new FatGuardDefaultState(this->mOrokuData));
+				}
+				return;
+			}
+			else if (this->sword->mSettedRightReserve)
+			{
+				this->sword->AddVx(Define::SWORDFATGUARD_SPEED);
+				this->timeDelayDefaultState += dt;
+				if (this->timeDelayDefaultState > 0.5f)
+				{
+					this->timeDelayDefaultState = 0;
+					this->SetState(new FatGuardDefaultState(this->mOrokuData));
+				}
+				return;
+			}
+
 			if (mSettedRightAttack)
 				mSettedRightAttack = false;
 			//neu oroku dang di sang ben trai thi return k can set state lai nua
@@ -70,12 +136,38 @@ void FatGuard::Update(float dt)
 			}
 			this->SetReverse(false);
 			this->allowDrawSword = true;
+			this->timeDelayDefaultState = 0;
 			this->SetState(new FatGuardAttackState(this->mOrokuData));
 			this->mSettedLeftAttack = true;
 		}
 		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX &&
 				 (this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN)
 		{
+			this->settingRunning = false;
+
+			if (this->sword->mSettedLeftReserve)
+			{
+				this->sword->AddVx(-Define::SWORDFATGUARD_SPEED);
+				this->timeDelayDefaultState += dt;
+				if (this->timeDelayDefaultState > 0.5f)
+				{
+					this->timeDelayDefaultState = 0;
+					this->SetState(new FatGuardDefaultState(this->mOrokuData));
+				}
+				return;
+			}
+			else if (this->sword->mSettedRightReserve)
+			{
+				this->sword->AddVx(Define::SWORDFATGUARD_SPEED);
+				this->timeDelayDefaultState += dt;
+				if (this->timeDelayDefaultState > 0.5f)
+				{
+					this->timeDelayDefaultState = 0;
+					this->SetState(new FatGuardDefaultState(this->mOrokuData));
+				}
+				return;
+			}
+
 			if (mSettedLeftAttack)
 				mSettedLeftAttack = false;
 			//neu oroku dang di sang ben phai thi return k can set state lai nua
@@ -85,6 +177,7 @@ void FatGuard::Update(float dt)
 			}
 			this->SetReverse(true);
 			this->allowDrawSword = true;
+			this->timeDelayDefaultState = 0;
 			this->SetState(new FatGuardAttackState(this->mOrokuData));
 			this->mSettedRightAttack = true;
 		}
@@ -96,7 +189,6 @@ void FatGuard::Update(float dt)
 				 this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX * 2)
 		{
 			Mode = RunMode::RunAttack;
-			this->allowDrawSword = false;
 
 			if (mSettedRightRunning)
 				mSettedRightRunning = false;
@@ -106,14 +198,15 @@ void FatGuard::Update(float dt)
 				return;
 			}
 			this->SetReverse(false);
-			this->SetState(new FatGuardRunningState(this->mOrokuData));
+			this->settingRunning = true;
+			this->timeDelayDefaultState = 0;
 			this->mSettedLeftRunning = true;
+			this->SetState(new FatGuardRunningState(this->mOrokuData));
 		}
 		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX * 2 &&
 				 (this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN)
 		{
 			Mode = RunMode::RunAttack;
-			this->allowDrawSword = false;
 
 			if (mSettedLeftRunning)
 				mSettedLeftRunning = false;
@@ -123,8 +216,10 @@ void FatGuard::Update(float dt)
 				return;
 			}
 			this->SetReverse(true);
-			this->SetState(new FatGuardRunningState(this->mOrokuData));
+			this->settingRunning = true;
+			this->timeDelayDefaultState = 0;
 			this->mSettedRightRunning = true;
+			this->SetState(new FatGuardRunningState(this->mOrokuData));
 		}
 #pragma endregion
 
@@ -136,6 +231,7 @@ void FatGuard::Update(float dt)
 		{
 			Mode = Oroku::RunMode::RunAround;
 			this->allowDrawSword = false;
+			this->settingRunning = false;
 			this->SetState(new FatGuardRunningState(this->mOrokuData));
 		}
 #pragma endregion
@@ -150,6 +246,7 @@ void FatGuard::Update(float dt)
 			mSettedRightRunning = false;
 			mSettedLeftRunning = false;
 			this->allowDrawSword = false;
+			this->settingRunning = false;
 			this->SetState(new FatGuardRunningState(this->mOrokuData));
 		}
 #pragma endregion

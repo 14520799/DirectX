@@ -9,6 +9,9 @@ FatGuardDefaultState::FatGuardDefaultState(OrokuData *orokuData)
 	//set lai huong tan cong cua fatguard thanh false
 	this->mOrokuData->fatGuard->mSettedLeftAttack = false;
 	this->mOrokuData->fatGuard->mSettedRightAttack = false;
+	//set lai huong bay cua cay kiem thanh false
+	this->mOrokuData->fatGuard->sword->mSettedLeftReserve = false;
+	this->mOrokuData->fatGuard->sword->mSettedRightReserve = false;
 	this->mOrokuData->fatGuard->SetVx(0);
 	this->mOrokuData->fatGuard->SetVy(0);
 }

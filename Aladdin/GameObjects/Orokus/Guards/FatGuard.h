@@ -25,8 +25,12 @@ public:
 	
 	OrokuState::StateName FatGuard::getState();
 
-	Brick *sword;
+	float timeDelayDefaultState;
+
+	bool settingRunning;
 protected:
+	bool addSwordQuadTree;
+
 	Animation *mAnimationDefault;
 
 	void changeAnimation(OrokuState::StateName state);

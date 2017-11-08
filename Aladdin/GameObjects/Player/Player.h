@@ -58,6 +58,8 @@ public:
 	void SetAppleFlyLeft(std::vector<Brick*> &listAppleFly, Brick *brick, int i, float dt);
 	void SetAppleFlyRight(std::vector<Brick*> &listAppleFly, Brick *brick, int i, float dt);
 
+	std::vector<Brick*> GetListAppleFly();
+
     bool allowMoveLeft;
     bool allowMoveRight;
 	bool allowMoveUp;

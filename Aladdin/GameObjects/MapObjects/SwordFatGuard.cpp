@@ -34,3 +34,11 @@ float SwordFatGuard::SecondPerFrame()
 {
     return 0.05f;
 }
+
+void SwordFatGuard::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)
+{
+	if (impactor->Tag == Entity::EntityTypes::Aladdin)
+	{
+		this->collisionWithPlayer = true;
+	}
+}

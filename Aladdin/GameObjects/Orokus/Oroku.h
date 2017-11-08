@@ -48,6 +48,8 @@ public:
 
 	Player *mPlayer;
 
+	Brick *sword;
+
 	QuadTree *mQuadTree;
 
 	D3DXVECTOR3 mOriginPosition;
