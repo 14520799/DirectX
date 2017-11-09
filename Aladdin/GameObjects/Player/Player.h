@@ -5,7 +5,7 @@
 #include "../../GameComponents/Animation.h"
 #include "../../GameComponents/GameGlobal.h"
 #include "../../GameComponents/Camera.h"
-#include "../../GameObjects/MapObjects/Brick.h"
+#include "../../GameObjects/MapObjects/Item.h"
 #include "PlayerData.h"
 #include "PlayerState.h"
 #include "PlayerRunningState.h"
@@ -35,7 +35,7 @@ public:
 
     void OnNoCollisionWithBottom();
 
-	void AddListApple(Brick *brick);
+	void AddListApple(Item *item);
 
     MoveDirection getMoveDirection();
 
@@ -55,10 +55,10 @@ public:
     void SetReverse(bool flag);
 
 	//set huong bay cua apple sau khi duoc nem ra
-	void SetAppleFlyLeft(std::vector<Brick*> &listAppleFly, Brick *brick, int i, float dt);
-	void SetAppleFlyRight(std::vector<Brick*> &listAppleFly, Brick *brick, int i, float dt);
+	void SetAppleFlyLeft(std::vector<Item*> &listAppleFly, Item *item, int i, float dt);
+	void SetAppleFlyRight(std::vector<Item*> &listAppleFly, Item *item, int i, float dt);
 
-	std::vector<Brick*> GetListAppleFly();
+	std::vector<Item*> GetListAppleFly();
 
     bool allowMoveLeft;
     bool allowMoveRight;
@@ -93,8 +93,9 @@ protected:
 				*mAnimationHorizontalClimbingThrowApple,
 				*mAnimationDeath;
 
-	std::vector<Brick*> mListApplePlayer; //apple cua player dang so huu
-	std::vector<Brick*> mListAppleFly; //apple da duoc player nem di
+	std::vector<Item*> mListApplePlayer; //apple cua player dang so huu
+	std::vector<Item*> mListAppleFly; //apple da duoc player nem di
+	std::vector<Item*> mListAppleEffect; //hieu ung cua apple truoc khi bi huy
 
     void changeAnimation(PlayerState::StateName state);
 
@@ -105,6 +106,7 @@ protected:
 	float timeDeath;
 	float timeDelayStates;
 
-	Brick *apple;
+	Item *apple;
+	Item *appleEffect;
 };
 

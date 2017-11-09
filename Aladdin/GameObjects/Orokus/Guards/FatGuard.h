@@ -3,7 +3,7 @@
 #include "../Oroku.h"
 #include "../OrokuData.h"
 #include "../OrokuState.h"
-#include "../../MapObjects/Brick.h"
+#include "../../MapObjects/Item.h"
 
 class FatGuard : public Oroku
 {
@@ -28,9 +28,9 @@ public:
 	float timeDelayDefaultState;
 
 	bool settingRunning;
-protected:
-	bool addSwordQuadTree;
 
+	bool addSwordQuadTree;
+protected:
 	Animation *mAnimationDefault;
 
 	void changeAnimation(OrokuState::StateName state);

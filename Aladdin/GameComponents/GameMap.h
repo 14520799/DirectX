@@ -12,7 +12,7 @@
 #include "GameGlobal.h"
 #include "GameCollision.h"
 #include "QuadTree.h"
-#include "../GameObjects/MapObjects/Brick.h"
+#include "../GameObjects/MapObjects/Item.h"
 #include "../GameObjects/Orokus/Oroku.h"
 
 class GameMap
@@ -31,7 +31,7 @@ public:
     std::map<int, Sprite*> GetListTileSet();
 
 	//tao vat pham len map vd: tao, tien, ...
-	void createApple(std::vector<Brick*> &entitiesOut, D3DXVECTOR3 position, int soTang);
+	void createApple(std::vector<Item*> &entitiesOut, D3DXVECTOR3 position, int soTang);
 	void createOroku(std::vector<Oroku*> &entitiesOut, D3DXVECTOR3 position, int orokuType, int orokuId);
 
     bool IsBoundLeft(); //kiem tra luc nay Camera o vi bien ben trai so voi WorldMap
@@ -40,17 +40,16 @@ public:
     bool IsBoundBottom(); // kiem tra xem co o vi tri bien ben phai worldmap khong
     ~GameMap();
 
-	void SetListBrick(std::vector<Brick*> listBricks);
-    std::vector<Brick*> GetListBrick();
+	void SetListItem(std::vector<Item*> listItems);
+    std::vector<Item*> GetListItem();
 
 	void SetListOroku(std::vector<Oroku*> listOrokus);
 	std::vector<Oroku*> GetListOroku();
-	std::vector<Oroku*> GetListStrongGuard();
 
-	Brick* GetBrick(std::vector<Brick*> entitiesIn, Brick *brick);
+	Item* GetItem(std::vector<Item*> entitiesIn, Item *item);
 	Oroku* GetOroku(std::vector<Oroku*> entitiesIn, Oroku *oroku);
 
-	std::vector<Brick*> RemoveBrick(std::vector<Brick*> &entitiesIn, Brick *brick);
+	std::vector<Item*> RemoveItem(std::vector<Item*> &entitiesIn, Item *item);
 	std::vector<Oroku*> RemoveOroku(std::vector<Oroku*> &entitiesIn, Oroku *oroku);
 
 	void SetPlayer(Player* player);
@@ -67,7 +66,7 @@ private:
     Camera                          *mCamera;
 	Player							*mPlayer;
     QuadTree                        *mQuadTree;
-    std::vector<Brick*>             mListBricks;
+    std::vector<Item*>				mListItems;
 	std::vector<Oroku*>             mListOrokus;
 };
 

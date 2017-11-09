@@ -6,6 +6,7 @@
 #include "OrokuState.h"
 #include "../Player/Player.h"
 #include "../../GameComponents/QuadTree.h"
+#include "../../GameObjects/MapObjects/Item.h"
 
 class Oroku : public Entity
 {
@@ -48,7 +49,7 @@ public:
 
 	Player *mPlayer;
 
-	Brick *sword;
+	Item *sword;
 
 	QuadTree *mQuadTree;
 

@@ -6,7 +6,7 @@
 #include "PlayerHorizontalClimbingState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
-#include "../../GameObjects/MapObjects/Brick.h"
+#include "../../GameObjects/MapObjects/Item.h"
 
 PlayerJumpingThrowAppleState::PlayerJumpingThrowAppleState(PlayerData *playerData)
 {

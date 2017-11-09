@@ -1,6 +1,6 @@
 #pragma once
-#include "Brick.h"
-class SwordFatGuard : public Brick
+#include "Item.h"
+class SwordFatGuard : public Item
 {
 public:
     ~SwordFatGuard();

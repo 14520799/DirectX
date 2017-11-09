@@ -166,9 +166,6 @@
     <ClCompile Include="GameComponents\QuadTree.cpp">
       <Filter>Framework\GameComponents</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\MapObjects\Brick.cpp">
-      <Filter>Framework\GameObjects\MapObjects</Filter>
-    </ClCompile>
     <ClCompile Include="GameObjects\Player\PlayerSittingState.cpp">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
@@ -272,6 +269,12 @@
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClCompile>
     <ClCompile Include="GameObjects\MapObjects\SwordFatGuard.cpp">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\AppleEffect.cpp">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\Item.cpp">
       <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -405,9 +408,6 @@
     <ClInclude Include="GameComponents\QuadTree.h">
       <Filter>Framework\GameComponents</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\MapObjects\Brick.h">
-      <Filter>Framework\GameObjects\MapObjects</Filter>
-    </ClInclude>
     <ClInclude Include="GameObjects\Player\PlayerSittingState.h">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
@@ -508,6 +508,12 @@
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\MapObjects\SwordFatGuard.h">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\AppleEffect.h">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\Item.h">
       <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClInclude>
   </ItemGroup>

@@ -43,13 +43,6 @@ FatGuard::~FatGuard()
 
 void FatGuard::Update(float dt)
 {
-	//them sword vao quadtree
-	if (addSwordQuadTree)
-	{
-		addSwordQuadTree = false;
-		this->mQuadTree->insertEntity(sword);
-	}
-
 	mCurrentAnimation->Update(dt);
 
 	if (this->mOrokuData->state)
@@ -97,7 +90,7 @@ void FatGuard::Update(float dt)
 	if (!allowDefault)
 	{
 #pragma region OROKU ATTACK PLAYER
-		// khi co khoang cach voi player -30 < player < 200 thi oroku se chay toi tan cong player
+		// khi co khoang cach voi player 0 < player < 200 thi oroku se chay toi tan cong player
 		if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN &&
 			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX)
 		{

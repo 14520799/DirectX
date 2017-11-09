@@ -1,19 +1,19 @@
-#include "Brick.h"
+#include "Item.h"
 #include "Apple.h"
 #include "../../GameComponents/GameGlobal.h"
 
 
-Brick::Brick()
+Item::Item()
 {
     
 }
 
-Brick::~Brick()
+Item::~Item()
 {
 
 }
 
-bool Brick::init(D3DXVECTOR3 position)
+bool Item::init(D3DXVECTOR3 position)
 {
     mAnimation = new Animation(FileName(), TotalFrame(), Row(), Column(), SecondPerFrame());
 
@@ -27,32 +27,32 @@ bool Brick::init(D3DXVECTOR3 position)
     return true;
 }
 
-void Brick::OnSetPosition(D3DXVECTOR3 pos)
+void Item::OnSetPosition(D3DXVECTOR3 pos)
 {
     mAnimation->SetPosition(pos);
 }
 
-void Brick::Update(float dt)
+void Item::Update(float dt)
 {
     mAnimation->Update(dt);
 }
 
-void Brick::Draw(D3DXVECTOR3 position, RECT sourceRect, D3DXVECTOR2 scale, D3DXVECTOR2 transform, float angle, D3DXVECTOR2 rotationCenter, D3DXCOLOR colorKey)
+void Item::Draw(D3DXVECTOR3 position, RECT sourceRect, D3DXVECTOR2 scale, D3DXVECTOR2 transform, float angle, D3DXVECTOR2 rotationCenter, D3DXCOLOR colorKey)
 {
     mAnimation->Draw(position, sourceRect, scale, transform, angle, rotationCenter, colorKey);
 }
 
-void Brick::Draw(D3DXVECTOR3 position, D3DXVECTOR2 transform)
+void Item::Draw(D3DXVECTOR3 position, D3DXVECTOR2 transform)
 {
 	mAnimation->Draw(position, transform);
 }
 
-void Brick::Draw(D3DXVECTOR2 transform)
+void Item::Draw(D3DXVECTOR2 transform)
 {
     mAnimation->Draw(transform);
 }
 
-void Brick::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)
+void Item::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)
 
 {
 	

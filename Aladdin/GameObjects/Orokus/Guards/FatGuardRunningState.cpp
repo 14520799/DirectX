@@ -45,7 +45,6 @@ void FatGuardRunningState::Update(float dt)
 		}
 		else
 		{
-			this->mOrokuData->fatGuard->Mode = Oroku::RunMode::None;
 			this->mOrokuData->fatGuard->mCurrentReverse = !this->mOrokuData->fatGuard->mCurrentReverse;
 			this->mOrokuData->fatGuard->SetState(new FatGuardStandingState(this->mOrokuData));
 			return;
@@ -90,7 +89,8 @@ void FatGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisions 
 			break;
 		}
 	}
-	else if (impactor->Tag != Entity::EntityTypes::Guard && impactor->Tag != Entity::EntityTypes::Aladdin)
+	else if (impactor->Tag != Entity::EntityTypes::Guard && impactor->Tag != Entity::EntityTypes::Aladdin &&
+			 impactor->Tag != Entity::EntityTypes::Sword)
 	{
 		switch (side)
 		{

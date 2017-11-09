@@ -96,7 +96,7 @@ void PlayerFallingState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	{
 		this->mPlayerData->player->collisionApple = true;
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Guard)
+	else if (impactor->Tag == Entity::EntityTypes::Guard || impactor->Tag == Entity::EntityTypes::Sword)
 	{
 
 	}

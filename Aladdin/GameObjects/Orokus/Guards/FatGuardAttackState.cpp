@@ -6,6 +6,12 @@
 FatGuardAttackState::FatGuardAttackState(OrokuData *orokuData)
 {
 	this->mOrokuData = orokuData;
+	//them sword vao quadtree
+	if (this->mOrokuData->fatGuard->addSwordQuadTree)
+	{
+		this->mOrokuData->fatGuard->addSwordQuadTree = false;
+		this->mOrokuData->fatGuard->mQuadTree->insertEntity(this->mOrokuData->fatGuard->sword);
+	}
 	//set lai huong chay cua fatguard thanh false
 	this->mOrokuData->fatGuard->mSettedLeftRunning = false;
 	this->mOrokuData->fatGuard->mSettedRightRunning = false;

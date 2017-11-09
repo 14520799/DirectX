@@ -97,7 +97,8 @@
     <ClCompile Include="GameComponents\Sprite.cpp" />
     <ClCompile Include="GameControllers\SceneManager.cpp" />
     <ClCompile Include="GameObjects\Entity.cpp" />
-    <ClCompile Include="GameObjects\MapObjects\Brick.cpp" />
+    <ClCompile Include="GameObjects\MapObjects\AppleEffect.cpp" />
+    <ClCompile Include="GameObjects\MapObjects\Item.cpp" />
     <ClCompile Include="GameObjects\MapObjects\Apple.cpp" />
     <ClCompile Include="GameObjects\MapObjects\SwordFatGuard.cpp" />
     <ClCompile Include="GameObjects\Orokus\Guards\FatGuard.cpp" />
@@ -175,7 +176,8 @@
     <ClInclude Include="GameControllers\SceneManager.h" />
     <ClInclude Include="GameDefines\GameDefine.h" />
     <ClInclude Include="GameObjects\Entity.h" />
-    <ClInclude Include="GameObjects\MapObjects\Brick.h" />
+    <ClInclude Include="GameObjects\MapObjects\AppleEffect.h" />
+    <ClInclude Include="GameObjects\MapObjects\Item.h" />
     <ClInclude Include="GameObjects\MapObjects\Apple.h" />
     <ClInclude Include="GameObjects\MapObjects\SwordFatGuard.h" />
     <ClInclude Include="GameObjects\Orokus\Guards\FatGuard.h" />

@@ -42,7 +42,6 @@ void ThinGuardRunningState::Update(float dt)
 		}
 		else
 		{
-			this->mOrokuData->thinGuard->Mode = Oroku::RunMode::None;
 			this->mOrokuData->thinGuard->mCurrentReverse = !this->mOrokuData->thinGuard->mCurrentReverse;
 			this->mOrokuData->thinGuard->SetState(new ThinGuardStandingState(this->mOrokuData));
 			return;

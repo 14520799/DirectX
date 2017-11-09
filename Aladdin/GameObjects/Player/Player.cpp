@@ -17,6 +17,7 @@
 #include "PlayerHorizontalClimbingThrowAppleState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
+#include "../../GameObjects/MapObjects/AppleEffect.h"
 
 Player::Player()
 {
@@ -34,7 +35,7 @@ Player::Player()
 	mAnimationSittingAttack = new Animation("Resources/Aladdin/Attack/SittingAttack.png", 6, 1, 6, 0.02f);
 	mAnimationJumpingAttack = new Animation("Resources/Aladdin/Attack/JumpingAttack.png", 6, 1, 6, 0.02f);
 	mAnimationHorizontalClimbingAttack = new Animation("Resources/Aladdin/Attack/HorizontalClimbingAttack.png", 7, 1, 7, 0.02f);
-		
+
 	mAnimationStandingThrowApple = new Animation("Resources/Aladdin/Attack/StandingThrowApple.png", 6, 1, 6, 0.02f);
 	mAnimationSittingThrowApple = new Animation("Resources/Aladdin/Attack/SittingThrowApple.png", 5, 1, 5, 0.03f);
 	mAnimationJumpingThrowApple = new Animation("Resources/Aladdin/Attack/JumpingThrowApple.png", 5, 1, 5, 0.03f);
@@ -84,19 +85,29 @@ void Player::Update(float dt)
 		{
 			if (mListAppleFly.at(i)->collisionWithOroku)
 			{
+				//them hieu ung apple effect vao list tai vi tri qua tao trung oroku
+				appleEffect = new AppleEffect(mListAppleFly.at(i)->GetPosition());
+				mListAppleEffect.push_back(appleEffect);
 				delete mListAppleFly.at(i);
-				 mListAppleFly.at(i) = nullptr;
+				mListAppleFly.at(i) = nullptr;
 				mListAppleFly.erase(mListAppleFly.begin() + i);
-				if (mListAppleFly.size() <= 0)
-					break;
-				else
-					removedApple = true;				
 			}
-			if (removedApple)
-			{
-				i--;
-				removedApple = false;
-			}
+		}
+	}
+
+	//chay animation cua effect apple roi tu huy
+	for (size_t i = 0; i < mListAppleEffect.size(); i++)
+	{
+		mListAppleEffect.at(i)->Update(dt);
+		mListAppleEffect.at(i)->timeDelayAppleEffect += dt;
+		if (mListAppleEffect.at(i)->timeDelayAppleEffect > 0.25f)
+		{
+			delete mListAppleEffect.at(i);
+			mListAppleEffect.at(i) = nullptr;
+			mListAppleEffect.erase(mListAppleEffect.begin() + i);
+			if (mListAppleEffect.size() == 0)
+				break;
+			i--;
 		}
 	}
 
@@ -131,12 +142,12 @@ void Player::Update(float dt)
 				{
 					//bay sang ben phai
 					SetAppleFlyRight(mListAppleFly, mListAppleFly.at(i), i, dt);
-				}		
+				}
 			}
 
 			//khi delete apple thi vong lap se lui lai vi listapple da mat 1 apple
 			if (removedApple)
-			{				
+			{
 				i--;
 				removedApple = false;
 			}
@@ -150,13 +161,13 @@ void Player::Update(float dt)
 		{
 		case PlayerState::Default:
 			timeDelayStates += dt;
-			if (timeDelayStates > 2.0f)			
+			if (timeDelayStates > 2.0f)
 				this->SetState(new PlayerStandingState(this->mPlayerData));
 			break;
 
 		case PlayerState::StandingAttack:
 			timeDelayStates += dt;
-			if (timeDelayStates > 0.15f)			
+			if (timeDelayStates > 0.15f)
 				this->SetState(new PlayerDefaultState(this->mPlayerData));
 			break;
 
@@ -180,7 +191,7 @@ void Player::Update(float dt)
 
 		case PlayerState::StandingThrowApple:
 			timeDelayStates += dt;
-			if (timeDelayStates > 0.2f)			
+			if (timeDelayStates > 0.2f)
 				this->SetState(new PlayerDefaultState(this->mPlayerData));
 			break;
 
@@ -220,63 +231,65 @@ void Player::Update(float dt)
 	}
 }
 
-void Player::SetAppleFlyLeft(std::vector<Brick*> &listAppleFly, Brick *brick, int i, float dt)
+void Player::SetAppleFlyLeft(std::vector<Item*> &listAppleFly, Item *item, int i, float dt)
 {
 	//khi di chuyen player sang trai ma apple da duoc nem sang phai thi no se van bay sang phai
-	if (brick->mSettedRightReserve)
+	if (item->mSettedRightReserve)
 	{
-		brick->AddVx(Define::APPLE_SPEED);
-		brick->Entity::Update(dt);
+		item->AddVx(Define::APPLE_SPEED);
+		item->Entity::Update(dt);
 		//sau khi apple bay toc do max se bien mat
-		if (brick->GetVx() >= Define::APPLE_MAX_SPEED && brick != nullptr)
+		if (item->GetVx() >= Define::APPLE_MAX_SPEED && item != nullptr)
 		{
 			listAppleFly.erase(listAppleFly.begin() + i);
-			//delete brick;
+			delete item;
+			item = nullptr;
 			removedApple = true;
 		}
 		return;
 	}
-	brick->mSettedLeftReserve = true;
-	brick->AddVx(-Define::APPLE_SPEED);
-	brick->Entity::Update(dt);
+	item->mSettedLeftReserve = true;
+	item->AddVx(-Define::APPLE_SPEED);
+	item->Entity::Update(dt);
 	//sau khi apple bay toc do max se bien mat
-	if (brick->GetVx() <= -Define::APPLE_MAX_SPEED && brick != nullptr)
+	if (item->GetVx() <= -Define::APPLE_MAX_SPEED && item != nullptr)
 	{
 		listAppleFly.erase(listAppleFly.begin() + i);
-		delete brick;
+		delete item;
+		item = nullptr;
 		removedApple = true;
 	}
 }
 
-void Player::SetAppleFlyRight(std::vector<Brick*> &listAppleFly, Brick *brick, int i, float dt)
+void Player::SetAppleFlyRight(std::vector<Item*> &listAppleFly, Item *item, int i, float dt)
 {
 	//khi di chuyen player sang phai ma apple da duoc nem sang trai thi no se van bay sang trai
-	if (brick->mSettedLeftReserve)
+	if (item->mSettedLeftReserve)
 	{
-		brick->AddVx(-Define::APPLE_SPEED && brick != nullptr);
-		brick->Entity::Update(dt);
+		item->AddVx(-Define::APPLE_SPEED && item != nullptr);
+		item->Entity::Update(dt);
 		//sau khi apple bay toc do max se bien mat
-		if (brick->GetVx() <= -Define::APPLE_MAX_SPEED)
+		if (item->GetVx() <= -Define::APPLE_MAX_SPEED)
 		{
 			listAppleFly.erase(listAppleFly.begin() + i);
-			delete brick;
+			delete item;
 			removedApple = true;
 		}
 		return;
 	}
-	brick->mSettedRightReserve = true;
-	brick->AddVx(Define::APPLE_SPEED);
-	brick->Entity::Update(dt);
+	item->mSettedRightReserve = true;
+	item->AddVx(Define::APPLE_SPEED);
+	item->Entity::Update(dt);
 	//sau khi apple bay toc do max se bien mat
-	if (brick->GetVx() >= Define::APPLE_MAX_SPEED && brick != nullptr)
+	if (item->GetVx() >= Define::APPLE_MAX_SPEED && item != nullptr)
 	{
 		listAppleFly.erase(listAppleFly.begin() + i);
-		delete brick;
+		delete item;
 		removedApple = true;
 	}
 }
 
-std::vector<Brick*> Player::GetListAppleFly()
+std::vector<Item*> Player::GetListAppleFly()
 {
 	return mListAppleFly;
 }
@@ -313,7 +326,7 @@ void Player::OnKeyPressed(int key)
 	}
 	else if (key == 0x41) //tan cong bang phim A
 	{
-		if (mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::Running || 
+		if (mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::Running ||
 			mCurrentState == PlayerState::Default || mCurrentState == PlayerState::StandingThrowApple)
 		{
 			this->SetState(new PlayerStandingAttackState(this->mPlayerData));
@@ -333,7 +346,7 @@ void Player::OnKeyPressed(int key)
 	}
 	else if (key == 0x53) //tan cong bang phim S
 	{
-		if (mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::StandingAttack || 
+		if (mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::StandingAttack ||
 			mCurrentState == PlayerState::Default || mCurrentState == PlayerState::Running)
 		{
 			this->SetState(new PlayerStandingThrowAppleState(this->mPlayerData));
@@ -355,6 +368,7 @@ void Player::OnKeyPressed(int key)
 		{
 			apple = mListApplePlayer.at(mListApplePlayer.size() - 1);
 			apple->SetPosition(this->GetPosition());
+			apple->collisionWithOroku = false;
 			apple->Tag == Entity::EntityTypes::AppleFly;
 			mListAppleFly.push_back(apple); //lay ra qua tao trong player roi dua vao listapple quan ly viec bay ra ngoai
 			mListApplePlayer.pop_back(); //lay qua tao ra khoi listapple cua player sau khi nem ra ngoai
@@ -392,12 +406,12 @@ void Player::SetCamera(Camera *camera)
 	this->mCamera = camera;
 }
 
-void Player::AddListApple(Brick *brick)
+void Player::AddListApple(Item *Item)
 {
 	// neu va cham voi apple thi apple se duoc dua vao listapple cua player
 	if (collisionApple)
 	{
-		mListApplePlayer.push_back(brick);
+		mListApplePlayer.push_back(Item);
 	}
 }
 
@@ -420,6 +434,14 @@ void Player::Draw(D3DXVECTOR3 position, RECT sourceRect, D3DXVECTOR2 scale, D3DX
 				mListAppleFly.at(i)->Draw(D3DXVECTOR3(mListAppleFly.at(i)->posX, mListAppleFly.at(i)->posY, 0), sourceRect, scale, trans, angle, rotationCenter, colorKey);
 			}
 		}
+		//ve apple effect
+		if (mListAppleEffect.size() > 0)
+		{
+			for (size_t i = 0; i < mListAppleEffect.size(); i++)
+			{
+				mListAppleEffect.at(i)->Draw(D3DXVECTOR3(mListAppleEffect.at(i)->posX, mListAppleEffect.at(i)->posY, 0), sourceRect, scale, trans, angle, rotationCenter, colorKey);
+			}
+		}
 	}
 	else
 	{
@@ -432,9 +454,16 @@ void Player::Draw(D3DXVECTOR3 position, RECT sourceRect, D3DXVECTOR2 scale, D3DX
 				mListAppleFly.at(i)->Draw(D3DXVECTOR3(mListAppleFly.at(i)->posX, mListAppleFly.at(i)->posY, 0));
 			}
 		}
+		if (mListAppleEffect.size() > 0)
+		{
+			for (size_t i = 0; i < mListAppleEffect.size(); i++)
+			{
+				mListAppleEffect.at(i)->Draw(D3DXVECTOR3(mListAppleEffect.at(i)->posX, mListAppleEffect.at(i)->posY, 0));
+			}
+		}
 	}
 
-	
+
 }
 
 void Player::SetState(PlayerState *newState)
@@ -574,7 +603,7 @@ Player::MoveDirection Player::getMoveDirection()
 
 void Player::OnNoCollisionWithBottom()
 {
-	if (mCurrentState != PlayerState::Jumping && mCurrentState != PlayerState::Falling && 
+	if (mCurrentState != PlayerState::Jumping && mCurrentState != PlayerState::Falling &&
 		mCurrentState != PlayerState::VerticalClimbing && mCurrentState != PlayerState::HorizontalClimbing && mCurrentState != PlayerState::HorizontalClimbingDefault &&
 		mCurrentState != PlayerState::JumpingAttack && mCurrentState != PlayerState::JumpingThrowApple &&
 		mCurrentState != PlayerState::HorizontalClimbingAttack && mCurrentState != PlayerState::HorizontalClimbingThrowApple)

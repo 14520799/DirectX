@@ -140,10 +140,10 @@ void Scene1::checkCollision()
 
 			if (mPlayer->collisionApple)
 			{
-				Brick* brick = mMap->GetBrick(mMap->GetListBrick(), (Brick*)listCollisionPlayer.at(i));
-				mMap->SetListBrick(mMap->RemoveBrick(mMap->GetListBrick(), brick)); //setlistbrick lai sau khi xoa brick khoi list
-				mMap->GetQuadTree()->removeEntity(listCollisionPlayer.at(i)); //clear brick khoi QuadTree
-				mPlayer->AddListApple(brick); //them apple sau khi an vao listapple cua player de nem apple
+				Item* item = mMap->GetItem(mMap->GetListItem(), (Item*)listCollisionPlayer.at(i));
+				mMap->SetListItem(mMap->RemoveItem(mMap->GetListItem(), item)); //setlistItem lai sau khi xoa Item khoi list
+				mMap->GetQuadTree()->removeEntity(listCollisionPlayer.at(i)); //clear Item khoi QuadTree
+				mPlayer->AddListApple(item); //them apple sau khi an vao listapple cua player de nem apple
 				mPlayer->collisionApple = false;
 				break;
 			}
@@ -188,8 +188,14 @@ void Scene1::checkCollision()
 					Oroku *oroku = mMap->GetOroku(mMap->GetListOroku(), (Oroku*)listCollisionApple.at(i));
 					mMap->SetListOroku(mMap->RemoveOroku(mMap->GetListOroku(), oroku));//xoa oroku khoi listoroku trong map
 					mMap->GetQuadTree()->removeEntity(listCollisionApple.at(i)); //xoa oroku ra khoi quadtree
-					if(oroku->sword != nullptr)
+					if (oroku->sword != nullptr)
+					{
 						mMap->GetQuadTree()->removeEntity(oroku->sword); //xoa sword khoi quadtree
+						delete oroku->sword;
+						oroku->sword = nullptr;
+					}
+					delete oroku;
+					oroku = nullptr;
 					break;
 				}
 			}

@@ -64,6 +64,8 @@ void QuadTree::insertEntity(Entity *entity)
 
 void QuadTree::removeEntity(Entity *entity)
 {
+	if (entity == nullptr)
+		return;
 	int index = getIndex(entity->GetBound());
 
 	if (index == -1)

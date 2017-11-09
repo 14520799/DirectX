@@ -3,11 +3,10 @@
 #include "./../../GameComponents/Animation.h"
 #include "../Entity.h"
 
-//vien gach
-class Brick : public Entity
+class Item : public Entity
 {
 public:
-    ~Brick();
+    ~Item();
 
     void Update(float dt);
     
@@ -23,8 +22,10 @@ public:
 
 	bool collisionWithOroku;
 	bool collisionWithPlayer;
+
+	float timeDelayAppleEffect;
 protected:
-    Brick();
+    Item();
 
     bool init(D3DXVECTOR3 position);
 

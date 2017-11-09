@@ -1,7 +1,7 @@
 #pragma once
-#include "Brick.h"
+#include "Item.h"
 
-class Apple : public Brick
+class Apple : public Item
 {
 public:
 	Apple(D3DXVECTOR3 position);

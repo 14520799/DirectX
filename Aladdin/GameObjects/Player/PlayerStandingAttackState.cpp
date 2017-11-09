@@ -73,7 +73,7 @@ void PlayerStandingAttackState::OnCollision(Entity *impactor, Entity::SideCollis
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Guard)
 	{
-
+	
 	}
 	else
 	{
