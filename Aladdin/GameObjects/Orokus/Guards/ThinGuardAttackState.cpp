@@ -6,8 +6,8 @@ ThinGuardAttackState::ThinGuardAttackState(OrokuData *orokuData)
 {
 	this->mOrokuData = orokuData;
 	this->mOrokuData->thinGuard->settingAttack = true;
-	this->mOrokuData->thinGuard->mSettedLeftRunning = false;
-	this->mOrokuData->thinGuard->mSettedRightRunning = false;
+	this->mOrokuData->thinGuard->mSettingLeftRun = false;
+	this->mOrokuData->thinGuard->mSettingRightRun = false;
 	this->mOrokuData->thinGuard->SetVx(0);
 	this->mOrokuData->thinGuard->SetVy(0);
 	timeDelayState = 0;
@@ -28,7 +28,7 @@ void ThinGuardAttackState::Update(float dt)
 			this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX)
 		{
 			this->mOrokuData->thinGuard->SetReverse(false);
-			this->mOrokuData->thinGuard->mSettedLeftRunning = true;
+			this->mOrokuData->thinGuard->mSettingLeftRun = true;
 			this->mOrokuData->thinGuard->settingAttack = false;
 			this->mOrokuData->thinGuard->SetState(new ThinGuardRunningState(this->mOrokuData));
 		}
@@ -36,7 +36,7 @@ void ThinGuardAttackState::Update(float dt)
 			(this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN)
 		{
 			this->mOrokuData->thinGuard->SetReverse(true);
-			this->mOrokuData->thinGuard->mSettedRightRunning = true;
+			this->mOrokuData->thinGuard->mSettingRightRun = true;
 			this->mOrokuData->thinGuard->settingAttack = false;
 			this->mOrokuData->thinGuard->SetState(new ThinGuardRunningState(this->mOrokuData));
 		}

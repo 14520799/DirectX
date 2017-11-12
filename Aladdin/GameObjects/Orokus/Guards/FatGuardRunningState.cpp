@@ -7,8 +7,8 @@ FatGuardRunningState::FatGuardRunningState(OrokuData *orokuData)
 	this->mOrokuData = orokuData;
 	originPosX = this->mOrokuData->fatGuard->GetPosition().x;
 	//set lai huong tan cong cua fatguard thanh false
-	this->mOrokuData->fatGuard->mSettedLeftAttack = false;
-	this->mOrokuData->fatGuard->mSettedRightAttack = false;
+	this->mOrokuData->fatGuard->mSettingLeftAttack = false;
+	this->mOrokuData->fatGuard->mSettingRightAttack = false;
 	this->mOrokuData->fatGuard->SetVx(0);
 	this->mOrokuData->fatGuard->SetVy(0);
 }

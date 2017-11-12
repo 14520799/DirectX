@@ -13,8 +13,8 @@ FatGuardAttackState::FatGuardAttackState(OrokuData *orokuData)
 		this->mOrokuData->fatGuard->mQuadTree->insertEntity(this->mOrokuData->fatGuard->sword);
 	}
 	//set lai huong chay cua fatguard thanh false
-	this->mOrokuData->fatGuard->mSettedLeftRunning = false;
-	this->mOrokuData->fatGuard->mSettedRightRunning = false;
+	this->mOrokuData->fatGuard->mSettingLeftRun = false;
+	this->mOrokuData->fatGuard->mSettingRightRun = false;
 	this->mOrokuData->fatGuard->SetVx(0);
 	this->mOrokuData->fatGuard->SetVy(0);
 	this->mOrokuData->fatGuard->sword->SetPosition(this->mOrokuData->fatGuard->GetPosition());
@@ -43,22 +43,22 @@ void FatGuardAttackState::Update(float dt)
 		//xet huong hien tai cua fatguard
 		if (this->mOrokuData->fatGuard->mCurrentReverse)
 		{
-			if (this->mOrokuData->fatGuard->sword->mSettedLeftReserve)
+			if (this->mOrokuData->fatGuard->sword->mSettingLeftItem)
 			{
 				this->mOrokuData->fatGuard->sword->AddVx(-Define::SWORDFATGUARD_SPEED);
 				return;
 			}
-			this->mOrokuData->fatGuard->sword->mSettedRightReserve = true;
+			this->mOrokuData->fatGuard->sword->mSettingRightItem = true;
 			this->mOrokuData->fatGuard->sword->AddVx(Define::SWORDFATGUARD_SPEED);
 		}
 		else if (!this->mOrokuData->fatGuard->mCurrentReverse)
 		{
-			if (this->mOrokuData->fatGuard->sword->mSettedRightReserve)
+			if (this->mOrokuData->fatGuard->sword->mSettingRightItem)
 			{
 				this->mOrokuData->fatGuard->sword->AddVx(Define::SWORDFATGUARD_SPEED);
 				return;
 			}
-			this->mOrokuData->fatGuard->sword->mSettedLeftReserve = true;
+			this->mOrokuData->fatGuard->sword->mSettingLeftItem = true;
 			this->mOrokuData->fatGuard->sword->AddVx(-Define::SWORDFATGUARD_SPEED);
 		}
 	}

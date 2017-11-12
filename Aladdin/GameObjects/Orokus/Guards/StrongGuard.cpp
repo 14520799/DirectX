@@ -53,15 +53,15 @@ void StrongGuard::Update(float dt)
 	{
 		Mode = RunMode::RunAttack;
 
-		if (mSettedRightRunning)
-			mSettedRightRunning = false;
+		if (mSettingRightRun)
+			mSettingRightRun = false;
 		//neu oroku dang di sang ben trai thi return k can set state lai nua
-		if (mSettedLeftRunning)
+		if (mSettingLeftRun)
 		{
 			return;
 		}
 		this->SetReverse(false);
-		this->mSettedLeftRunning = true;
+		this->mSettingLeftRun = true;
 
 		if (runningFire)
 		{
@@ -77,15 +77,15 @@ void StrongGuard::Update(float dt)
 	{
 		Mode = RunMode::RunAttack;
 
-		if (mSettedLeftRunning)
-			mSettedLeftRunning = false;
+		if (mSettingLeftRun)
+			mSettingLeftRun = false;
 		//neu oroku dang di sang ben phai thi return k can set state lai nua
-		if (mSettedRightRunning)
+		if (mSettingRightRun)
 		{
 			return;
 		}
 		this->SetReverse(true);
-		this->mSettedRightRunning = true;
+		this->mSettingRightRun = true;
 
 		if (runningFire)
 		{
@@ -105,8 +105,8 @@ void StrongGuard::Update(float dt)
 			  Mode == Oroku::RunMode::RunAttack)
 	{
 		Mode = Oroku::RunMode::RunComeback;
-		mSettedRightRunning = false;
-		mSettedLeftRunning = false;
+		mSettingRightRun = false;
+		mSettingLeftRun = false;
 		if (runningFire)
 		{
 			this->SetState(new StrongGuardHurtingState(this->mOrokuData));

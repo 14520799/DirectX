@@ -109,6 +109,19 @@ void GameMap::LoadMap(char* filePath)
 			{
 				entity->Tag = Entity::EntityTypes::Fire;
 			}
+			else if (object->GetName() == "CenterStairs")
+			{
+				entity->Tag = Entity::EntityTypes::CenterStairs;
+			}
+			else if (object->GetName() == "UpStairs")
+			{
+				entity->Tag = Entity::EntityTypes::UpStairs;
+				mListUpStairs.push_back(entity);
+			}
+			else if (object->GetName() == "DownStairs")
+			{
+				entity->Tag = Entity::EntityTypes::DownStairs;
+			}
 			else
 			{
 				entity->Tag = Entity::EntityTypes::Static;
@@ -504,6 +517,32 @@ void GameMap::SetPlayer(Player* player)
 Player* GameMap::GetPlayer()
 {
 	return mPlayer;
+}
+
+void GameMap::InsertUpStairs()
+{
+	for (auto child : mListUpStairs)
+	{
+		mQuadTree->insertEntity(child);
+	}
+}
+
+void GameMap::RemoveUpStairs()
+{
+	for (auto child : mListUpStairs)
+	{
+		mQuadTree->removeEntity(child);
+	}
+}
+
+void GameMap::SetListUpStairs(std::vector<Entity*> listUpStairs)
+{
+	mListUpStairs = listUpStairs;
+}
+
+std::vector<Entity*> GameMap::GetListUpStairs()
+{
+	return mListUpStairs;
 }
 
 QuadTree * GameMap::GetQuadTree()

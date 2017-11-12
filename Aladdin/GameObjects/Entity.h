@@ -32,8 +32,9 @@ public:
 
     enum EntityTypes
     {
-        None, Aladdin, VerticalRope, HorizontalRope, Fire, Apple, AppleFly, Static, Guard,
-		Sword
+        None, Aladdin, Static, 
+		VerticalRope, HorizontalRope, Fire, CenterStairs, UpStairs, DownStairs, Apple, AppleFly,
+		Guard, Sword
     };
 
 	enum EntityId
@@ -92,14 +93,17 @@ public:
 	//vi tri tam position x va y
 	float posX, posY;
 	//huong nem qua tao da duoc nem ra se khong doi huong
-	bool mSettedRightReserve;
-	bool mSettedLeftReserve;
+	bool mSettingRightItem;
+	bool mSettingLeftItem;
 	//huong chay toi tan cong cua oroku
-	bool mSettedRightRunning;
-	bool mSettedLeftRunning;
+	bool mSettingRightRun;
+	bool mSettingLeftRun;
 	//huong tan cong cua oroku
-	bool mSettedRightAttack;
-	bool mSettedLeftAttack;
+	bool mSettingRightAttack;
+	bool mSettingLeftAttack;
+	//huong di cau thang
+	bool allowUp_DownStairs; //cho phep di len - true, di xuong - false
+	bool mSettingUp_DownStairs; //dang di len - true, di xuong - false
 protected:
 
     //duoc goi khi set position cua Entity, dung cho ke thua

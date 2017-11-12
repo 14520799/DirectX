@@ -5,6 +5,7 @@
 #include "../../GameComponents/Animation.h"
 #include "../../GameComponents/GameGlobal.h"
 #include "../../GameComponents/Camera.h"
+#include "../../GameComponents/GameMap.h"
 #include "../../GameObjects/MapObjects/Item.h"
 #include "PlayerData.h"
 #include "PlayerState.h"
@@ -24,6 +25,8 @@ public:
     };
 
     void SetCamera(Camera *camera);
+
+	void SetMap(GameMap *map);
 
     void Update(float dt);
 
@@ -67,11 +70,12 @@ public:
 	bool allowDelayState;
 
 	bool collisionApple; //kiem tra xem player da cham apple hay chua
-protected:
 
+	GameMap *mMap;
+protected:
     Camera      *mCamera;
 
-    PlayerData *mPlayerData;
+    PlayerData	*mPlayerData;
 
     Animation	*mCurrentAnimation,
 				*mAnimationDefault,

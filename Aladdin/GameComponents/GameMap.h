@@ -2,6 +2,9 @@
 #ifndef __GAME_MAP__
 #define __GAME_MAP__
 
+class Oroku;
+class Player;
+
 #include <d3dx9.h>
 #include <d3d9.h>
 #include <vector>
@@ -13,7 +16,6 @@
 #include "GameCollision.h"
 #include "QuadTree.h"
 #include "../GameObjects/MapObjects/Item.h"
-#include "../GameObjects/Orokus/Oroku.h"
 
 class GameMap
 {
@@ -55,6 +57,11 @@ public:
 	void SetPlayer(Player* player);
 	Player* GetPlayer();
 
+	void InsertUpStairs();
+	void RemoveUpStairs();
+	void SetListUpStairs(std::vector<Entity*> listUpStairs);
+	std::vector<Entity*> GetListUpStairs();
+
     QuadTree* GetQuadTree();
 
 private:
@@ -68,6 +75,7 @@ private:
     QuadTree                        *mQuadTree;
     std::vector<Item*>				mListItems;
 	std::vector<Oroku*>             mListOrokus;
+	std::vector<Entity*>			mListUpStairs;
 };
 
 #endif

@@ -54,6 +54,9 @@ Player::Player()
 	allowJump = true;
 	allowDeath = true;
 	allowDelayState = true;
+	//ban dau huong di len cau thang
+	allowUp_DownStairs = false;
+	mSettingUp_DownStairs = true;
 	timeDeath = 0; //time duoc mien sat thuong sau khi hoi sinh
 	timeDelayStates = 0; //time delay thuc thi xong state nay roi chuyen sang state khac
 
@@ -234,7 +237,7 @@ void Player::Update(float dt)
 void Player::SetAppleFlyLeft(std::vector<Item*> &listAppleFly, Item *item, int i, float dt)
 {
 	//khi di chuyen player sang trai ma apple da duoc nem sang phai thi no se van bay sang phai
-	if (item->mSettedRightReserve)
+	if (item->mSettingRightItem)
 	{
 		item->AddVx(Define::APPLE_SPEED);
 		item->Entity::Update(dt);
@@ -248,7 +251,7 @@ void Player::SetAppleFlyLeft(std::vector<Item*> &listAppleFly, Item *item, int i
 		}
 		return;
 	}
-	item->mSettedLeftReserve = true;
+	item->mSettingLeftItem = true;
 	item->AddVx(-Define::APPLE_SPEED);
 	item->Entity::Update(dt);
 	//sau khi apple bay toc do max se bien mat
@@ -264,7 +267,7 @@ void Player::SetAppleFlyLeft(std::vector<Item*> &listAppleFly, Item *item, int i
 void Player::SetAppleFlyRight(std::vector<Item*> &listAppleFly, Item *item, int i, float dt)
 {
 	//khi di chuyen player sang phai ma apple da duoc nem sang trai thi no se van bay sang trai
-	if (item->mSettedLeftReserve)
+	if (item->mSettingLeftItem)
 	{
 		item->AddVx(-Define::APPLE_SPEED && item != nullptr);
 		item->Entity::Update(dt);
@@ -277,7 +280,7 @@ void Player::SetAppleFlyRight(std::vector<Item*> &listAppleFly, Item *item, int 
 		}
 		return;
 	}
-	item->mSettedRightReserve = true;
+	item->mSettingRightItem = true;
 	item->AddVx(Define::APPLE_SPEED);
 	item->Entity::Update(dt);
 	//sau khi apple bay toc do max se bien mat
@@ -404,6 +407,11 @@ void Player::SetReverse(bool flag)
 void Player::SetCamera(Camera *camera)
 {
 	this->mCamera = camera;
+}
+
+void Player::SetMap(GameMap *map)
+{
+	this->mMap = map;
 }
 
 void Player::AddListApple(Item *Item)

@@ -52,32 +52,32 @@ void ThinGuard::Update(float dt)
 	{
 		Mode = RunMode::RunAttack;
 
-		if (mSettedRightRunning)
-			mSettedRightRunning = false;
+		if (mSettingRightRun)
+			mSettingRightRun = false;
 		//neu oroku dang di sang ben trai thi return k can set state lai nua
-		if (mSettedLeftRunning)
+		if (mSettingLeftRun)
 		{
 			return;
 		}
 		this->SetReverse(false);
 		this->SetState(new ThinGuardRunningState(this->mOrokuData));
-		this->mSettedLeftRunning = true;
+		this->mSettingLeftRun = true;
 	}
 	else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX &&
 			(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN && !settingAttack)
 	{
 		Mode = RunMode::RunAttack;
 
-		if (mSettedLeftRunning)
-			mSettedLeftRunning = false;
+		if (mSettingLeftRun)
+			mSettingLeftRun = false;
 		//neu oroku dang di sang ben phai thi return k can set state lai nua
-		if (mSettedRightRunning)
+		if (mSettingRightRun)
 		{
 			return;
 		}
 		this->SetReverse(true);
 		this->SetState(new ThinGuardRunningState(this->mOrokuData));
-		this->mSettedRightRunning = true;
+		this->mSettingRightRun = true;
 	}
 #pragma endregion
 
@@ -109,8 +109,8 @@ void ThinGuard::Update(float dt)
 			 Mode == Oroku::RunMode::RunAttack)
 	{
 		Mode = Oroku::RunMode::RunComeback;
-		mSettedRightRunning = false;
-		mSettedLeftRunning = false;
+		mSettingRightRun = false;
+		mSettingLeftRun = false;
 		this->SetState(new ThinGuardRunningState(this->mOrokuData));
 	}
 #pragma endregion
