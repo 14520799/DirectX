@@ -145,9 +145,6 @@
     <ClCompile Include="GameObjects\Player\PlayerFallingState.cpp">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\Player\PlayerJumpingState.cpp">
-      <Filter>Framework\GameObjects\Player</Filter>
-    </ClCompile>
     <ClCompile Include="GameObjects\Player\PlayerRunningState.cpp">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
@@ -277,6 +274,15 @@
     <ClCompile Include="GameObjects\MapObjects\Item.cpp">
       <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerStandingJumpState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerRunningJumpState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerRunningStopState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameComponents\Game.h">
@@ -382,9 +388,6 @@
       <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\Player\PlayerFallingState.h">
-      <Filter>Framework\GameObjects\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObjects\Player\PlayerJumpingState.h">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\Player\PlayerRunningState.h">
@@ -515,6 +518,15 @@
     </ClInclude>
     <ClInclude Include="GameObjects\MapObjects\Item.h">
       <Filter>Framework\GameObjects\MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerStandingJumpState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerRunningJumpState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerRunningStopState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

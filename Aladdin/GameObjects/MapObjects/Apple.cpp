@@ -12,7 +12,7 @@ Apple::~Apple()
 
 const char * Apple::FileName()
 {
-    return "Resources/Aladdin/Apple.png";
+    return "Resources/Aladdin/Apple/Apple.png";
 }
 
 int Apple::TotalFrame()

@@ -32,8 +32,9 @@ public:
 
     enum EntityTypes
     {
-        None, Aladdin, Static, 
-		VerticalRope, HorizontalRope, Fire, CenterStairs, UpStairs, DownStairs, Apple, AppleFly,
+        None, Aladdin, Static,
+		VerticalRope, HorizontalRope, Fire, Apple,
+		Stairs, UpStairs, CenterStairs, DownStairs, LastStairs,
 		Guard, Sword
     };
 
@@ -104,6 +105,9 @@ public:
 	//huong di cau thang
 	bool allowUp_DownStairs; //cho phep di len - true, di xuong - false
 	bool mSettingUp_DownStairs; //dang di len - true, di xuong - false
+
+	bool collisionWithOroku;
+	bool collisionWithPlayer;
 protected:
 
     //duoc goi khi set position cua Entity, dung cho ke thua

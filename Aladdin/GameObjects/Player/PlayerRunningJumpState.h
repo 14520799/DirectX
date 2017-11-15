@@ -2,11 +2,11 @@
 #include "Player.h"
 #include "PlayerState.h"
 
-class PlayerJumpingState : public PlayerState
+class PlayerRunningJumpState : public PlayerState
 {
 public:
-    PlayerJumpingState(PlayerData *playerData);
-    ~PlayerJumpingState();
+	PlayerRunningJumpState(PlayerData *playerData);
+    ~PlayerRunningJumpState();
 
     void Update(float dt);
 

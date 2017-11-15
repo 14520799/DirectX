@@ -20,9 +20,6 @@ public:
 
 	void OnSetPosition(D3DXVECTOR3 poks);
 
-	bool collisionWithOroku;
-	bool collisionWithPlayer;
-
 	float timeDelayAppleEffect;
 protected:
     Item();

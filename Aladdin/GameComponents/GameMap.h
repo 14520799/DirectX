@@ -58,9 +58,8 @@ public:
 	Player* GetPlayer();
 
 	void InsertUpStairs();
+	void InsertDownStairs();
 	void RemoveUpStairs();
-	void SetListUpStairs(std::vector<Entity*> listUpStairs);
-	std::vector<Entity*> GetListUpStairs();
 
     QuadTree* GetQuadTree();
 
@@ -76,6 +75,7 @@ private:
     std::vector<Item*>				mListItems;
 	std::vector<Oroku*>             mListOrokus;
 	std::vector<Entity*>			mListUpStairs;
+	std::vector<Entity*>			mListDownStairs;
 };
 
 #endif

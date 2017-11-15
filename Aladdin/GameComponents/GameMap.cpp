@@ -55,9 +55,9 @@ void GameMap::LoadMap(char* filePath)
 
 	//khoi tao nhung tang qua tao
 #pragma region -APPLE LAYER-
-	createApple(mListItems, D3DXVECTOR3(425, 550, 0), 3);
-	createApple(mListItems, D3DXVECTOR3(705, 550, 0), 2);
-	createApple(mListItems, D3DXVECTOR3(850, 550, 0), 2);
+	//createApple(mListItems, D3DXVECTOR3(425, 550, 0), 3);
+	//createApple(mListItems, D3DXVECTOR3(705, 550, 0), 2);
+	//createApple(mListItems, D3DXVECTOR3(850, 550, 0), 2);
 
 	for (auto child : mListItems)
 	{
@@ -67,10 +67,10 @@ void GameMap::LoadMap(char* filePath)
 
 	//tao oroku
 #pragma region -OROKU-
-	createOroku(mListOrokus, D3DXVECTOR3(576, 632, 0), 1, 1);
-	createOroku(mListOrokus, D3DXVECTOR3(1440, 665, 0), 1, 2);
-	createOroku(mListOrokus, D3DXVECTOR3(676, 634.5f, 0), 2, 1);
-	createOroku(mListOrokus, D3DXVECTOR3(776, 630.5f, 0), 3, 1);
+	//createOroku(mListOrokus, D3DXVECTOR3(576, 632, 0), 1, 1);
+	//createOroku(mListOrokus, D3DXVECTOR3(1440, 665, 0), 1, 2);
+	//createOroku(mListOrokus, D3DXVECTOR3(676, 634.5f, 0), 2, 1);
+	//createOroku(mListOrokus, D3DXVECTOR3(776, 630.5f, 0), 3, 1);
 
 	for (auto child : mListOrokus)
 	{
@@ -109,18 +109,29 @@ void GameMap::LoadMap(char* filePath)
 			{
 				entity->Tag = Entity::EntityTypes::Fire;
 			}
-			else if (object->GetName() == "CenterStairs")
+			else if (object->GetName() == "Stairs")
 			{
-				entity->Tag = Entity::EntityTypes::CenterStairs;
+				entity->Tag = Entity::EntityTypes::Stairs;
 			}
 			else if (object->GetName() == "UpStairs")
 			{
 				entity->Tag = Entity::EntityTypes::UpStairs;
 				mListUpStairs.push_back(entity);
+				continue;
+			}
+			else if (object->GetName() == "CenterStairs")
+			{
+				entity->Tag = Entity::EntityTypes::CenterStairs;
 			}
 			else if (object->GetName() == "DownStairs")
 			{
 				entity->Tag = Entity::EntityTypes::DownStairs;
+				mListDownStairs.push_back(entity);
+				continue;
+			}
+			else if (object->GetName() == "LastStairs")
+			{
+				entity->Tag = Entity::EntityTypes::LastStairs;
 			}
 			else
 			{
@@ -527,22 +538,20 @@ void GameMap::InsertUpStairs()
 	}
 }
 
+void GameMap::InsertDownStairs()
+{
+	for (auto child : mListDownStairs)
+	{
+		mQuadTree->insertEntity(child);
+	}
+}
+
 void GameMap::RemoveUpStairs()
 {
 	for (auto child : mListUpStairs)
 	{
 		mQuadTree->removeEntity(child);
 	}
-}
-
-void GameMap::SetListUpStairs(std::vector<Entity*> listUpStairs)
-{
-	mListUpStairs = listUpStairs;
-}
-
-std::vector<Entity*> GameMap::GetListUpStairs()
-{
-	return mListUpStairs;
 }
 
 QuadTree * GameMap::GetQuadTree()

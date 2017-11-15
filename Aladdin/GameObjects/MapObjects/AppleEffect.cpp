@@ -13,7 +13,7 @@ AppleEffect::~AppleEffect()
 
 const char * AppleEffect::FileName()
 {
-	return "Resources/Aladdin/AppleEffect.png";
+	return "Resources/Aladdin/Apple/AppleEffect.png";
 }
 
 int AppleEffect::TotalFrame()

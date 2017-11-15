@@ -1,4 +1,5 @@
-#include "PlayerJumpingState.h"
+#include "PlayerStandingJumpState.h"
+#include "PlayerDefaultState.h"
 #include "PlayerStandingState.h"
 #include "PlayerFallingState.h"
 #include "PlayerVerticalClimbingState.h"
@@ -7,7 +8,7 @@
 #include "../../GameDefines/GameDefine.h"
 #include "../../GameObjects/MapObjects/Item.h"
 
-PlayerJumpingState::PlayerJumpingState(PlayerData *playerData)
+PlayerStandingJumpState::PlayerStandingJumpState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
 	this->mPlayerData->player->SetVy(Define::PLAYER_MIN_JUMP_VELOCITY);
@@ -15,18 +16,18 @@ PlayerJumpingState::PlayerJumpingState(PlayerData *playerData)
 }
 
 
-PlayerJumpingState::~PlayerJumpingState()
+PlayerStandingJumpState::~PlayerStandingJumpState()
 {
 
 }
 
-void PlayerJumpingState::Update(float dt)
+void PlayerStandingJumpState::Update(float dt)
 {
 	this->mPlayerData->player->AddVy(Define::PLAYER_JUMP_SPEED_Y);
 
-	if (mPlayerData->player->GetVy() >= 0)
+	if (mPlayerData->player->GetVy() >= Define::PLAYER_MAX_JUMP_VELOCITY)
 	{
-		mPlayerData->player->SetState(new PlayerFallingState(this->mPlayerData));
+		this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
 
 		return;
 	}
@@ -58,7 +59,7 @@ void PlayerJumpingState::Update(float dt)
 	}
 }
 
-void PlayerJumpingState::HandleKeyboard(std::map<int, bool> keys)
+void PlayerStandingJumpState::HandleKeyboard(std::map<int, bool> keys)
 {
 	if (keys[VK_RIGHT])
 	{
@@ -100,7 +101,7 @@ void PlayerJumpingState::HandleKeyboard(std::map<int, bool> keys)
 	}
 }
 
-void PlayerJumpingState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
+void PlayerStandingJumpState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
 	if (impactor->Tag == Entity::EntityTypes::VerticalRope)
 	{
@@ -124,40 +125,39 @@ void PlayerJumpingState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	{
 		switch (side)
 		{
-			case Entity::Left:
-			{
-				this->mPlayerData->player->AddPosition(data.RegionCollision.right - data.RegionCollision.left, 0);
-				this->mPlayerData->player->SetVx(0);
-				break;
-			}
+		case Entity::Left:
+		{
+			this->mPlayerData->player->AddPosition(data.RegionCollision.right - data.RegionCollision.left, 0);
+			this->mPlayerData->player->SetVx(0);
+			break;
+		}
 
-			case Entity::Right:
-			{
-				this->mPlayerData->player->AddPosition(-(data.RegionCollision.right - data.RegionCollision.left), 0);
-				this->mPlayerData->player->SetVx(0);
-				break;
-			}
+		case Entity::Right:
+		{
+			this->mPlayerData->player->AddPosition(-(data.RegionCollision.right - data.RegionCollision.left), 0);
+			this->mPlayerData->player->SetVx(0);
+			break;
+		}
 
-			case Entity::TopRight: case Entity::TopLeft: case Entity::Top:
-			{
-				this->mPlayerData->player->AddPosition(0, data.RegionCollision.bottom - data.RegionCollision.top);
-				this->mPlayerData->player->SetVy(0);
-				break;
-			}
+		case Entity::TopRight: case Entity::TopLeft: case Entity::Top:
+		{
+			this->mPlayerData->player->AddPosition(0, data.RegionCollision.bottom - data.RegionCollision.top);
+			this->mPlayerData->player->SetVy(0);
+			break;
+		}
 
-			case Entity::BottomRight: case Entity::BottomLeft: case Entity::Bottom:
-			{
-				this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
-				break;
-			}
+		case Entity::BottomRight: case Entity::BottomLeft: case Entity::Bottom:
+		{
+			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
+		}
 
-			default:
-				break;
+		default:
+			break;
 		}
 	}
 }
 
-PlayerState::StateName PlayerJumpingState::GetState()
+PlayerState::StateName PlayerStandingJumpState::GetState()
 {
-	return PlayerState::Jumping;
+	return PlayerState::StandingJump;
 }

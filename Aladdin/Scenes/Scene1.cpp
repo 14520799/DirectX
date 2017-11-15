@@ -148,6 +148,22 @@ void Scene1::checkCollision()
 				mPlayer->collisionApple = false;
 				break;
 			}
+			if (mPlayer->collisionWithOroku)
+			{
+				Oroku *oroku = mMap->GetOroku(mMap->GetListOroku(), (Oroku*)listCollisionPlayer.at(i));
+				mMap->SetListOroku(mMap->RemoveOroku(mMap->GetListOroku(), oroku));//xoa oroku khoi listoroku trong map
+				mMap->GetQuadTree()->removeEntity(listCollisionPlayer.at(i)); //xoa oroku ra khoi quadtree
+				if (oroku->sword != nullptr)
+				{
+					mMap->GetQuadTree()->removeEntity(oroku->sword); //xoa sword khoi quadtree
+					delete oroku->sword;
+					oroku->sword = nullptr;
+				}
+				delete oroku;
+				oroku = nullptr;
+				mPlayer->collisionWithOroku = false;
+				break;
+			}
         }
     }
 
