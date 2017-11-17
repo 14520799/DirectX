@@ -11,7 +11,7 @@ void Scene1::LoadContent()
     //set mau backcolor cho scene o day la mau xanh
     mBackColor = 0x54acd2;
 
-    mMap = new GameMap("Resources/Scene_1.tmx");
+    mMap = new GameMap("Resources/untitled.tmx");
 
     mCamera = new Camera(GameGlobal::GetWidth(), GameGlobal::GetHeight());
     mCamera->SetPosition(GameGlobal::GetWidth() / 2, 

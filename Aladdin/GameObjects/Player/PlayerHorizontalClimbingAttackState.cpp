@@ -72,7 +72,7 @@ void PlayerHorizontalClimbingAttackState::OnCollision(Entity *impactor, Entity::
 {
 	switch (side)
 	{
-	case Entity::Left:
+	case Entity::Left: case Entity::TopLeft:
 		//va cham phia ben trai player
 		if (this->mPlayerData->player->getMoveDirection() == Player::MoveToLeft)
 		{
@@ -82,7 +82,7 @@ void PlayerHorizontalClimbingAttackState::OnCollision(Entity *impactor, Entity::
 		}
 		break;
 
-	case Entity::Right:
+	case Entity::Right: case Entity::TopRight:
 		//va cham phia ben phai player
 		if (this->mPlayerData->player->getMoveDirection() == Player::MoveToRight)
 		{

@@ -28,7 +28,7 @@ Player::Player()
 	mAnimationStanding = new Animation("Resources/Aladdin/Standing/Standing.png", 32, 2, 16, 0.05f);
 	mAnimationFalling = new Animation("Resources/Aladdin/Falling/Falling.png", 1, 1, 1, 0.0f);
 	mAnimationRunning = new Animation("Resources/Aladdin/Running/Running.png", 13, 1, 13, 0.02f);
-	mAnimationRunningStop = new Animation("Resources/Aladdin/Running/RunningStop.png", 4, 1, 4, 0.05f);
+	mAnimationRunningStop = new Animation("Resources/Aladdin/Running/RunningStop.png", 9, 1, 9, 0.02f);
 	mAnimationSitting = new Animation("Resources/Aladdin/Sitting/Sitting.png", 1, 1, 1, 0.0f);
 	mAnimationVerticalClimbing = new Animation("Resources/Aladdin/VerticalClimbing/VerticalClimbing.png", 10, 1, 10, 0.05f);
 	mAnimationHorizontalClimbing = new Animation("Resources/Aladdin/HorizontalClimbing/HorizontalClimbing.png", 10, 1, 10, 0.05f);
@@ -534,7 +534,7 @@ void Player::changeAnimation(PlayerState::StateName state)
 
 	case PlayerState::RunningStop:
 		delete mAnimationRunningStop;
-		mAnimationRunningStop = new Animation("Resources/Aladdin/Running/RunningStop.png", 4, 1, 4, 0.05f);
+		mAnimationRunningStop = new Animation("Resources/Aladdin/Running/RunningStop.png", 9, 1, 9, 0.02f);
 		mCurrentAnimation = mAnimationRunningStop;
 		break;
 

@@ -24,9 +24,8 @@ void Sprite::InitWithSprite(const char* filePath, RECT sourceRect, int width, in
     mRotation = 0;
     mRotationCenter = D3DXVECTOR2(mPosition.x, mPosition.y);
     mTranslation = D3DXVECTOR2(0, 0);
-    mScale = D3DXVECTOR2(0, 1);
+    mScale = D3DXVECTOR2(1, 1);
     mSourceRect = sourceRect;
-    mScale.x = mScale.y = 1;
 
     D3DXGetImageInfoFromFileA(filePath, &mImageInfo);
 
@@ -115,8 +114,8 @@ void Sprite::Draw(D3DXVECTOR3 position, RECT sourceRect, D3DXVECTOR2 scale, D3DX
     if (isRect(sourceRect))
         inSourceRect = sourceRect;
 
-    if (scale != D3DXVECTOR2())
-        inCcale = scale;
+	if (scale != D3DXVECTOR2())
+		inCcale = scale;
 
     if (transform != D3DXVECTOR2())
         inTranslation = transform;

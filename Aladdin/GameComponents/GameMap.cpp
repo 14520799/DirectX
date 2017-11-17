@@ -55,7 +55,7 @@ void GameMap::LoadMap(char* filePath)
 
 	//khoi tao nhung tang qua tao
 #pragma region -APPLE LAYER-
-	//createApple(mListItems, D3DXVECTOR3(425, 550, 0), 3);
+	//createApple(mListItems, D3DXVECTOR3(920, 1050, 0), 3);
 	//createApple(mListItems, D3DXVECTOR3(705, 550, 0), 2);
 	//createApple(mListItems, D3DXVECTOR3(850, 550, 0), 2);
 
