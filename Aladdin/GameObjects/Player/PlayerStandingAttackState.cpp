@@ -9,9 +9,6 @@ PlayerStandingAttackState::PlayerStandingAttackState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
 	this->mPlayerData->player->SetVx(0);
-	//acceletoryX = Define::PLAYER_HURT_SPEED_X;
-	//this->mPlayerData->player->allowMoveLeft = true;
-	//this->mPlayerData->player->allowMoveRight = true;
 }
 
 PlayerStandingAttackState::~PlayerStandingAttackState()
@@ -46,25 +43,11 @@ void PlayerStandingAttackState::OnCollision(Entity *impactor, Entity::SideCollis
 		switch (side)
 		{
 		case Entity::Left:
-			//va cham phia ben trai player
-			if (this->mPlayerData->player->getMoveDirection() == Player::MoveToLeft)
-			{
-				this->mPlayerData->player->allowMoveLeft = false;
-
-				//day Player ra phia ben phai de cho player khong bi xuyen qua object
-				this->mPlayerData->player->AddPosition(data.RegionCollision.right - data.RegionCollision.left, 0);
-				this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
-			}
+			this->mPlayerData->player->AddPosition(data.RegionCollision.right - data.RegionCollision.left, 0);
 			break;
 
 		case Entity::Right:
-			//va cham phia ben phai player
-			if (this->mPlayerData->player->getMoveDirection() == Player::MoveToRight)
-			{
-				this->mPlayerData->player->allowMoveRight = false;
-				this->mPlayerData->player->AddPosition(-(data.RegionCollision.right - data.RegionCollision.left), 0);
-				this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
-			}
+			this->mPlayerData->player->AddPosition(-(data.RegionCollision.right - data.RegionCollision.left), 0);
 			break;
 
 		case Entity::Top:

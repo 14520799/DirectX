@@ -4,7 +4,7 @@
 #include "PlayerSittingState.h"
 #include "PlayerVerticalClimbingState.h"
 #include "PlayerDeathState.h"
-#include "PlayerDefaultState.h"
+#include "PlayerFallingStopState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 
@@ -100,6 +100,10 @@ void PlayerFallingState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	{
 
 	}
+	else if (impactor->Tag == Entity::EntityTypes::UpStairsControl || impactor->Tag == Entity::EntityTypes::DownStairsControl || impactor->Tag == Entity::EntityTypes::GroundControl)
+	{
+
+	}
 	else
 	{
 		switch (side)
@@ -126,18 +130,10 @@ void PlayerFallingState::OnCollision(Entity *impactor, Entity::SideCollisions si
 			case Entity::Bottom:
 			case Entity::BottomRight:
 			case Entity::BottomLeft:
-				if (data.RegionCollision.right - data.RegionCollision.left >= 10.0f)
+				if (data.RegionCollision.right - data.RegionCollision.left >= 1.0f)
 				{
 					this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
-
-					if (isLeftOrRightKeyPressed)
-					{
-						this->mPlayerData->player->SetState(new PlayerRunningState(this->mPlayerData));
-					}
-					else
-					{
-						this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
-					}
+					this->mPlayerData->player->SetState(new PlayerFallingStopState(this->mPlayerData));
 				}
 				return;
 

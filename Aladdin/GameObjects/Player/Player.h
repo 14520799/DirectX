@@ -56,6 +56,7 @@ public:
 
     //true thi se lat nguoc anh theo truc y
     void SetReverse(bool flag);
+	bool GetReverse();
 
 	//set huong bay cua apple sau khi duoc nem ra
 	void SetAppleFlyLeft(std::vector<Item*> &listAppleFly, Item *item, int i, float dt);
@@ -63,8 +64,8 @@ public:
 
 	std::vector<Item*> GetListAppleFly();
 
-    bool allowMoveLeft;
-    bool allowMoveRight;
+	bool allowMoveLeft;
+	bool allowMoveRight;
 	bool allowMoveUp;
 	bool allowDeath;
 	bool allowDelayState;
@@ -83,20 +84,24 @@ protected:
                 *mAnimationRunning,
 				*mAnimationRunningStop,
 				*mAnimationFalling,
+				*mAnimationFallingStop,
 				*mAnimationSitting,
+				*mAnimationPushing,
 				*mAnimationVerticalClimbing,
+				*mAnimationVerticalClimbingDefault,
 				*mAnimationHorizontalClimbing,
 				*mAnimationHorizontalClimbingDefault,
 				*mAnimationStandingJump,
 				*mAnimationRunningJump,
+				*mAnimationVerticalClimbingJump,
 				*mAnimationStandingAttack,
 				*mAnimationSittingAttack,
 				*mAnimationJumpingAttack,
-				*mAnimationHorizontalClimbingAttack,
+				*mAnimationClimbingAttack,
 				*mAnimationStandingThrowApple,
 				*mAnimationSittingThrowApple,
 				*mAnimationJumpingThrowApple,
-				*mAnimationHorizontalClimbingThrowApple,
+				*mAnimationClimbingThrowApple,
 				*mAnimationDeath;
 
 	std::vector<Item*> mListApplePlayer; //apple cua player dang so huu
@@ -105,7 +110,7 @@ protected:
 
     void changeAnimation(PlayerState::StateName state);
 
-    PlayerState::StateName mCurrentState;
+    PlayerState::StateName mCurrentState, mPreCurrentState;
 
     //chi cho phep jump khi nhan nhim space, muon nhay lai phai tha phim space roi nhan lai
     bool allowJump, removedApple, mCurrentReverse;

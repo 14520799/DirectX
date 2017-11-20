@@ -91,6 +91,9 @@ void GameMap::LoadMap(char* filePath)
 			//object group se chua nhung body
 			Tmx::Object *object = objectGroup->GetObjects().at(j);
 
+			if (!object->IsVisible())
+				continue;
+
 			Entity *entity = new Entity();
 			entity->SetPosition(object->GetX() + object->GetWidth() / 2,
 				object->GetY() + object->GetHeight() / 2);
@@ -119,9 +122,15 @@ void GameMap::LoadMap(char* filePath)
 				mListUpStairs.push_back(entity);
 				continue;
 			}
+			else if (object->GetName() == "UpStairsControl")
+			{
+				entity->Tag = Entity::EntityTypes::UpStairsControl;
+			}
 			else if (object->GetName() == "CenterStairs")
 			{
 				entity->Tag = Entity::EntityTypes::CenterStairs;
+				mListDownStairs.push_back(entity);
+				continue;
 			}
 			else if (object->GetName() == "DownStairs")
 			{
@@ -129,9 +138,17 @@ void GameMap::LoadMap(char* filePath)
 				mListDownStairs.push_back(entity);
 				continue;
 			}
-			else if (object->GetName() == "LastStairs")
+			else if (object->GetName() == "DownStairsControl")
 			{
-				entity->Tag = Entity::EntityTypes::LastStairs;
+				entity->Tag = Entity::EntityTypes::DownStairsControl;
+			}
+			else if (object->GetName() == "GroundControl")
+			{
+				entity->Tag = Entity::EntityTypes::GroundControl;
+			}
+			else if (object->GetName() == "FallControl")
+			{
+				entity->Tag = Entity::EntityTypes::FallControl;
 			}
 			else
 			{
@@ -367,6 +384,11 @@ void GameMap::Draw()
 			continue;
 		}
 
+		if (layer->GetName() == "Tile Layer 3")
+		{
+			this->GetPlayer()->Draw();
+		}
+
 		for (size_t j = 0; j < mMap->GetNumTilesets(); j++)
 		{
 			const Tmx::Tileset *tileSet = mMap->GetTileset(j);
@@ -550,6 +572,16 @@ void GameMap::RemoveUpStairs()
 {
 	for (auto child : mListUpStairs)
 	{
+		mQuadTree->removeEntity(child);
+	}
+}
+
+void GameMap::RemoveDownStairs()
+{
+	for (auto child : mListDownStairs)
+	{
+		if (child->Tag == Entity::EntityTypes::CenterStairs)
+			continue;
 		mQuadTree->removeEntity(child);
 	}
 }

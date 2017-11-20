@@ -1,4 +1,5 @@
 #include "PlayerVerticalClimbingState.h"
+#include "PlayerVerticalClimbingDefaultState.h"
 #include "PlayerFallingState.h"
 #include "../../GameDefines/GameDefine.h"
 #include "../../GameComponents/GameCollision.h"
@@ -6,31 +7,13 @@
 PlayerVerticalClimbingState::PlayerVerticalClimbingState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
-	this->mPlayerData->player->allowMoveUp = true;
 	this->mPlayerData->player->SetVx(0);
 	this->mPlayerData->player->SetVy(0);
-	timeDelayClimb = 0;
-	allowDelayClimb = true;
 }
 
 PlayerVerticalClimbingState::~PlayerVerticalClimbingState()
 {
 
-}
-
-void PlayerVerticalClimbingState::Update(float dt)
-{
-	//sau khi cham vao day thi se delay khoang 1 time, sau khoang time do thi moi co the thuc thi cac key input
-	if (allowDelayClimb)
-	{
-		timeDelayClimb += dt;
-
-		if (timeDelayClimb > 0.5f)
-		{
-			allowDelayClimb = false;
-			timeDelayClimb = 0;
-		}
-	}
 }
 
 void PlayerVerticalClimbingState::HandleKeyboard(std::map<int, bool> keys)
@@ -62,29 +45,9 @@ void PlayerVerticalClimbingState::HandleKeyboard(std::map<int, bool> keys)
 			}
 		}
 	}
-	//sau khi bam day 1 khoang time moi duoc chuyen sang state khac
-	else if (keys[VK_LEFT])
-	{
-		if (!allowDelayClimb)
-		{
-			this->mPlayerData->player->AddPosition(this->mPlayerData->player->GetBound().left - this->mPlayerData->player->GetBound().right, 0);
-			//tranh vx = 0 de khi chuyen qua falling thi se khong nhan input left, right
-			this->mPlayerData->player->AddVx(-1);
-			this->mPlayerData->player->SetState(new PlayerFallingState(this->mPlayerData));
-		}
-	}
-	else if (keys[VK_RIGHT])
-	{
-		if (!allowDelayClimb)
-		{
-			this->mPlayerData->player->AddPosition(this->mPlayerData->player->GetBound().right - this->mPlayerData->player->GetBound().left, 0);
-			this->mPlayerData->player->AddVx(1);
-			this->mPlayerData->player->SetState(new PlayerFallingState(this->mPlayerData));
-		}
-	}
 	else
 	{
-		this->mPlayerData->player->SetVy(0);
+		this->mPlayerData->player->SetState(new PlayerVerticalClimbingDefaultState(this->mPlayerData));
 	}
 
 }

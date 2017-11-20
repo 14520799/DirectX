@@ -2,8 +2,8 @@
 #include "PlayerDefaultState.h"
 #include "PlayerStandingState.h"
 #include "PlayerFallingState.h"
-#include "PlayerVerticalClimbingState.h"
-#include "PlayerHorizontalClimbingState.h"
+#include "PlayerVerticalClimbingDefaultState.h"
+#include "PlayerHorizontalClimbingDefaultState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 #include "../../GameObjects/MapObjects/Item.h"
@@ -106,18 +106,22 @@ void PlayerStandingJumpState::OnCollision(Entity *impactor, Entity::SideCollisio
 	if (impactor->Tag == Entity::EntityTypes::VerticalRope)
 	{
 		this->mPlayerData->player->SetPosition(impactor->GetPosition().x, this->mPlayerData->player->GetPosition().y);
-		this->mPlayerData->player->SetState(new PlayerVerticalClimbingState(this->mPlayerData));
+		this->mPlayerData->player->SetState(new PlayerVerticalClimbingDefaultState(this->mPlayerData));
 	}
 	else if (impactor->Tag == Entity::EntityTypes::HorizontalRope)
 	{
 		//this->mPlayerData->player->SetPosition(this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y + (this->mPlayerData->player->GetPosition().y - impactor->GetPosition().y));
-		this->mPlayerData->player->SetState(new PlayerHorizontalClimbingState(this->mPlayerData));
+		this->mPlayerData->player->SetState(new PlayerHorizontalClimbingDefaultState(this->mPlayerData));
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Apple)
 	{
 		this->mPlayerData->player->collisionApple = true;
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Guard)
+	{
+
+	}
+	else if (impactor->Tag == Entity::EntityTypes::DownStairsControl || impactor->Tag == Entity::EntityTypes::UpStairsControl)
 	{
 
 	}

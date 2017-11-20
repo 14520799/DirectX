@@ -60,6 +60,7 @@ public:
 	void InsertUpStairs();
 	void InsertDownStairs();
 	void RemoveUpStairs();
+	void RemoveDownStairs();
 
     QuadTree* GetQuadTree();
 

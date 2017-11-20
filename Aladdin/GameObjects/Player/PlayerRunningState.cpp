@@ -3,6 +3,7 @@
 #include "PlayerDeathState.h"
 #include "PlayerDefaultState.h"
 #include "PlayerFallingState.h"
+#include "PlayerPushingState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 
@@ -11,8 +12,6 @@ PlayerRunningState::PlayerRunningState(PlayerData *playerData)
 	this->mPlayerData = playerData;
 	acceletoryX = Define::PLAYER_NORMAL_SPEED_X;
 	this->mPlayerData->player->SetVx(0);
-	this->mPlayerData->player->allowMoveLeft = true;
-	this->mPlayerData->player->allowMoveRight = true;
 }
 
 
@@ -24,44 +23,38 @@ void PlayerRunningState::HandleKeyboard(std::map<int, bool> keys)
 {
 	if (keys[VK_RIGHT])
 	{
-		if (mPlayerData->player->allowMoveRight)
+		mPlayerData->player->SetReverse(false);
+
+		//di chuyen sang phai
+		if (this->mPlayerData->player->GetVx() < Define::PLAYER_MAX_RUNNING_SPEED)
 		{
-			mPlayerData->player->SetReverse(false);
+			this->mPlayerData->player->AddVx(acceletoryX);
 
-			//di chuyen sang phai
-			if (this->mPlayerData->player->GetVx() < Define::PLAYER_MAX_RUNNING_SPEED)
+			if (this->mPlayerData->player->GetVx() >= Define::PLAYER_MAX_RUNNING_SPEED)
 			{
-				this->mPlayerData->player->AddVx(acceletoryX);
-
-				if (this->mPlayerData->player->GetVx() >= Define::PLAYER_MAX_RUNNING_SPEED)
-				{
-					this->mPlayerData->player->SetVx(Define::PLAYER_MAX_RUNNING_SPEED);
-				}
+				this->mPlayerData->player->SetVx(Define::PLAYER_MAX_RUNNING_SPEED);
 			}
 		}
 	}
 	else if (keys[VK_LEFT])
 	{
-		if (mPlayerData->player->allowMoveLeft)
+		mPlayerData->player->SetReverse(true);
+
+		//di chuyen sang trai
+		if (this->mPlayerData->player->GetVx() > -Define::PLAYER_MAX_RUNNING_SPEED)
 		{
-			mPlayerData->player->SetReverse(true);
+			this->mPlayerData->player->AddVx(-acceletoryX);
 
-			//di chuyen sang trai
-			if (this->mPlayerData->player->GetVx() > -Define::PLAYER_MAX_RUNNING_SPEED)
+			if (this->mPlayerData->player->GetVx() < -Define::PLAYER_MAX_RUNNING_SPEED)
 			{
-				this->mPlayerData->player->AddVx(-acceletoryX);
-
-				if (this->mPlayerData->player->GetVx() < -Define::PLAYER_MAX_RUNNING_SPEED)
-				{
-					this->mPlayerData->player->SetVx(-Define::PLAYER_MAX_RUNNING_SPEED);
-				}
+				this->mPlayerData->player->SetVx(-Define::PLAYER_MAX_RUNNING_SPEED);
 			}
 		}
 	}
 	else
 	{
-		if (this->mPlayerData->player->GetVx() < -Define::PLAYER_MAX_RUNNING_SPEED * 3.5f / 5 ||
-			this->mPlayerData->player->GetVx() > Define::PLAYER_MAX_RUNNING_SPEED * 3.5f / 5)
+		if (this->mPlayerData->player->GetVx() < -Define::PLAYER_MAX_RUNNING_SPEED * 4.5f / 5 ||
+			this->mPlayerData->player->GetVx() > Define::PLAYER_MAX_RUNNING_SPEED * 4.5f / 5)
 			this->mPlayerData->player->SetState(new PlayerRunningStopState(this->mPlayerData));
 		else
 			this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
@@ -71,6 +64,11 @@ void PlayerRunningState::HandleKeyboard(std::map<int, bool> keys)
 
 void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
+	if (impactor->Tag == Entity::EntityTypes::GroundControl)
+	{
+		this->mPlayerData->player->CurrentMoveStairs = Entity::EntityCurrentMoveStairs::CurrentGround;
+		return;
+	}
 	//lay phia va cham so voi player
 	//GameCollision::SideCollisions side = GameCollision::getSideCollision(this->mPlayerData->player, data);
 	if (impactor->Tag == Entity::EntityTypes::Fire && this->mPlayerData->player->allowDeath)
@@ -91,61 +89,58 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	{
 
 	}
-	else if (impactor->Tag == Entity::EntityTypes::LastStairs)
+	else if (impactor->Tag == Entity::EntityTypes::DownStairsControl)
 	{
-		this->mPlayerData->player->mMap->InsertDownStairs();
-		this->mPlayerData->player->mSettingUp_DownStairs = false;
-		this->mPlayerData->player->mMap->GetQuadTree()->removeEntity(impactor);
+		//khi trang thai cua player dang di tren dat -> tao cau thang downstairs -> de di len cau thang downstairs
+		if (this->mPlayerData->player->CurrentMoveStairs == Entity::EntityCurrentMoveStairs::CurrentGround)
+			this->mPlayerData->player->mMap->InsertDownStairs();
+		//khi trang thai cua player dang di tren cau thang downstairs -> xoa cau thang downstairs -> di xuong dat
+		else if (this->mPlayerData->player->CurrentMoveStairs == Entity::EntityCurrentMoveStairs::CurrentDownStairs)
+			this->mPlayerData->player->mMap->RemoveDownStairs();
+		this->mPlayerData->player->CurrentMoveStairs = Entity::EntityCurrentMoveStairs::CurrentNone;
 	}
-	else if (impactor->Tag == Entity::EntityTypes::CenterStairs)
+	else if (impactor->Tag == Entity::EntityTypes::UpStairsControl)
 	{
-		//cho phep di xuong thi se remove bac thang o tren
-		if (!this->mPlayerData->player->allowUp_DownStairs)
-		{
-			this->mPlayerData->player->mMap->RemoveUpStairs();
-			this->mPlayerData->player->mSettingUp_DownStairs = false;
-		}
-		//cho phep di len thi se tao lai bac thang o tren
-		else if (this->mPlayerData->player->allowUp_DownStairs)
-		{
+		//khi trang thai cua player dang di tren cau thang downstairs -> tao cau thang upstairs -> de di len cau thang upstairs
+		if (this->mPlayerData->player->CurrentMoveStairs == Entity::EntityCurrentMoveStairs::CurrentDownStairs)
 			this->mPlayerData->player->mMap->InsertUpStairs();
-			this->mPlayerData->player->mSettingUp_DownStairs = true;
+		//khi trang thai cua player dang di tren cau thang upstairs -> xoa cau thang upstairs -> de di xuong cau thang downstairs
+		else if (this->mPlayerData->player->CurrentMoveStairs == Entity::EntityCurrentMoveStairs::CurrentUpStairs)
+			this->mPlayerData->player->mMap->RemoveUpStairs();
+		this->mPlayerData->player->CurrentMoveStairs = Entity::EntityCurrentMoveStairs::CurrentNone;
+	}
+	else if (impactor->Tag == Entity::EntityTypes::DownStairs)
+	{
+		if (this->mPlayerData->player->CurrentMoveStairs == Entity::EntityCurrentMoveStairs::CurrentNone)
+		{
+			this->mPlayerData->player->CurrentMoveStairs = Entity::EntityCurrentMoveStairs::CurrentDownStairs;
+		}
+		switch (side)
+		{
+		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
+			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
+			this->mPlayerData->player->SetVy(0);
+			break;
+
+		default:
+			break;
 		}
 	}
 	else if (impactor->Tag == Entity::EntityTypes::UpStairs)
 	{
-		if (this->mPlayerData->player->mSettingUp_DownStairs)
+		if (this->mPlayerData->player->CurrentMoveStairs == Entity::EntityCurrentMoveStairs::CurrentNone)
 		{
-			//sau khi len bac thang thanh cong thi se cho phep chuyen huong di xuong
-			this->mPlayerData->player->allowUp_DownStairs = false;
-			switch (side)
-			{
-			case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
-				this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
-				this->mPlayerData->player->SetVy(0);
-				break;
-
-			default:
-				break;
-			}
+			this->mPlayerData->player->CurrentMoveStairs = Entity::EntityCurrentMoveStairs::CurrentUpStairs;
 		}
-	}
-	else if (impactor->Tag == Entity::EntityTypes::DownStairs)
-	{
-		if (!this->mPlayerData->player->mSettingUp_DownStairs)
+		switch (side)
 		{
-			//sau khi xuong bac thang thanh cong thi se cho phep chuyen huong
-			this->mPlayerData->player->allowUp_DownStairs = true;
-			switch (side)
-			{
-			case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
-				this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
-				this->mPlayerData->player->SetVy(0);
-				break;
+		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
+			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
+			this->mPlayerData->player->SetVy(0);
+			break;
 
-			default:
-				break;
-			}
+		default:
+			break;
 		}
 	}
 	else
@@ -156,11 +151,9 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 			//va cham phia ben trai player
 			if (this->mPlayerData->player->getMoveDirection() == Player::MoveToLeft)
 			{
-				this->mPlayerData->player->allowMoveLeft = false;
-
 				//day Player ra phia ben phai de cho player khong bi xuyen qua object
 				this->mPlayerData->player->AddPosition(data.RegionCollision.right - data.RegionCollision.left, 0);
-				this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
+				this->mPlayerData->player->SetState(new PlayerPushingState(this->mPlayerData));
 			}
 			break;
 
@@ -168,9 +161,8 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 			//va cham phia ben phai player
 			if (this->mPlayerData->player->getMoveDirection() == Player::MoveToRight)
 			{
-				this->mPlayerData->player->allowMoveRight = false;
 				this->mPlayerData->player->AddPosition(-(data.RegionCollision.right - data.RegionCollision.left), 0);
-				this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
+				this->mPlayerData->player->SetState(new PlayerPushingState(this->mPlayerData));
 			}
 			break;
 

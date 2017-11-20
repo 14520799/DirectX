@@ -63,56 +63,9 @@ void PlayerRunningStopState::OnCollision(Entity *impactor, Entity::SideCollision
 	{
 
 	}
-	else if (impactor->Tag == Entity::EntityTypes::CenterStairs)
+	else if (impactor->Tag == Entity::EntityTypes::UpStairsControl || impactor->Tag == Entity::EntityTypes::DownStairsControl || impactor->Tag == Entity::EntityTypes::GroundControl)
 	{
-		//cho phep di xuong thi se remove bac thang o tren
-		if (!this->mPlayerData->player->allowUp_DownStairs)
-		{
-			this->mPlayerData->player->mMap->RemoveUpStairs();
-			this->mPlayerData->player->mSettingUp_DownStairs = false;
-		}
-		//cho phep di len thi se tao lai bac thang o tren
-		else if (this->mPlayerData->player->allowUp_DownStairs)
-		{
-			this->mPlayerData->player->mMap->InsertUpStairs();
-			this->mPlayerData->player->mSettingUp_DownStairs = true;
-		}
-	}
-	else if (impactor->Tag == Entity::EntityTypes::UpStairs)
-	{
-		if (this->mPlayerData->player->mSettingUp_DownStairs)
-		{
-			//sau khi len bac thang thanh cong thi se cho phep chuyen huong di xuong
-			this->mPlayerData->player->allowUp_DownStairs = false;
-			switch (side)
-			{
-			case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
-				this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
-				this->mPlayerData->player->SetVy(0);
-				break;
 
-			default:
-				break;
-			}
-		}
-	}
-	else if (impactor->Tag == Entity::EntityTypes::DownStairs)
-	{
-		if (!this->mPlayerData->player->mSettingUp_DownStairs)
-		{
-			//sau khi xuong bac thang thanh cong thi se cho phep chuyen huong
-			this->mPlayerData->player->allowUp_DownStairs = true;
-			switch (side)
-			{
-			case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
-				this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
-				this->mPlayerData->player->SetVy(0);
-				break;
-
-			default:
-				break;
-			}
-		}
 	}
 	else
 	{

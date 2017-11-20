@@ -196,12 +196,6 @@
     <ClCompile Include="GameObjects\Player\PlayerDefaultState.cpp">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\Player\PlayerHorizontalClimbingAttackState.cpp">
-      <Filter>Framework\GameObjects\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObjects\Player\PlayerHorizontalClimbingThrowAppleState.cpp">
-      <Filter>Framework\GameObjects\Player</Filter>
-    </ClCompile>
     <ClCompile Include="GameObjects\Player\PlayerSittingThrowAppleState.cpp">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
@@ -281,6 +275,24 @@
       <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
     <ClCompile Include="GameObjects\Player\PlayerRunningStopState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerFallingStopState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerPushingState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerClimbingAttackState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerClimbingThrowAppleState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerVerticalClimbingDefaultState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerVerticalClimbingJumpState.cpp">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
   </ItemGroup>
@@ -438,12 +450,6 @@
     <ClInclude Include="GameObjects\Player\PlayerDeathState.h">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\Player\PlayerHorizontalClimbingAttackState.h">
-      <Filter>Framework\GameObjects\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObjects\Player\PlayerHorizontalClimbingThrowAppleState.h">
-      <Filter>Framework\GameObjects\Player</Filter>
-    </ClInclude>
     <ClInclude Include="GameObjects\Player\PlayerSittingThrowAppleState.h">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
@@ -526,6 +532,24 @@
       <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\Player\PlayerRunningStopState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerFallingStopState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerPushingState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerClimbingAttackState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerClimbingThrowAppleState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerVerticalClimbingDefaultState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerVerticalClimbingJumpState.h">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
   </ItemGroup>

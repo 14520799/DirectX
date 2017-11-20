@@ -29,12 +29,12 @@ public:
         bool IsCollided;
         RECT RegionCollision;
     };
-
+	//dung them CenterStairs de xu ly xoa cau thang luc ban dau
     enum EntityTypes
     {
         None, Aladdin, Static,
 		VerticalRope, HorizontalRope, Fire, Apple,
-		Stairs, UpStairs, CenterStairs, DownStairs, LastStairs,
+		Stairs, UpStairs, UpStairsControl, CenterStairs, DownStairs, DownStairsControl, GroundControl, FallControl,
 		Guard, Sword
     };
 
@@ -44,10 +44,17 @@ public:
 		FatGuard_1, FatGuard_2, FatGuard_3,
 		StrongGuard_1, StrongGuard_2, StrongGuard_3
 	};
+	
+	enum EntityCurrentMoveStairs
+	{
+		CurrentNone, CurrentUpStairs, CurrentDownStairs, CurrentGround
+	};
 
     EntityTypes Tag; //Tag de nhan dien loai Entity
 
 	EntityId Id; //Id de nhan dien Entity
+
+	EntityCurrentMoveStairs CurrentMoveStairs; //MoveStairs luu trang thai hien tai cua player khi toi noi co nhieu cau thang len xuong
 
     virtual RECT GetBound();
 
@@ -102,9 +109,9 @@ public:
 	//huong tan cong cua oroku
 	bool mSettingRightAttack;
 	bool mSettingLeftAttack;
-	//huong di cau thang
-	bool allowUp_DownStairs; //cho phep di len - true, di xuong - false
-	bool mSettingUp_DownStairs; //dang di len - true, di xuong - false
+	//xu ly di xuong cau thang
+	bool collisionStairs;
+	bool allowFalling;
 
 	bool collisionWithOroku;
 	bool collisionWithPlayer;

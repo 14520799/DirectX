@@ -11,7 +11,7 @@ void Scene1::LoadContent()
     //set mau backcolor cho scene o day la mau xanh
     mBackColor = 0x54acd2;
 
-    mMap = new GameMap("Resources/untitled.tmx");
+    mMap = new GameMap("Resources/Scene_1.tmx");
 
     mCamera = new Camera(GameGlobal::GetWidth(), GameGlobal::GetHeight());
     mCamera->SetPosition(GameGlobal::GetWidth() / 2, 
@@ -20,7 +20,7 @@ void Scene1::LoadContent()
     mMap->SetCamera(mCamera);
 
     mPlayer = new Player();
-    mPlayer->SetPosition(GameGlobal::GetWidth() / 4, GameGlobal::GetHeight() / 2);
+    mPlayer->SetPosition(GameGlobal::GetWidth() / 4, GameGlobal::GetHeight() * 2 - 40);
     mPlayer->SetCamera(mCamera);
 	mPlayer->SetMap(mMap);
 
@@ -43,8 +43,6 @@ void Scene1::Update(float dt)
 void Scene1::Draw()
 {
     mMap->Draw();
-
-    mPlayer->Draw();
 }
 
 void Scene1::OnKeyDown(int keyCode)
@@ -128,15 +126,31 @@ void Scene1::checkCollision()
             mPlayer->OnCollision(listCollisionPlayer.at(i), r, sidePlayer);
             listCollisionPlayer.at(i)->OnCollision(mPlayer, r, sideImpactor);
 
+#pragma region Xu ly di xuong cau thang
+			//xac dinh player co dang va cham voi cau thang hay khong
+			if (listCollisionPlayer.at(i)->Tag == Entity::EntityTypes::Stairs || listCollisionPlayer.at(i)->Tag == Entity::EntityTypes::UpStairs ||
+				listCollisionPlayer.at(i)->Tag == Entity::EntityTypes::CenterStairs || listCollisionPlayer.at(i)->Tag == Entity::EntityTypes::DownStairs)
+				mPlayer->collisionStairs = true;
+			else
+				mPlayer->collisionStairs = false;
+			//xac dinh player co dang di den cuoi cau thang de roi xuong hay chua
+			if (listCollisionPlayer.at(i)->Tag == Entity::EntityTypes::FallControl)
+				mPlayer->allowFalling = true;
+			else
+				mPlayer->allowFalling = false;
+#pragma endregion
+
             //kiem tra neu va cham voi phia duoi cua Player 
             if (sidePlayer == Entity::Bottom || sidePlayer == Entity::BottomLeft 
                 || sidePlayer == Entity::BottomRight)
             {
-                //kiem cha do dai ma mario tiep xuc phia duoi day
+                //kiem cha do dai ma player tiep xuc phia duoi day
                 int bot = r.RegionCollision.right - r.RegionCollision.left;
 
-                if (bot > widthBottomPlayer)
-                    widthBottomPlayer = bot;
+				if (bot > widthBottomPlayer)
+				{
+					widthBottomPlayer = bot;
+				}
             }
 
 			if (mPlayer->collisionApple)
@@ -167,7 +181,7 @@ void Scene1::checkCollision()
         }
     }
 
-    //Neu mario dung ngoai mep thi luc nay cho mario rot xuong duoi dat    
+    //Neu player dung ngoai mep thi luc nay cho player rot xuong duoi dat    
     if (widthBottomPlayer < Define::PLAYER_BOTTOM_RANGE_FALLING)
     {
         mPlayer->OnNoCollisionWithBottom();

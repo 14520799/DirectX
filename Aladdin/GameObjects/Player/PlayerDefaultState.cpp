@@ -30,6 +30,14 @@ void PlayerDefaultState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	{
 		this->mPlayerData->player->SetState(new PlayerDeathState(this->mPlayerData));
 	}
+	else if (impactor->Tag == Entity::EntityTypes::Sword && this->mPlayerData->player->allowDeath)
+	{
+		this->mPlayerData->player->SetState(new PlayerDeathState(this->mPlayerData));
+	}
+	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard)
+	{
+
+	}
 }
 
 PlayerState::StateName PlayerDefaultState::GetState()

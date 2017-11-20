@@ -18,6 +18,5 @@ public:
 
 protected:
     bool noPressed;
-    bool allowMoveRight, allowMoveLeft;
 };
 
