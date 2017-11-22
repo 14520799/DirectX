@@ -31,8 +31,7 @@ void PlayerStandingAttackState::OnCollision(Entity *impactor, Entity::SideCollis
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Fire && !this->mPlayerData->player->allowDeath)
 	{
-		//giam toc do khi player chay vao bai lua
-		acceletoryX = Define::PLAYER_HURT_SPEED_X;
+
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Guard)
 	{

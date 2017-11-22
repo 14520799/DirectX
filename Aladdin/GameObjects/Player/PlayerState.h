@@ -11,6 +11,8 @@ public:
 	{
 		Default,
 		Standing,
+		StandingUp,
+		StandingUpStop,
 		Running,
 		RunningStop,
 		Falling,

@@ -1,24 +1,26 @@
-#include "PlayerStandingThrowAppleState.h"
+#include "PlayerStandingUpStopState.h"
+#include "PlayerStandingState.h"
+#include "PlayerRunningState.h"
 #include "PlayerDeathState.h"
-#include "../../GameComponents/GameCollision.h"
 
-PlayerStandingThrowAppleState::PlayerStandingThrowAppleState(PlayerData *playerData)
+PlayerStandingUpStopState::PlayerStandingUpStopState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
 	this->mPlayerData->player->SetVx(0);
+	this->mPlayerData->player->SetVy(0);
 }
 
-PlayerStandingThrowAppleState::~PlayerStandingThrowAppleState()
+
+PlayerStandingUpStopState::~PlayerStandingUpStopState()
+{
+}
+
+void PlayerStandingUpStopState::HandleKeyboard(std::map<int, bool> keys)
 {
 
 }
 
-void PlayerStandingThrowAppleState::HandleKeyboard(std::map<int, bool> keys)
-{
-
-}
-
-void PlayerStandingThrowAppleState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
+void PlayerStandingUpStopState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
 	if (impactor->Tag == Entity::EntityTypes::Fire && this->mPlayerData->player->allowDeath)
 	{
@@ -56,7 +58,7 @@ void PlayerStandingThrowAppleState::OnCollision(Entity *impactor, Entity::SideCo
 	}
 }
 
-PlayerState::StateName PlayerStandingThrowAppleState::GetState()
+PlayerState::StateName PlayerStandingUpStopState::GetState()
 {
-	return PlayerState::StandingThrowApple;
+	return PlayerState::StandingUpStop;
 }

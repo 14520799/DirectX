@@ -295,6 +295,12 @@
     <ClCompile Include="GameObjects\Player\PlayerVerticalClimbingJumpState.cpp">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerStandingUpState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerStandingUpStopState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameComponents\Game.h">
@@ -550,6 +556,12 @@
       <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\Player\PlayerVerticalClimbingJumpState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerStandingUpState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerStandingUpStopState.h">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
   </ItemGroup>

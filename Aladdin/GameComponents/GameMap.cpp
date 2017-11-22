@@ -55,7 +55,7 @@ void GameMap::LoadMap(char* filePath)
 
 	//khoi tao nhung tang qua tao
 #pragma region -APPLE LAYER-
-	//createApple(mListItems, D3DXVECTOR3(920, 1050, 0), 3);
+	//createApple(mListItems, D3DXVECTOR3(835, 895, 0), 3);
 	//createApple(mListItems, D3DXVECTOR3(705, 550, 0), 2);
 	//createApple(mListItems, D3DXVECTOR3(850, 550, 0), 2);
 
@@ -67,10 +67,10 @@ void GameMap::LoadMap(char* filePath)
 
 	//tao oroku
 #pragma region -OROKU-
-	//createOroku(mListOrokus, D3DXVECTOR3(576, 632, 0), 1, 1);
-	//createOroku(mListOrokus, D3DXVECTOR3(1440, 665, 0), 1, 2);
-	//createOroku(mListOrokus, D3DXVECTOR3(676, 634.5f, 0), 2, 1);
-	//createOroku(mListOrokus, D3DXVECTOR3(776, 630.5f, 0), 3, 1);
+	createOroku(mListOrokus, D3DXVECTOR3(576, 632, 0), 1, 1);
+	createOroku(mListOrokus, D3DXVECTOR3(1440, 665, 0), 1, 2);
+	createOroku(mListOrokus, D3DXVECTOR3(676, 634.5f, 0), 2, 1);
+	createOroku(mListOrokus, D3DXVECTOR3(776, 630.5f, 0), 3, 1);
 
 	for (auto child : mListOrokus)
 	{
@@ -580,8 +580,8 @@ void GameMap::RemoveDownStairs()
 {
 	for (auto child : mListDownStairs)
 	{
-		if (child->Tag == Entity::EntityTypes::CenterStairs)
-			continue;
+		//if (child->Tag == Entity::EntityTypes::CenterStairs)
+		//	continue;
 		mQuadTree->removeEntity(child);
 	}
 }

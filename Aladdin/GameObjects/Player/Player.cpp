@@ -5,6 +5,8 @@
 #include "PlayerFallingState.h"
 #include "PlayerFallingStopState.h"
 #include "PlayerStandingState.h"
+#include "PlayerStandingUpState.h"
+#include "PlayerStandingUpStopState.h"
 #include "PlayerSittingState.h"
 #include "PlayerPushingState.h"
 #include "PlayerVerticalClimbingState.h"
@@ -29,6 +31,7 @@
 Player::Player()
 {
 	mAnimationDefault = new Animation("Resources/Aladdin/Default/Default.png", 1, 1, 1, 0.0f);
+	mAnimationStandingUpStop = new Animation("Resources/Aladdin/Standing/StandingUpStop.png", 1, 1, 1, 0.0f);
 	mAnimationFalling = new Animation("Resources/Aladdin/Falling/Falling.png", 1, 1, 1, 0.0f);
 	mAnimationSitting = new Animation("Resources/Aladdin/Sitting/Sitting.png", 1, 1, 1, 0.0f);
 	mAnimationVerticalClimbingDefault = new Animation("Resources/Aladdin/Climbing/VerticalClimbing/VerticalClimbingDefault.png", 1, 1, 1, 0.0f);
@@ -334,6 +337,14 @@ void Player::OnKeyPressed(int key)
 			this->SetState(new PlayerSittingState(this->mPlayerData));
 		}
 	}
+	else if (key == VK_UP)
+	{
+		if (mCurrentState == PlayerState::Default || mCurrentState == PlayerState::Standing)
+		{
+			this->onKeyUpPressing = true;
+			this->SetState(new PlayerStandingUpState(this->mPlayerData));
+		}
+	}
 	else if (key == 0x41) //tan cong bang phim A
 	{
 		if (mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::Running || mCurrentState == PlayerState::RunningStop ||
@@ -395,10 +406,12 @@ void Player::OnKeyUp(int key)
 	{
 		allowJump = true;
 	}
-	else if (key == VK_DOWN)
+	else if (key == VK_DOWN || key == VK_UP)
 	{
 		if(mCurrentState != PlayerState::VerticalClimbing)
 			this->SetState(new PlayerDefaultState(this->mPlayerData));
+		if (key == VK_UP)
+			this->onKeyUpPressing = false;
 	}
 	else if (key == 0x41 || key == 0x53)
 	{
@@ -491,17 +504,21 @@ void Player::SetState(PlayerState *newState)
 	allowMoveRight = true;
 	allowMoveUp = true;
 	allowDelayState = false;
-	collisionApple = false;
+	//collisionApple = false;
 	timeDelayStates = 0;
 
 	delete this->mPlayerData->state;
 
 	this->mPlayerData->state = newState;
 
+	mPreCurrentAnimation = mCurrentAnimation;
 	this->changeAnimation(newState->GetState());
 
 	mPreCurrentState = mCurrentState;
 	mCurrentState = newState->GetState();
+
+	if (mPreCurrentAnimation != nullptr)
+		this->posY += (mPreCurrentAnimation->GetHeight() - mCurrentAnimation->GetHeight()) / 2.0f;
 
 	if (mCurrentState == PlayerState::Default)
 		allowDelayState = true;
@@ -515,11 +532,50 @@ void Player::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity:
 RECT Player::GetBound()
 {
 	RECT rect;
+
+	//if (mCurrentState == PlayerState::StandingAttack || mCurrentState == PlayerState::ClimbingAttack)
+	//{
+	//	rect.left = this->posX - mCurrentAnimation->GetWidth() / 2;
+	//	rect.right = this->posX + mCurrentAnimation->GetWidth() / 2;
+	//	rect.top = this->posY - mCurrentAnimation->GetHeight() / 8;
+	//	rect.bottom = this->posY + mCurrentAnimation->GetHeight() / 2;
+	//}
+	//else if (mCurrentState == PlayerState::JumpingAttack)
+	//{
+	//	rect.left = this->posX - mCurrentAnimation->GetWidth() / 2;
+	//	rect.right = this->posX + mCurrentAnimation->GetWidth() / 2;
+	//	rect.top = this->posY - mCurrentAnimation->GetHeight() / 4;
+	//	rect.bottom = this->posY + mCurrentAnimation->GetHeight() / 8;
+	//}
+	//else if (mCurrentState == PlayerState::SittingAttack)
+	//{
+	//	rect.left = this->posX - mCurrentAnimation->GetWidth() / 2;
+	//	rect.right = this->posX + mCurrentAnimation->GetWidth() / 2;
+	//	rect.top = this->posY + mCurrentAnimation->GetHeight() / 4;
+	//	rect.bottom = this->posY + mCurrentAnimation->GetHeight() / 2;
+	//}
+	//else if (mCurrentState == PlayerState::Sitting || mCurrentState == PlayerState::SittingThrowApple)
+	//{
+	//	rect.left = this->posX - mCurrentAnimation->GetWidth() / 2;
+	//	rect.right = this->posX;
+	//	rect.top = this->posY + mCurrentAnimation->GetHeight() / 4;
+	//	rect.bottom = this->posY + mCurrentAnimation->GetHeight() / 2;
+	//}
+	//else if (mCurrentState == PlayerState::RunningJump || mCurrentState == PlayerState::StandingJump || mCurrentState == PlayerState::JumpingThrowApple)
+	//{
+	//	rect.left = this->posX - mCurrentAnimation->GetWidth() / 10;
+	//	rect.right = this->posX + mCurrentAnimation->GetWidth() / 10;
+	//	rect.top = this->posY - mCurrentAnimation->GetHeight() / 4;
+	//	rect.bottom = this->posY + mCurrentAnimation->GetHeight() / 4;
+	//}
+	//else
+	//{
+
+	//}
 	rect.left = this->posX - mCurrentAnimation->GetWidth() / 10;
 	rect.right = this->posX + mCurrentAnimation->GetWidth() / 10;
-	rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;
+	rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;;
 	rect.bottom = this->posY + mCurrentAnimation->GetHeight() / 2;
-
 	return rect;
 }
 
@@ -560,6 +616,16 @@ void Player::changeAnimation(PlayerState::StateName state)
 		mCurrentAnimation = mAnimationStanding;
 		break;
 
+	case PlayerState::StandingUp:
+		delete mAnimationStandingUp;
+		mAnimationStandingUp = new Animation("Resources/Aladdin/Standing/StandingUp.png", 3, 1, 3, 0.1f);
+		mCurrentAnimation = mAnimationStandingUp;
+		break;
+
+	case PlayerState::StandingUpStop:
+		mCurrentAnimation = mAnimationStandingUpStop;
+		break;
+
 	case PlayerState::StandingJump:
 		delete mAnimationStandingJump;
 		mAnimationStandingJump = new Animation("Resources/Aladdin/Jumping/StandingJump.png", 4, 1, 4, 0.2f);
@@ -598,7 +664,7 @@ void Player::changeAnimation(PlayerState::StateName state)
 
 	case PlayerState::VerticalClimbingJump:
 		delete mAnimationVerticalClimbingJump;
-		mAnimationVerticalClimbingJump = new Animation("Resources/Aladdin/Climbing/VerticalClimbing/VerticalClimbingJump.png", 8, 1, 8, 0.5f);
+		mAnimationVerticalClimbingJump = new Animation("Resources/Aladdin/Climbing/VerticalClimbing/VerticalClimbingJump.png", 9, 1, 9, 0.2f);
 		mCurrentAnimation = mAnimationVerticalClimbingJump;
 		break;
 
@@ -628,7 +694,7 @@ void Player::changeAnimation(PlayerState::StateName state)
 
 	case PlayerState::JumpingAttack:
 		delete mAnimationJumpingAttack;
-		mAnimationJumpingAttack = new Animation("Resources/Aladdin/Jumping/JumpingAttack.png", 6, 1, 6, 0.02f);
+		mAnimationJumpingAttack = new Animation("Resources/Aladdin/Jumping/JumpingAttack.png", 5, 1, 5, 0.02f);
 		mCurrentAnimation = mAnimationJumpingAttack;
 		break;
 

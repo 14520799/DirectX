@@ -50,6 +50,7 @@ void FatGuardRunningState::Update(float dt)
 			return;
 		}
 	}
+
 	//tang van toc sau khi xac dinh huong
 	if (this->mOrokuData->fatGuard->mCurrentReverse)
 	{
@@ -71,26 +72,8 @@ void FatGuardRunningState::Update(float dt)
 
 void FatGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
-	if (impactor->Tag == Entity::EntityTypes::Aladdin)
-	{
-		switch (side)
-		{
-		case Entity::Left:
-			this->mOrokuData->fatGuard->SetReverse(false);
-			this->mOrokuData->fatGuard->SetState(new FatGuardAttackState(this->mOrokuData));
-			break;
-
-		case Entity::Right:
-			this->mOrokuData->fatGuard->SetReverse(true);
-			this->mOrokuData->fatGuard->SetState(new FatGuardAttackState(this->mOrokuData));
-			break;
-
-		default:
-			break;
-		}
-	}
-	else if (impactor->Tag != Entity::EntityTypes::Guard && impactor->Tag != Entity::EntityTypes::Aladdin &&
-			 impactor->Tag != Entity::EntityTypes::Sword)
+	if (impactor->Tag != Entity::EntityTypes::Guard && impactor->Tag != Entity::EntityTypes::Aladdin &&
+		impactor->Tag != Entity::EntityTypes::Sword)
 	{
 		switch (side)
 		{

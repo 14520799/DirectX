@@ -38,6 +38,28 @@ void PlayerDefaultState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	{
 
 	}
+	else
+	{
+		switch (side)
+		{
+		case Entity::Left:
+			this->mPlayerData->player->AddPosition(data.RegionCollision.right - data.RegionCollision.left, 0);
+			break;
+
+		case Entity::Right:
+			this->mPlayerData->player->AddPosition(-(data.RegionCollision.right - data.RegionCollision.left), 0);
+			break;
+
+		case Entity::Top: case Entity::TopLeft: case Entity::TopRight:
+			this->mPlayerData->player->AddPosition(0, data.RegionCollision.bottom - data.RegionCollision.top);
+			break;
+
+		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
+			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
+			this->mPlayerData->player->SetVy(0);
+			break;
+		}
+	}
 }
 
 PlayerState::StateName PlayerDefaultState::GetState()

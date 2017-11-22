@@ -20,13 +20,13 @@ void PlayerRunningStopState::Update(float dt)
 {
 	if (this->mPlayerData->player->getMoveDirection() == Player::MoveToLeft)
 	{
-		this->mPlayerData->player->AddVx(Define::PLAYER_NORMAL_SPEED_X);
+		this->mPlayerData->player->AddVx(Define::PLAYER_RUN_SPEED_X);
 		if (this->mPlayerData->player->GetVx() >= 0)
 			this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
 	}
 	else if (this->mPlayerData->player->getMoveDirection() == Player::MoveToRight)
 	{
-		this->mPlayerData->player->AddVx(-Define::PLAYER_NORMAL_SPEED_X);
+		this->mPlayerData->player->AddVx(-Define::PLAYER_RUN_SPEED_X);
 		if (this->mPlayerData->player->GetVx() <= 0)
 			this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
 	}

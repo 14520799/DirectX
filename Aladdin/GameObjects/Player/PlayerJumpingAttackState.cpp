@@ -20,7 +20,7 @@ PlayerJumpingAttackState::~PlayerJumpingAttackState()
 
 void PlayerJumpingAttackState::Update(float dt)
 {
-	this->mPlayerData->player->AddVy(Define::PLAYER_JUMP_SPEED_Y);
+	this->mPlayerData->player->AddVy(Define::PLAYER_FALL_SPEED_Y);
 
 	if (noPressed)
 	{
@@ -29,7 +29,7 @@ void PlayerJumpingAttackState::Update(float dt)
 			//player dang di chuyen sang ben trai      
 			if (mPlayerData->player->GetVx() < 0)
 			{
-				this->mPlayerData->player->AddVx(Define::PLAYER_NORMAL_SPEED_X);
+				this->mPlayerData->player->AddVx(Define::PLAYER_RUN_SPEED_X);
 
 				if (mPlayerData->player->GetVx() > 0)
 					this->mPlayerData->player->SetVx(0);
@@ -40,7 +40,7 @@ void PlayerJumpingAttackState::Update(float dt)
 			//player dang di chuyen sang phai   
 			if (mPlayerData->player->GetVx() > 0)
 			{
-				this->mPlayerData->player->AddVx(-Define::PLAYER_NORMAL_SPEED_X);
+				this->mPlayerData->player->AddVx(-Define::PLAYER_RUN_SPEED_X);
 
 				if (mPlayerData->player->GetVx() < 0)
 					this->mPlayerData->player->SetVx(0);
@@ -57,13 +57,13 @@ void PlayerJumpingAttackState::HandleKeyboard(std::map<int, bool> keys)
 		mPlayerData->player->SetReverse(false);
 
 		//di chuyen sang phai
-		if (this->mPlayerData->player->GetVx() < Define::PLAYER_MAX_RUNNING_SPEED)
+		if (this->mPlayerData->player->GetVx() < Define::PLAYER_MAX_JUMPING_SPEED)
 		{
-			this->mPlayerData->player->AddVx(Define::PLAYER_NORMAL_SPEED_X);
+			this->mPlayerData->player->AddVx(Define::PLAYER_JUMP_SPEED_X);
 
-			if (this->mPlayerData->player->GetVx() >= Define::PLAYER_MAX_RUNNING_SPEED)
+			if (this->mPlayerData->player->GetVx() >= Define::PLAYER_MAX_JUMPING_SPEED)
 			{
-				this->mPlayerData->player->SetVx(Define::PLAYER_MAX_RUNNING_SPEED);
+				this->mPlayerData->player->SetVx(Define::PLAYER_MAX_JUMPING_SPEED);
 			}
 		}
 
@@ -74,13 +74,13 @@ void PlayerJumpingAttackState::HandleKeyboard(std::map<int, bool> keys)
 		mPlayerData->player->SetReverse(true);
 
 		//di chuyen sang trai
-		if (this->mPlayerData->player->GetVx() > -Define::PLAYER_MAX_RUNNING_SPEED)
+		if (this->mPlayerData->player->GetVx() > -Define::PLAYER_MAX_JUMPING_SPEED)
 		{
-			this->mPlayerData->player->AddVx(-Define::PLAYER_NORMAL_SPEED_X);
+			this->mPlayerData->player->AddVx(-Define::PLAYER_JUMP_SPEED_X);
 
-			if (this->mPlayerData->player->GetVx() < -Define::PLAYER_MAX_RUNNING_SPEED)
+			if (this->mPlayerData->player->GetVx() < -Define::PLAYER_MAX_JUMPING_SPEED)
 			{
-				this->mPlayerData->player->SetVx(-Define::PLAYER_MAX_RUNNING_SPEED);
+				this->mPlayerData->player->SetVx(-Define::PLAYER_MAX_JUMPING_SPEED);
 			}
 		}
 

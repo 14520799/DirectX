@@ -15,6 +15,5 @@ public:
     virtual StateName GetState();
 
 protected:
-	float acceletoryX;
 };
 

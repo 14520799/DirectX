@@ -49,7 +49,7 @@ void PlayerFallingState::HandleKeyboard(std::map<int, bool> keys)
 			//di chuyen sang phai
 			if (this->mPlayerData->player->GetVx() < Define::PLAYER_MAX_RUNNING_SPEED)
 			{
-				this->mPlayerData->player->AddVx(Define::PLAYER_NORMAL_SPEED_X);
+				this->mPlayerData->player->AddVx(Define::PLAYER_RUN_SPEED_X);
 
 				if (this->mPlayerData->player->GetVx() >= Define::PLAYER_MAX_RUNNING_SPEED)
 				{
@@ -68,7 +68,7 @@ void PlayerFallingState::HandleKeyboard(std::map<int, bool> keys)
 			//di chuyen sang trai
 			if (this->mPlayerData->player->GetVx() > -Define::PLAYER_MAX_RUNNING_SPEED)
 			{
-				this->mPlayerData->player->AddVx(-Define::PLAYER_NORMAL_SPEED_X);
+				this->mPlayerData->player->AddVx(-Define::PLAYER_RUN_SPEED_X);
 
 				if (this->mPlayerData->player->GetVx() <= -Define::PLAYER_MAX_RUNNING_SPEED)
 				{

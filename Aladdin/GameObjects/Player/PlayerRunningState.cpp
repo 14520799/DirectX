@@ -10,7 +10,6 @@
 PlayerRunningState::PlayerRunningState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
-	acceletoryX = Define::PLAYER_NORMAL_SPEED_X;
 	this->mPlayerData->player->SetVx(0);
 }
 
@@ -28,7 +27,7 @@ void PlayerRunningState::HandleKeyboard(std::map<int, bool> keys)
 		//di chuyen sang phai
 		if (this->mPlayerData->player->GetVx() < Define::PLAYER_MAX_RUNNING_SPEED)
 		{
-			this->mPlayerData->player->AddVx(acceletoryX);
+			this->mPlayerData->player->AddVx(Define::PLAYER_RUN_SPEED_X);
 
 			if (this->mPlayerData->player->GetVx() >= Define::PLAYER_MAX_RUNNING_SPEED)
 			{
@@ -43,7 +42,7 @@ void PlayerRunningState::HandleKeyboard(std::map<int, bool> keys)
 		//di chuyen sang trai
 		if (this->mPlayerData->player->GetVx() > -Define::PLAYER_MAX_RUNNING_SPEED)
 		{
-			this->mPlayerData->player->AddVx(-acceletoryX);
+			this->mPlayerData->player->AddVx(-Define::PLAYER_RUN_SPEED_X);
 
 			if (this->mPlayerData->player->GetVx() < -Define::PLAYER_MAX_RUNNING_SPEED)
 			{
@@ -77,8 +76,7 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Fire && !this->mPlayerData->player->allowDeath)
 	{
-		//giam toc do khi player chay vao bai lua
-		//acceletoryX = Define::PLAYER_HURT_SPEED_X;
+
 	}
 	//bi thuong khi trung kiem
 	else if (impactor->Tag == Entity::EntityTypes::Sword && this->mPlayerData->player->allowDeath)

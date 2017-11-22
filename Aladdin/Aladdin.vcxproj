@@ -132,6 +132,8 @@
     <ClCompile Include="GameObjects\Player\PlayerRunningStopState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerSittingThrowAppleState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerStandingJumpState.cpp" />
+    <ClCompile Include="GameObjects\Player\PlayerStandingUpState.cpp" />
+    <ClCompile Include="GameObjects\Player\PlayerStandingUpStopState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerVerticalClimbingDefaultState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerVerticalClimbingJumpState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerVerticalClimbingState.cpp" />
@@ -217,6 +219,8 @@
     <ClInclude Include="GameObjects\Player\PlayerRunningStopState.h" />
     <ClInclude Include="GameObjects\Player\PlayerSittingThrowAppleState.h" />
     <ClInclude Include="GameObjects\Player\PlayerStandingJumpState.h" />
+    <ClInclude Include="GameObjects\Player\PlayerStandingUpState.h" />
+    <ClInclude Include="GameObjects\Player\PlayerStandingUpStopState.h" />
     <ClInclude Include="GameObjects\Player\PlayerVerticalClimbingDefaultState.h" />
     <ClInclude Include="GameObjects\Player\PlayerVerticalClimbingJumpState.h" />
     <ClInclude Include="GameObjects\Player\PlayerVerticalClimbingState.h" />

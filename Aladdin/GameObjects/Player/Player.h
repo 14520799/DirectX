@@ -71,6 +71,7 @@ public:
 	bool allowDelayState;
 
 	bool collisionApple; //kiem tra xem player da cham apple hay chua
+	bool onKeyUpPressing; //thong bao aladdin dang nhin len tren
 
 	GameMap *mMap;
 protected:
@@ -79,8 +80,11 @@ protected:
     PlayerData	*mPlayerData;
 
     Animation	*mCurrentAnimation,
+				*mPreCurrentAnimation,
 				*mAnimationDefault,
                 *mAnimationStanding,
+				*mAnimationStandingUp,
+				*mAnimationStandingUpStop,
                 *mAnimationRunning,
 				*mAnimationRunningStop,
 				*mAnimationFalling,

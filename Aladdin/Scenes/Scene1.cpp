@@ -20,7 +20,7 @@ void Scene1::LoadContent()
     mMap->SetCamera(mCamera);
 
     mPlayer = new Player();
-    mPlayer->SetPosition(GameGlobal::GetWidth() / 4, GameGlobal::GetHeight() * 2 - 40);
+    mPlayer->SetPosition(GameGlobal::GetWidth() / 4, GameGlobal::GetHeight() * 2);
     mPlayer->SetCamera(mCamera);
 	mPlayer->SetMap(mMap);
 
@@ -66,7 +66,10 @@ void Scene1::OnMouseDown(float x, float y)
 
 void Scene1::CheckCameraAndWorldMap()
 {
-    mCamera->SetPosition(mPlayer->GetPosition());
+	if(mPlayer->onKeyUpPressing)
+		mCamera->SetPosition(mPlayer->GetPosition() + D3DXVECTOR3(0, -250, 0));
+	else
+		mCamera->SetPosition(mPlayer->GetPosition());
 
     if (mCamera->GetBound().left < 0)
     {
