@@ -38,8 +38,6 @@ public:
 
     void OnNoCollisionWithBottom();
 
-	void AddListApple(Item *item);
-
     MoveDirection getMoveDirection();
 
     RECT GetBound();     
@@ -70,8 +68,13 @@ public:
 	bool allowDeath;
 	bool allowDelayState;
 
-	bool collisionApple; //kiem tra xem player da cham apple hay chua
 	bool onKeyUpPressing; //thong bao aladdin dang nhin len tren
+	bool collisionAppleItem;
+
+	std::vector<Item*> mListApplePlayer; //apple cua player dang so huu
+
+	Item *apple;
+	Item *appleEffect;
 
 	GameMap *mMap;
 protected:
@@ -108,7 +111,6 @@ protected:
 				*mAnimationClimbingThrowApple,
 				*mAnimationDeath;
 
-	std::vector<Item*> mListApplePlayer; //apple cua player dang so huu
 	std::vector<Item*> mListAppleFly; //apple da duoc player nem di
 	std::vector<Item*> mListAppleEffect; //hieu ung cua apple truoc khi bi huy
 
@@ -120,8 +122,5 @@ protected:
     bool allowJump, removedApple, mCurrentReverse;
 	float timeDeath;
 	float timeDelayStates;
-
-	Item *apple;
-	Item *appleEffect;
 };
 

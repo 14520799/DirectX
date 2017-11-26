@@ -3,6 +3,7 @@
 #include "FatGuardRunningState.h"
 #include "FatGuardAttackState.h"
 #include "FatGuardDefaultState.h"
+#include "FatGuardHurtingState.h"
 #include "../../Player/Player.h"
 #include "../../../GameDefines/GameDefine.h"
 #include "../../MapObjects/SwordFatGuard.h"
@@ -10,9 +11,8 @@
 FatGuard::FatGuard(D3DXVECTOR3 position)
 {
 	mAnimationDefault = new Animation("Resources/Orokus/Guards/FatGuardDefault.png", 1, 1, 1, 0.0f);
-	mAnimationStanding = new Animation("Resources/Orokus/Guards/FatGuardStanding_2.png", 7, 1, 7, 0.15f);
+	mAnimationStanding = new Animation("Resources/Orokus/Guards/FatGuardStanding.png", 7, 1, 7, 0.15f);
 	mAnimationRunning = new Animation("Resources/Orokus/Guards/FatGuardRunning.png", 8, 1, 8, 0.1f);
-	mAnimationAttack = new Animation("Resources/Orokus/Guards/FatGuardAttack.png", 5, 1, 5, 0.1f);
 
 	this->mOriginPosition = position;
 	this->SetPosition(mOriginPosition);
@@ -30,11 +30,12 @@ FatGuard::FatGuard(D3DXVECTOR3 position)
 	{
 		settedPlayer = false;
 	}
-	//fatguard duoc khoi tao truoc sau do moi duoc set QuadTree vao fatguard
-	//nen sword k duoc insert vao quadtree tai ham khoi tao fatguard. Tu do ta co bien bool addSwordQuadTree de insert sword vao quadtree sau
-	sword = new SwordFatGuard(mOriginPosition);
-	sword->Tag = Entity::EntityTypes::Sword;
-	addSwordQuadTree = true;
+
+	this->sword = new SwordFatGuard(D3DXVECTOR3(
+		this->mOrokuData->fatGuard->GetPosition().x,
+		this->mOrokuData->fatGuard->GetPosition().y - this->mOrokuData->fatGuard->GetHeight() / 2,
+		0));
+	this->mOrokuData->fatGuard->sword->Tag = Entity::EntityTypes::Sword;
 }
 
 FatGuard::~FatGuard()
@@ -59,50 +60,31 @@ void FatGuard::Update(float dt)
 	this->Entity::Update(dt);
 
 	//neu sword va cham voi player thi se bien mat
-	if (sword->collisionWithPlayer)
+	if (sword->collisionWithPlayer || sword->weaponCollided)
 	{
 		allowDrawSword = false;
 		sword->collisionWithPlayer = false;
-	}
-
-	//khi cay kiem dang bay ra va state doi sang running thi cay kiem van tiep tuc bay
-	if (settingRunning)
-	{
-		if (this->sword->mSettingLeftItem)
-		{
-			this->sword->AddVx(-Define::SWORDFATGUARD_SPEED);
-		}
-		else if (this->sword->mSettingRightItem)
-		{
-			this->sword->AddVx(Define::SWORDFATGUARD_SPEED);
-		}
-
-		this->timeDelayDefaultState += dt;
-		if (this->timeDelayDefaultState > 0.5f)
-		{
-			this->timeDelayDefaultState = 0;
-			this->sword->mSettingLeftItem = false;
-			this->sword->mSettingRightItem = false;
-			this->allowDrawSword = false;
-		}
+		sword->weaponCollided = false;
 	}
 
 	//delay 1 khoang time de thuc hien statedefault
 	if (!allowDefault)
 	{
 #pragma region OROKU ATTACK PLAYER
-		// khi co khoang cach voi player 0 < player < 200 thi oroku se chay toi tan cong player
+		// khi co khoang cach voi player 0 < player < 200 thi oroku se tan cong player
 		if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN &&
 			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX)
 		{
-			this->settingRunning = false;
+			Mode = RunMode::None;
+
 			//khi cay kiem dang bay ra theo huong nao thi se tiep tuc bay theo huong do 
 			//cho du player co di qua phia ben kia cua fatguard
 			if (this->sword->mSettingLeftItem)
 			{
-				this->sword->AddVx(-Define::SWORDFATGUARD_SPEED);
+				this->sword->AddVx(-Define::ITEM_SPEED_X);
+				this->sword->AddVy(Define::ITEM_SPEED_Y);
 				this->timeDelayDefaultState += dt;
-				if (this->timeDelayDefaultState > 0.5f)
+				if (this->timeDelayDefaultState > 0.8f)
 				{
 					this->timeDelayDefaultState = 0;
 					this->SetState(new FatGuardDefaultState(this->mOrokuData));
@@ -111,9 +93,10 @@ void FatGuard::Update(float dt)
 			}
 			else if (this->sword->mSettingRightItem)
 			{
-				this->sword->AddVx(Define::SWORDFATGUARD_SPEED);
+				this->sword->AddVx(Define::ITEM_SPEED_X);
+				this->sword->AddVy(Define::ITEM_SPEED_Y);
 				this->timeDelayDefaultState += dt;
-				if (this->timeDelayDefaultState > 0.5f)
+				if (this->timeDelayDefaultState > 0.8f)
 				{
 					this->timeDelayDefaultState = 0;
 					this->SetState(new FatGuardDefaultState(this->mOrokuData));
@@ -135,15 +118,16 @@ void FatGuard::Update(float dt)
 			this->mSettingLeftAttack = true;
 		}
 		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX &&
-				 (this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN)
+			(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN)
 		{
-			this->settingRunning = false;
+			Mode = RunMode::None;
 
 			if (this->sword->mSettingLeftItem)
 			{
-				this->sword->AddVx(-Define::SWORDFATGUARD_SPEED);
+				this->sword->AddVx(-Define::ITEM_SPEED_X);
+				this->sword->AddVy(Define::ITEM_SPEED_Y);
 				this->timeDelayDefaultState += dt;
-				if (this->timeDelayDefaultState > 0.5f)
+				if (this->timeDelayDefaultState > 0.8f)
 				{
 					this->timeDelayDefaultState = 0;
 					this->SetState(new FatGuardDefaultState(this->mOrokuData));
@@ -152,16 +136,16 @@ void FatGuard::Update(float dt)
 			}
 			else if (this->sword->mSettingRightItem)
 			{
-				this->sword->AddVx(Define::SWORDFATGUARD_SPEED);
+				this->sword->AddVx(Define::ITEM_SPEED_X);
+				this->sword->AddVy(Define::ITEM_SPEED_Y);
 				this->timeDelayDefaultState += dt;
-				if (this->timeDelayDefaultState > 0.5f)
+				if (this->timeDelayDefaultState > 0.8f)
 				{
 					this->timeDelayDefaultState = 0;
 					this->SetState(new FatGuardDefaultState(this->mOrokuData));
 				}
 				return;
 			}
-
 			if (mSettingLeftAttack)
 				mSettingLeftAttack = false;
 			//neu oroku dang di sang ben phai thi return k can set state lai nua
@@ -177,12 +161,47 @@ void FatGuard::Update(float dt)
 		}
 #pragma endregion
 
+#pragma region OROKU DEFAULT
+		else if (((this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN &&
+			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX * 1.5f)
+			||
+			(this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX * 1.5f &&
+				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MIN)) 
+			&& Mode != Oroku::RunMode::RunAttack)
+		{
+			if (this->sword->mSettingLeftItem)
+			{
+				this->sword->AddVx(-Define::ITEM_SPEED_X);
+				this->sword->AddVy(Define::ITEM_SPEED_Y);
+				this->timeDelayDefaultState += dt;
+				if (this->timeDelayDefaultState > 0.8f)
+				{
+					this->timeDelayDefaultState = 0;
+					this->SetState(new FatGuardDefaultState(this->mOrokuData));
+				}
+				return;
+			}
+			else if (this->sword->mSettingRightItem)
+			{
+				this->sword->AddVx(Define::ITEM_SPEED_X);
+				this->sword->AddVy(Define::ITEM_SPEED_Y);
+				this->timeDelayDefaultState += dt;
+				if (this->timeDelayDefaultState > 0.8f)
+				{
+					this->timeDelayDefaultState = 0;
+					this->SetState(new FatGuardDefaultState(this->mOrokuData));
+				}
+				return;
+			}
+		}
+#pragma endregion
+
 #pragma region OROKU RUN TO ATTACK PLAYER
 		// khi co khoang cach voi player -30 < player < 200 thi oroku se chay toi tan cong player
 		else if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN &&
-				 this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX * 2)
+			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX * 2)
 		{
-			Mode = RunMode::RunAttack;
+ 			Mode = RunMode::RunAttack;
 
 			if (mSettingRightRun)
 				mSettingRightRun = false;
@@ -192,13 +211,12 @@ void FatGuard::Update(float dt)
 				return;
 			}
 			this->SetReverse(false);
-			this->settingRunning = true;
 			this->timeDelayDefaultState = 0;
 			this->mSettingLeftRun = true;
 			this->SetState(new FatGuardRunningState(this->mOrokuData));
 		}
 		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX * 2 &&
-				 (this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN)
+			(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN)
 		{
 			Mode = RunMode::RunAttack;
 
@@ -210,37 +228,22 @@ void FatGuard::Update(float dt)
 				return;
 			}
 			this->SetReverse(true);
-			this->settingRunning = true;
 			this->timeDelayDefaultState = 0;
 			this->mSettingRightRun = true;
 			this->SetState(new FatGuardRunningState(this->mOrokuData));
 		}
 #pragma endregion
 
-#pragma region OROKU RUN AROUND
-		// khi co khoang cach voi player -400 --> 400 thi oroku se di xung quanh
-		else if (this->GetPosition().x - this->mPlayer->GetPosition().x > (-Define::DANGEROUS_AREA_MAX * 3) &&
-				 this->GetPosition().x - this->mPlayer->GetPosition().x < (Define::DANGEROUS_AREA_MAX * 3) &&
-				 Mode == Oroku::RunMode::None)
-		{
-			Mode = Oroku::RunMode::RunAround;
-			this->allowDrawSword = false;
-			this->settingRunning = false;
-			this->SetState(new FatGuardRunningState(this->mOrokuData));
-		}
-#pragma endregion
-
 #pragma region OROKU RUN COMEBACK
 		// khi co khoang cach voi player -600 --> 600 thi oroku se quay ve cho cu
-		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < (-Define::DANGEROUS_AREA_MAX * 3) ||
-				 this->GetPosition().x - this->mPlayer->GetPosition().x >(Define::DANGEROUS_AREA_MAX * 3)) &&
-				 Mode == Oroku::RunMode::RunAttack)
+		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < -Define::DANGEROUS_AREA_MAX * 2 ||
+			this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MAX * 2) &&
+			Mode == Oroku::RunMode::RunAttack)
 		{
 			Mode = Oroku::RunMode::RunComeback;
 			mSettingRightRun = false;
 			mSettingLeftRun = false;
 			this->allowDrawSword = false;
-			this->settingRunning = false;
 			this->SetState(new FatGuardRunningState(this->mOrokuData));
 		}
 #pragma endregion
@@ -254,7 +257,11 @@ void FatGuard::SetState(OrokuState *newState)
 
 	this->mOrokuData->state = newState;
 
+	mPreCurrentAnimation = mCurrentAnimation;
 	this->changeAnimation(newState->GetState());
+
+	if (mPreCurrentAnimation != nullptr)
+		this->posY += (mPreCurrentAnimation->GetHeight() - mCurrentAnimation->GetHeight()) / 2.0f;
 
 	mCurrentState = newState->GetState();
 }
@@ -275,6 +282,11 @@ RECT FatGuard::GetBound()
 	return rect;
 }
 
+bool FatGuard::GetReverse()
+{
+	return mCurrentReverse;
+}
+
 void FatGuard::Draw(D3DXVECTOR2 trans)
 {
 	mCurrentAnimation->FlipVertical(this->mCurrentReverse);
@@ -288,6 +300,11 @@ void FatGuard::Draw(D3DXVECTOR2 trans)
 
 void FatGuard::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)
 {
+	if (impactor->Tag == Entity::EntityTypes::AppleWeapon)
+	{
+		this->mOrokuData->fatGuard->SetState(new FatGuardHurtingState(this->mOrokuData));
+		return;
+	}
 	this->mOrokuData->state->OnCollision(impactor, side, data);
 }
 
@@ -308,7 +325,15 @@ void FatGuard::changeAnimation(OrokuState::StateName state)
 		break;
 
 	case OrokuState::FatGuardAttack:
+		delete mAnimationAttack;
+		mAnimationAttack = new Animation("Resources/Orokus/Guards/FatGuardAttack.png", 5, 1, 5, 0.1f);
 		mCurrentAnimation = mAnimationAttack;
+		break;
+
+	case OrokuState::FatGuardHurting:
+		delete mAnimationHurting;
+		mAnimationHurting = new Animation("Resources/Orokus/Guards/FatGuardHurting.png", 7, 1, 7, 0.1f);
+		mCurrentAnimation = mAnimationHurting;
 		break;
 
 	default:

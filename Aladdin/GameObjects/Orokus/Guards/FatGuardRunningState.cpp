@@ -1,11 +1,11 @@
 #include "FatGuardRunningState.h"
 #include "FatGuardStandingState.h"
 #include "FatGuardAttackState.h"
+#include "FatGuardDefaultState.h"
 
 FatGuardRunningState::FatGuardRunningState(OrokuData *orokuData)
 {
 	this->mOrokuData = orokuData;
-	originPosX = this->mOrokuData->fatGuard->GetPosition().x;
 	//set lai huong tan cong cua fatguard thanh false
 	this->mOrokuData->fatGuard->mSettingLeftAttack = false;
 	this->mOrokuData->fatGuard->mSettingRightAttack = false;
@@ -20,19 +20,7 @@ FatGuardRunningState::~FatGuardRunningState()
 void FatGuardRunningState::Update(float dt)
 {
 	//xac dinh huong
-	if (this->mOrokuData->fatGuard->Mode == Oroku::RunMode::RunAround)
-	{
-		//oroku di qua di lai trong 1 vung bang Define::AREA_OROKU_RUNAROUND 
-		if (this->mOrokuData->fatGuard->GetPosition().x < originPosX - Define::AREA_OROKU_RUNAROUND)
-		{
-			this->mOrokuData->fatGuard->SetReverse(true);
-		}
-		else if (this->mOrokuData->fatGuard->GetPosition().x >= originPosX)
-		{
-			this->mOrokuData->fatGuard->SetReverse(false);
-		}
-	}
-	else if (this->mOrokuData->fatGuard->Mode == Oroku::RunMode::RunComeback)
+	if (this->mOrokuData->fatGuard->Mode == Oroku::RunMode::RunComeback)
 	{
 		//oroku quay lai cho cu
 		if (this->mOrokuData->fatGuard->GetPosition().x - this->mOrokuData->fatGuard->mOriginPosition.x < -1)
@@ -72,8 +60,12 @@ void FatGuardRunningState::Update(float dt)
 
 void FatGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
+	if (impactor->Tag == Entity::EntityTypes::Fire)
+	{
+		this->mOrokuData->fatGuard->SetState(new FatGuardDefaultState(this->mOrokuData));
+	}
 	if (impactor->Tag != Entity::EntityTypes::Guard && impactor->Tag != Entity::EntityTypes::Aladdin &&
-		impactor->Tag != Entity::EntityTypes::Sword)
+		impactor->Tag != Entity::EntityTypes::Sword && impactor->Tag != Entity::EntityTypes::AppleItem)
 	{
 		switch (side)
 		{

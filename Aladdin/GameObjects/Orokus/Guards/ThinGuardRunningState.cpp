@@ -1,6 +1,6 @@
 #include "ThinGuardRunningState.h"
 #include "ThinGuardAttackState.h"
-#include "ThinGuardStandingState.h"
+#include "ThinGuardDefaultState.h"
 
 ThinGuardRunningState::ThinGuardRunningState(OrokuData *orokuData)
 {
@@ -43,7 +43,7 @@ void ThinGuardRunningState::Update(float dt)
 		else
 		{
 			this->mOrokuData->thinGuard->mCurrentReverse = !this->mOrokuData->thinGuard->mCurrentReverse;
-			this->mOrokuData->thinGuard->SetState(new ThinGuardStandingState(this->mOrokuData));
+			this->mOrokuData->thinGuard->SetState(new ThinGuardDefaultState(this->mOrokuData));
 			return;
 		}
 	}
@@ -87,7 +87,7 @@ void ThinGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisions
 		}
 	}
 	else if(impactor->Tag != Entity::EntityTypes::Guard && impactor->Tag != Entity::EntityTypes::Sword &&
-			impactor->Tag != Entity::EntityTypes::Apple)
+			impactor->Tag != Entity::EntityTypes::AppleItem)
 	{
 		switch (side)
 		{

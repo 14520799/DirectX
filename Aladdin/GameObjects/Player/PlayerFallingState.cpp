@@ -7,6 +7,7 @@
 #include "PlayerFallingStopState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
+#include "../MapObjects/AppleWeapon.h"
 
 PlayerFallingState::PlayerFallingState(PlayerData *playerData)
 {
@@ -92,9 +93,11 @@ void PlayerFallingState::OnCollision(Entity *impactor, Entity::SideCollisions si
 		this->mPlayerData->player->SetPosition(impactor->GetPosition().x, this->mPlayerData->player->GetPosition().y);
 		this->mPlayerData->player->SetState(new PlayerVerticalClimbingState(this->mPlayerData));
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Apple)
+	else if (impactor->Tag == Entity::EntityTypes::AppleItem)
 	{
-		this->mPlayerData->player->collisionApple = true;
+		this->mPlayerData->player->collisionAppleItem = true;
+		this->mPlayerData->player->apple = new AppleWeapon();
+		this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Guard || impactor->Tag == Entity::EntityTypes::Sword)
 	{

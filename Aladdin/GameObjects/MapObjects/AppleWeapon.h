@@ -1,11 +1,12 @@
 #pragma once
 #include "Item.h"
 
-class Apple : public Item
+class AppleWeapon : public Item
 {
 public:
-	Apple(D3DXVECTOR3 position);
-    ~Apple();
+	AppleWeapon(D3DXVECTOR3 position);
+	AppleWeapon();
+    ~AppleWeapon();
 
     virtual const char* FileName();
     virtual int TotalFrame();

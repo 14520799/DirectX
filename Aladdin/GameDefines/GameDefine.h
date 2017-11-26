@@ -16,15 +16,13 @@ namespace Define
 	const float PLAYER_CLIM_SPPED = 5.0f; //toc do leo player
 #pragma endregion
 
-#pragma region BRICK
-	const float APPLE_MAX_SPEED = 2500.0f; //toc do bay max cua apple
-	const float APPLE_SPEED = 100.0f; //toc do bay cua apple
-	const float SWORDFATGUARD_MAX_SPEED = 1500.0f; //toc do bay max cua sword
-	const float SWORDFATGUARD_SPEED = 30.0f; //toc do bay cua sowrd
+#pragma region ITEM
+	const float ITEM_SPEED_X = 25.0f;
+	const float ITEM_SPEED_Y = 10.0f;
 #pragma endregion
 
 	const float DANGEROUS_AREA_MIN = 0.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
-	const float DANGEROUS_AREA_MAX = 200.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
+	const float DANGEROUS_AREA_MAX = 300.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
 	const float AREA_OROKU_RUNAROUND = 50.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
 
 #pragma region OROKU
@@ -32,6 +30,10 @@ namespace Define
 	const float OROKU_MAX_HURTING_SPEED = 500.0f;
 	const float OROKU_NORMAL_SPPED_X = 15.0f;
 	const float OROKU_HURT_SPPED_X = 50.0f;
+#pragma endregion
+
+#pragma region BLOOD
+	const float GUARD_BLOOD = 2.0f;
 #pragma endregion
 
 }

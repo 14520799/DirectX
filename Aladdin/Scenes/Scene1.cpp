@@ -20,7 +20,7 @@ void Scene1::LoadContent()
     mMap->SetCamera(mCamera);
 
     mPlayer = new Player();
-    mPlayer->SetPosition(GameGlobal::GetWidth() / 4, GameGlobal::GetHeight() * 2);
+    mPlayer->SetPosition(GameGlobal::GetWidth() / 4, 1035);
     mPlayer->SetCamera(mCamera);
 	mPlayer->SetMap(mMap);
 
@@ -114,8 +114,7 @@ void Scene1::checkCollision()
 
     for (size_t i = 0; i < listCollisionPlayer.size(); i++)
     {
-        Entity::CollisionReturn r = GameCollision::RecteAndRect(mPlayer->GetBound(), 
-																listCollisionPlayer.at(i)->GetBound());
+        Entity::CollisionReturn r = GameCollision::RecteAndRect(mPlayer->GetBound(), listCollisionPlayer.at(i)->GetBound());
 
         if (r.IsCollided)
         {
@@ -133,14 +132,15 @@ void Scene1::checkCollision()
 			//xac dinh player co dang va cham voi cau thang hay khong
 			if (listCollisionPlayer.at(i)->Tag == Entity::EntityTypes::Stairs || listCollisionPlayer.at(i)->Tag == Entity::EntityTypes::UpStairs ||
 				listCollisionPlayer.at(i)->Tag == Entity::EntityTypes::CenterStairs || listCollisionPlayer.at(i)->Tag == Entity::EntityTypes::DownStairs)
+			{
 				mPlayer->collisionStairs = true;
+				mPlayer->allowFalling = false;
+			}
 			else
 				mPlayer->collisionStairs = false;
 			//xac dinh player co dang di den cuoi cau thang de roi xuong hay chua
 			if (listCollisionPlayer.at(i)->Tag == Entity::EntityTypes::FallControl)
 				mPlayer->allowFalling = true;
-			else
-				mPlayer->allowFalling = false;
 #pragma endregion
 
             //kiem tra neu va cham voi phia duoi cua Player 
@@ -156,30 +156,33 @@ void Scene1::checkCollision()
 				}
             }
 
-			if (mPlayer->collisionApple)
+			if (mPlayer->collisionAppleItem)
 			{
-				Item* item = mMap->GetItem(mMap->GetListItem(), (Item*)listCollisionPlayer.at(i));
-				mMap->SetListItem(mMap->RemoveItem(mMap->GetListItem(), (Item*)listCollisionPlayer.at(i))); //setlistItem lai sau khi xoa Item khoi list
-				mMap->GetQuadTree()->removeEntity(listCollisionPlayer.at(i)); //clear Item khoi QuadTree
-				mPlayer->AddListApple(item); //them apple sau khi an vao listapple cua player de nem apple
-				mPlayer->collisionApple = false;
+				Item* item = (Item*)listCollisionPlayer.at(i);
+				mMap->RemoveItem(item);
+				mMap->GetQuadTree()->removeEntity(item); //clear Item khoi QuadTree
+				mPlayer->collisionAppleItem = false;
 				break;
 			}
 			if (mPlayer->collisionWithOroku)
 			{
-				Oroku *oroku = mMap->GetOroku(mMap->GetListOroku(), (Oroku*)listCollisionPlayer.at(i));
-				mMap->SetListOroku(mMap->RemoveOroku(mMap->GetListOroku(), oroku));//xoa oroku khoi listoroku trong map
-				mMap->GetQuadTree()->removeEntity(listCollisionPlayer.at(i)); //xoa oroku ra khoi quadtree
-				if (oroku->sword != nullptr)
+				Oroku *oroku = (Oroku*)listCollisionPlayer.at(i);
+				oroku->bloodOfEntity--;
+				if (oroku->bloodOfEntity == 0)
 				{
-					mMap->GetQuadTree()->removeEntity(oroku->sword); //xoa sword khoi quadtree
-					delete oroku->sword;
-					oroku->sword = nullptr;
+					oroku->SetPosition(oroku->mOriginPosition);
+					mMap->RemoveOroku(oroku);//xoa oroku khoi listoroku trong map
+					mMap->GetQuadTree()->removeEntity(oroku); //xoa oroku ra khoi quadtree
+					if (oroku->sword != nullptr)
+					{
+						delete oroku->sword;
+						oroku->sword = nullptr;
+					}
+					delete oroku;
+					oroku = nullptr;
+					mPlayer->collisionWithOroku = false;
+					break;
 				}
-				delete oroku;
-				oroku = nullptr;
-				mPlayer->collisionWithOroku = false;
-				break;
 			}
         }
     }
@@ -213,6 +216,37 @@ void Scene1::checkCollision()
 				//goi den ham xu ly collision cua StrongGuard va Entity
 				child->OnCollision(listCollisionGuards.at(i), r, sideGuard);
 				listCollisionGuards.at(i)->OnCollision(child, r, sideImpactor);
+
+				if (child->sword != nullptr)
+				{
+					Entity::CollisionReturn r = GameCollision::RecteAndRect(child->sword->GetBound(), listCollisionGuards.at(i)->GetBound());
+					Entity::CollisionReturn R = GameCollision::RecteAndRect(child->sword->GetBound(), mPlayer->GetBound());
+
+					if (r.IsCollided)
+					{
+						//lay phia va cham cua Entity so voi StrongGuard
+						Entity::SideCollisions sideSword = GameCollision::getSideCollision(child->sword, r);
+
+						//lay phia va cham cua StrongGuard so voi Entity
+						Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(listCollisionGuards.at(i), r);
+
+						//goi den ham xu ly collision cua StrongGuard va Entity
+						child->sword->OnCollision(listCollisionGuards.at(i), r, sideSword);
+						listCollisionGuards.at(i)->OnCollision(child->sword, r, sideImpactor);
+					}
+					else if (R.IsCollided)
+					{
+						//lay phia va cham cua Entity so voi StrongGuard
+						Entity::SideCollisions sideSword = GameCollision::getSideCollision(child->sword, R);
+
+						//lay phia va cham cua StrongGuard so voi Entity
+						Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(mPlayer, R);
+
+						//goi den ham xu ly collision cua StrongGuard va Entity
+						child->sword->OnCollision(mPlayer, R, sideSword);
+						mPlayer->OnCollision(child->sword, R, sideImpactor);
+					}
+				}
 			}
 		}
 	}
@@ -246,18 +280,22 @@ void Scene1::checkCollision()
 
 				if (child->collisionWithOroku)
 				{
-					Oroku *oroku = mMap->GetOroku(mMap->GetListOroku(), (Oroku*)listCollisionApple.at(i));
-					mMap->SetListOroku(mMap->RemoveOroku(mMap->GetListOroku(), oroku));//xoa oroku khoi listoroku trong map
-					mMap->GetQuadTree()->removeEntity(listCollisionApple.at(i)); //xoa oroku ra khoi quadtree
-					if (oroku->sword != nullptr)
+					Oroku *oroku = (Oroku*)listCollisionApple.at(i);
+					oroku->bloodOfEntity--;
+					if (oroku->bloodOfEntity == 0)
 					{
-						mMap->GetQuadTree()->removeEntity(oroku->sword); //xoa sword khoi quadtree
-						delete oroku->sword;
-						oroku->sword = nullptr;
+						oroku->SetPosition(oroku->mOriginPosition);
+						mMap->RemoveOroku(oroku);//xoa oroku khoi listoroku trong map
+						mMap->GetQuadTree()->removeEntity(oroku); //xoa oroku ra khoi quadtree
+						if (oroku->sword != nullptr)
+						{
+							delete oroku->sword;
+							oroku->sword = nullptr;
+						}
+						delete oroku;
+						oroku = nullptr;
+						break;
 					}
-					delete oroku;
-					oroku = nullptr;
-					break;
 				}
 			}
 		}	

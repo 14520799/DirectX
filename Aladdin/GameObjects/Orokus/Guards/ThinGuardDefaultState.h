@@ -1,18 +1,18 @@
 #pragma once
-#include "FatGuard.h"
+#include "ThinGuard.h"
 #include "../OrokuState.h"
-#include "../../../GameDefines/GameDefine.h"
 
-class FatGuardRunningState : public OrokuState
+class ThinGuardDefaultState : public OrokuState
 {
 public:
-	FatGuardRunningState(OrokuData *orokuData);
-	~FatGuardRunningState();
+	ThinGuardDefaultState(OrokuData *orokuData);
+	~ThinGuardDefaultState();
 
 	void Update(float dt);
 
 	void OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data);
 
 	virtual StateName GetState();
+
 protected:
 };

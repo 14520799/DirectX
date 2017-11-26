@@ -187,9 +187,6 @@
     <ClCompile Include="Scenes\Scene1.cpp">
       <Filter>Framework\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\MapObjects\Apple.cpp">
-      <Filter>Framework\GameObjects\MapObjects</Filter>
-    </ClCompile>
     <ClCompile Include="GameObjects\Player\PlayerDeathState.cpp">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
@@ -230,9 +227,6 @@
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClCompile>
     <ClCompile Include="GameObjects\Orokus\Guards\ThinGuard.cpp">
-      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObjects\Orokus\Guards\ThinGuardStandingState.cpp">
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClCompile>
     <ClCompile Include="GameObjects\Orokus\Guards\ThinGuardAttackState.cpp">
@@ -300,6 +294,18 @@
     </ClCompile>
     <ClCompile Include="GameObjects\Player\PlayerStandingUpStopState.cpp">
       <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Guards\ThinGuardDefaultState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\AppleItem.cpp">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\AppleWeapon.cpp">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Guards\FatGuardHurtingState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -450,9 +456,6 @@
     <ClInclude Include="Scenes\Scene1.h">
       <Filter>Framework\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\MapObjects\Apple.h">
-      <Filter>Framework\GameObjects\MapObjects</Filter>
-    </ClInclude>
     <ClInclude Include="GameObjects\Player\PlayerDeathState.h">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
@@ -493,9 +496,6 @@
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\Orokus\Guards\ThinGuard.h">
-      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObjects\Orokus\Guards\ThinGuardStandingState.h">
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\Orokus\Guards\ThinGuardAttackState.h">
@@ -563,6 +563,18 @@
     </ClInclude>
     <ClInclude Include="GameObjects\Player\PlayerStandingUpStopState.h">
       <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Guards\ThinGuardDefaultState.h">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\AppleItem.h">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\AppleWeapon.h">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Guards\FatGuardHurtingState.h">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

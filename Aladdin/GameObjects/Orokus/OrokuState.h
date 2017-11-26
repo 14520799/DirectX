@@ -9,13 +9,14 @@ class OrokuState
 public:
 	enum StateName
 	{
-		ThinGuardStanding,
+		ThinGuardDefault,
 		ThinGuardRunning,
 		ThinGuardAttack,
 		FatGuardDefault,
 		FatGuardStanding,
 		FatGuardRunning,
 		FatGuardAttack,
+		FatGuardHurting,
 		StrongGuardStanding,
 		StrongGuardRunning,
 		StrongGuardHurting,

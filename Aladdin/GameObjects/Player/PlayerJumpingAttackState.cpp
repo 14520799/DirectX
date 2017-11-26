@@ -7,6 +7,7 @@
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 #include "../../GameObjects/MapObjects/Item.h"
+#include "../MapObjects/AppleWeapon.h"
 
 PlayerJumpingAttackState::PlayerJumpingAttackState(PlayerData *playerData)
 {
@@ -104,11 +105,13 @@ void PlayerJumpingAttackState::OnCollision(Entity *impactor, Entity::SideCollisi
 		//this->mPlayerData->player->SetPosition(this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y + (this->mPlayerData->player->GetPosition().y - impactor->GetPosition().y));
 		this->mPlayerData->player->SetState(new PlayerHorizontalClimbingState(this->mPlayerData));
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Apple)
+	else if (impactor->Tag == Entity::EntityTypes::AppleItem)
 	{
-		this->mPlayerData->player->collisionApple = true;
+		this->mPlayerData->player->collisionAppleItem = true;
+		this->mPlayerData->player->apple = new AppleWeapon();
+		this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Guard)
+	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard)
 	{
 
 	}

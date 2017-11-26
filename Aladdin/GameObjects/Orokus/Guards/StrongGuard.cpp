@@ -7,10 +7,9 @@
 
 StrongGuard::StrongGuard(D3DXVECTOR3 position)
 {
-	mAnimationStanding = new Animation("Resources/Orokus/Guards/StrongGuardStanding_1.png", 6, 1, 6, 0.1f);
 	mAnimationRunning = new Animation("Resources/Orokus/Guards/StrongGuardRunning.png", 8, 1, 8, 0.1f);
 	mAnimationHurting = new Animation("Resources/Orokus/Guards/StrongGuardHurting.png", 9, 1, 9, 0.1f);
-	mAnimationAttack = new Animation("Resources/Orokus/Guards/StrongGuardAttack_2.png", 5, 1, 5, 0.05f);
+	mAnimationAttack = new Animation("Resources/Orokus/Guards/StrongGuardAttack.png", 5, 1, 5, 0.05f);
 
 	this->mOriginPosition = position;
 	this->SetPosition(mOriginPosition);
@@ -168,6 +167,8 @@ void StrongGuard::changeAnimation(OrokuState::StateName state)
 	switch (state)
 	{
 	case OrokuState::StrongGuardStanding:
+		delete mAnimationStanding;
+		mAnimationStanding = new Animation("Resources/Orokus/Guards/StrongGuardStanding_1.png", 6, 1, 6, 0.1f);
 		mCurrentAnimation = mAnimationStanding;
 		break;
 

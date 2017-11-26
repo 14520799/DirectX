@@ -1,5 +1,5 @@
 #include "ThinGuard.h"
-#include "ThinGuardStandingState.h"
+#include "ThinGuardDefaultState.h"
 #include "ThinGuardRunningState.h"
 #include "ThinGuardAttackState.h"
 #include "../../Player/Player.h"
@@ -7,7 +7,7 @@
 
 ThinGuard::ThinGuard(D3DXVECTOR3 position)
 {
-	mAnimationStanding = new Animation("Resources/Orokus/Guards/ThinGuardStanding.png", 9, 1, 9, 0.1f);
+	mAnimationDefault = new Animation("Resources/Orokus/Guards/ThinGuardDefault.png", 1, 1, 1, 0.0f);
 	mAnimationRunning = new Animation("Resources/Orokus/Guards/ThinGuardRunning.png", 8, 1, 8, 0.01f);
 	mAnimationAttack = new Animation("Resources/Orokus/Guards/ThinGuardAttack.png", 6, 1, 6, 0.01f);
 
@@ -19,7 +19,7 @@ ThinGuard::ThinGuard(D3DXVECTOR3 position)
 	this->vx = 0;
 	this->vy = 0;
 
-	this->SetState(new ThinGuardStandingState(this->mOrokuData));
+	this->SetState(new ThinGuardDefaultState(this->mOrokuData));
 
 	Mode = RunMode::None;
 
@@ -98,7 +98,7 @@ void ThinGuard::Update(float dt)
 			 this->GetPosition().x - this->mPlayer->GetPosition().x > (Define::DANGEROUS_AREA_MAX * 1.5)) &&
 			 Mode != Oroku::RunMode::RunComeback)
 	{
-		this->SetState(new ThinGuardStandingState(this->mOrokuData));
+		this->SetState(new ThinGuardDefaultState(this->mOrokuData));
 	}
 #pragma endregion
 
@@ -164,8 +164,8 @@ void ThinGuard::changeAnimation(OrokuState::StateName state)
 {
 	switch (state)
 	{
-	case OrokuState::ThinGuardStanding:
-		mCurrentAnimation = mAnimationStanding;
+	case OrokuState::ThinGuardDefault:
+		mCurrentAnimation = mAnimationDefault;
 		break;
 
 	case OrokuState::ThinGuardRunning:

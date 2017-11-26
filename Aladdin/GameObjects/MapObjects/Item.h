@@ -16,11 +16,14 @@ public:
 
 	void Draw(D3DXVECTOR2 transform);
 
-	virtual void OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side);
-
 	void OnSetPosition(D3DXVECTOR3 poks);
 
+	virtual RECT GetBound();
+	virtual void OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side);
+
 	float timeDelayAppleEffect;
+
+	D3DXVECTOR3 originPos;
 protected:
     Item();
 

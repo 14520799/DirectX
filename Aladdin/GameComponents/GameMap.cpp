@@ -1,5 +1,6 @@
 ﻿#include "GameMap.h"
-#include "../GameObjects/MapObjects/Apple.h"
+#include "../GameDefines/GameDefine.h"
+#include "../GameObjects/MapObjects/AppleItem.h"
 #include "../GameObjects/Orokus/Guards/ThinGuard.h"
 #include "../GameObjects/Orokus/Guards/FatGuard.h"
 #include "../GameObjects/Orokus/Guards/StrongGuard.h"
@@ -52,31 +53,6 @@ void GameMap::LoadMap(char* filePath)
 		Sprite *sprite = new Sprite(tileset->GetImage()->GetSource().c_str());
 		mListTileset.insert(pair<int, Sprite*>(i, sprite));
 	}
-
-	//khoi tao nhung tang qua tao
-#pragma region -APPLE LAYER-
-	//createApple(mListItems, D3DXVECTOR3(835, 895, 0), 3);
-	//createApple(mListItems, D3DXVECTOR3(705, 550, 0), 2);
-	//createApple(mListItems, D3DXVECTOR3(850, 550, 0), 2);
-
-	for (auto child : mListItems)
-	{
-		mQuadTree->insertEntity(child);
-	}
-#pragma endregion
-
-	//tao oroku
-#pragma region -OROKU-
-	createOroku(mListOrokus, D3DXVECTOR3(576, 632, 0), 1, 1);
-	createOroku(mListOrokus, D3DXVECTOR3(1440, 665, 0), 1, 2);
-	createOroku(mListOrokus, D3DXVECTOR3(676, 634.5f, 0), 2, 1);
-	createOroku(mListOrokus, D3DXVECTOR3(776, 630.5f, 0), 3, 1);
-
-	for (auto child : mListOrokus)
-	{
-		mQuadTree->insertEntity(child);
-	}
-#pragma endregion
 
 	//tao oject cho map
 #pragma region -OBJECTGROUP, STATIC OBJECT-
@@ -159,6 +135,31 @@ void GameMap::LoadMap(char* filePath)
 		}
 	}
 #pragma endregion
+
+	//khoi tao nhung tang qua tao
+#pragma region -APPLE LAYER-
+	createApple(mListItems, D3DXVECTOR3(820, 880, 0), 3);
+	createApple(mListItems, D3DXVECTOR3(1400, 880, 0), 2);
+	createApple(mListItems, D3DXVECTOR3(1680, 880, 0), 2);
+
+	for (auto child : mListItems)
+	{
+		mQuadTree->insertEntity(child);
+	}
+#pragma endregion
+
+	//tao oroku
+#pragma region -OROKU-
+	//createOroku(mListOrokus, D3DXVECTOR3(576, 632, 0), 1);
+	//createOroku(mListOrokus, D3DXVECTOR3(1230, 665, 0), 1);
+	createOroku(mListOrokus, D3DXVECTOR3(1230, 985, 0), 2);
+	//createOroku(mListOrokus, D3DXVECTOR3(776, 630.5f, 0), 3);
+
+	for (auto child : mListOrokus)
+	{
+		mQuadTree->insertEntity(child);
+	}
+#pragma endregion
 }
 
 void GameMap::createApple(std::vector<Item*> &entitiesOut, D3DXVECTOR3 position, int soTang)
@@ -175,21 +176,21 @@ void GameMap::createApple(std::vector<Item*> &entitiesOut, D3DXVECTOR3 position,
 		switch (i)
 		{
 		case 1:
-			Item = new Apple(position);
+			Item = new AppleItem(position);
 			entitiesOut.push_back(Item);
 			break;
 
 		case 2:
-			Item = new Apple(D3DXVECTOR3(position.x - 30, position.y + 20, 0));
+			Item = new AppleItem(D3DXVECTOR3(position.x - 50, position.y + 40, 0));
 			entitiesOut.push_back(Item);
-			Item = new Apple(D3DXVECTOR3(position.x + 30, position.y + 20, 0));
+			Item = new AppleItem(D3DXVECTOR3(position.x + 50, position.y + 40, 0));
 			entitiesOut.push_back(Item);
 			break;
 
 		case 3:
-			Item = new Apple(D3DXVECTOR3(position.x - 60, position.y + 40, 0));
+			Item = new AppleItem(D3DXVECTOR3(position.x - 100, position.y + 80, 0));
 			entitiesOut.push_back(Item);
-			Item = new Apple(D3DXVECTOR3(position.x + 60, position.y + 40, 0));
+			Item = new AppleItem(D3DXVECTOR3(position.x + 100, position.y + 80, 0));
 			entitiesOut.push_back(Item);
 			break;
 
@@ -200,11 +201,11 @@ void GameMap::createApple(std::vector<Item*> &entitiesOut, D3DXVECTOR3 position,
 
 	for (auto child : entitiesOut)
 	{
-		child->Tag = Entity::EntityTypes::Apple;
+		child->Tag = Entity::EntityTypes::AppleItem;
 	}
 }
 
-void GameMap::createOroku(std::vector<Oroku*> &entitiesOut, D3DXVECTOR3 position, int orokuType, int orokuId)
+void GameMap::createOroku(std::vector<Oroku*> &entitiesOut, D3DXVECTOR3 position, int orokuType)
 {
 	Oroku *oroku = nullptr;
 
@@ -231,60 +232,7 @@ void GameMap::createOroku(std::vector<Oroku*> &entitiesOut, D3DXVECTOR3 position
 		break;
 	}
 
-	if (oroku->Tag == Entity::EntityTypes::Guard)
-	{
-		if (orokuType == 1)
-		{
-			switch (orokuId)
-			{
-			case 1:
-				oroku->Id = Entity::EntityId::ThinGuard_1;
-				break;
-			case 2:
-				oroku->Id = Entity::EntityId::ThinGuard_2;
-				break;
-			case 3:
-				oroku->Id = Entity::EntityId::ThinGuard_3;
-				break;
-			default:
-				break;
-			}
-		}
-		else if (orokuType == 2)
-		{
-			switch (orokuId)
-			{
-			case 1:
-				oroku->Id = Entity::EntityId::FatGuard_1;
-				break;
-			case 2:
-				oroku->Id = Entity::EntityId::FatGuard_2;
-				break;
-			case 3:
-				oroku->Id = Entity::EntityId::FatGuard_3;
-				break;
-			default:
-				break;
-			}
-		}
-		else if (orokuType == 3)
-		{
-			switch (orokuId)
-			{
-			case 1:
-				oroku->Id = Entity::EntityId::StrongGuard_1;
-				break;
-			case 2:
-				oroku->Id = Entity::EntityId::StrongGuard_2;
-				break;
-			case 3:
-				oroku->Id = Entity::EntityId::StrongGuard_3;
-				break;
-			default:
-				break;
-			}
-		}
-	}
+	oroku->bloodOfEntity = Define::GUARD_BLOOD;
 }
 
 void GameMap::SetCamera(Camera* camera)
@@ -468,79 +416,37 @@ std::map<int, Sprite*> GameMap::GetListTileSet()
 	return mListTileset;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////
-void GameMap::SetListItem(std::vector<Item*> listItems)
-{
-	mListItems = listItems;
-}
-
-std::vector<Item*> GameMap::GetListItem()
-{
-	return mListItems;
-}
-
-Item* GameMap::GetItem(std::vector<Item*> entitiesIn, Item *item)
-{
-	for (auto child : entitiesIn)
-	{
-		if (child->GetPosition() == item->GetPosition())
-		{
-			return item;
-		}
-	}
-}
-
-std::vector<Item*> GameMap::RemoveItem(std::vector<Item*> &entitiesIn, Item *item)
+void GameMap::RemoveItem(Item *item)
 {
 	//lay ra vi tri cua Item o trong mang
-	for (size_t i = 0; i < entitiesIn.size(); i++)
+	for (size_t i = 0; i < mListItems.size(); i++)
 	{
-		if (entitiesIn.at(i)->GetPosition() == item->GetPosition())
+		if (mListItems.at(i)->GetPosition() == item->GetPosition())
 		{
 			//xoa Item khoi mang
-			entitiesIn.erase(entitiesIn.begin() + i);
-			return entitiesIn;
+			mListItems.erase(mListItems.begin() + i);
+		}
+	}
+}
+
+void GameMap::RemoveOroku(Oroku *oroku)
+{
+	//lay ra vi tri cua oroku o trong mang
+	for (size_t i = 0; i < mListOrokus.size(); i++)
+	{
+		if (mListOrokus.at(i)->GetPosition() == oroku->GetPosition())
+		{
+			//xoa oroku khoi mang
+			mListOrokus.erase(mListOrokus.begin() + i);
 		}
 	}
 
-}
-//-------------------------------------------------------------------------------------//
-void GameMap::SetListOroku(std::vector<Oroku*> listOrokus)
-{
-	mListOrokus = listOrokus;
 }
 
 std::vector<Oroku*> GameMap::GetListOroku()
 {
 	return mListOrokus;
 }
-
-Oroku* GameMap::GetOroku(std::vector<Oroku*> entitiesIn, Oroku *oroku)
-{
-	for (auto child : entitiesIn)
-	{
-		if (child->Id == oroku->Id)
-		{
-			return oroku;
-		}
-	}
-}
-
-std::vector<Oroku*> GameMap::RemoveOroku(std::vector<Oroku*> &entitiesIn, Oroku *oroku)
-{
-	//lay ra vi tri cua oroku o trong mang
-	for (size_t i = 0; i < entitiesIn.size(); i++)
-	{
-		if (entitiesIn.at(i)->Id == oroku->Id)
-		{
-			//xoa oroku khoi mang
-			entitiesIn.erase(entitiesIn.begin() + i);
-			return entitiesIn;
-		}
-	}
-
-}
-/////////////////////////////////////////////////////////////////////////////////////////
 
 void GameMap::SetPlayer(Player* player)
 {

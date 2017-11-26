@@ -1,5 +1,4 @@
 #include "Item.h"
-#include "Apple.h"
 #include "../../GameComponents/GameGlobal.h"
 
 
@@ -32,6 +31,18 @@ void Item::OnSetPosition(D3DXVECTOR3 pos)
     mAnimation->SetPosition(pos);
 }
 
+RECT Item::GetBound()
+{
+	RECT rect;
+
+	rect.left = this->posX - 5;
+	rect.right = this->posX + 5;
+	rect.top = this->posY + 5;
+	rect.bottom = this->posY - 5;
+
+	return rect;
+}
+
 void Item::Update(float dt)
 {
     mAnimation->Update(dt);
@@ -53,7 +64,6 @@ void Item::Draw(D3DXVECTOR2 transform)
 }
 
 void Item::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)
-
 {
 	
 }

@@ -41,4 +41,8 @@ void SwordFatGuard::OnCollision(Entity *impactor, Entity::CollisionReturn data, 
 	{
 		this->collisionWithPlayer = true;
 	}
+	else if (impactor->Tag != Entity::EntityTypes::Guard && impactor->Tag != Entity::EntityTypes::AppleItem)
+	{
+		this->weaponCollided = true;
+	}
 }

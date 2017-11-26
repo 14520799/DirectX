@@ -22,12 +22,12 @@ public:
 	void OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions);
 
 	RECT GetBound();
+
+	bool GetReverse();
 	
 	OrokuState::StateName FatGuard::getState();
 
 	float timeDelayDefaultState;
-
-	bool settingRunning;
 
 	bool addSwordQuadTree;
 protected:

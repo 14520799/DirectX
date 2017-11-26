@@ -80,15 +80,7 @@ void QuadTree::removeEntity(Entity *entity)
 		{
 			for (size_t i = 0; i < mListEntity.size(); i++)
 			{
-				if (entity->Tag == Entity::EntityTypes::Apple)
-				{
-					if (mListEntity.at(i)->Tag == entity->Tag)
-					{
-						mListEntity.erase(mListEntity.begin() + i);
-						return;
-					}
-				}
-				else if (entity->Tag == Entity::EntityTypes::Guard)
+/*				if (entity->Tag == Entity::EntityTypes::Guard)
 				{
 					if (mListEntity.at(i)->Id == entity->Id)
 					{
@@ -96,15 +88,8 @@ void QuadTree::removeEntity(Entity *entity)
 						return;
 					}
 				}
-				else if (entity->Tag == Entity::EntityTypes::Sword)
-				{
-					if (mListEntity.at(i)->Tag == entity->Tag)
-					{
-						mListEntity.erase(mListEntity.begin() + i);
-						return;
-					}
-				}
-				else if(mListEntity.at(i)->GetPosition() == entity->GetPosition())
+				else */
+				if(mListEntity.at(i)->GetPosition() == entity->GetPosition())
 				{
 					mListEntity.erase(mListEntity.begin() + i);
 					return;

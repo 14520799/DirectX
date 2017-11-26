@@ -34,7 +34,7 @@ public:
 
 	//tao vat pham len map vd: tao, tien, ...
 	void createApple(std::vector<Item*> &entitiesOut, D3DXVECTOR3 position, int soTang);
-	void createOroku(std::vector<Oroku*> &entitiesOut, D3DXVECTOR3 position, int orokuType, int orokuId);
+	void createOroku(std::vector<Oroku*> &entitiesOut, D3DXVECTOR3 position, int orokuType);
 
     bool IsBoundLeft(); //kiem tra luc nay Camera o vi bien ben trai so voi WorldMap
     bool IsBoundRight(); // kiem tra xem co o vi tri bien ben phai worldmap khong
@@ -42,17 +42,9 @@ public:
     bool IsBoundBottom(); // kiem tra xem co o vi tri bien ben phai worldmap khong
     ~GameMap();
 
-	void SetListItem(std::vector<Item*> listItems);
-    std::vector<Item*> GetListItem();
-
-	void SetListOroku(std::vector<Oroku*> listOrokus);
 	std::vector<Oroku*> GetListOroku();
-
-	Item* GetItem(std::vector<Item*> entitiesIn, Item *item);
-	Oroku* GetOroku(std::vector<Oroku*> entitiesIn, Oroku *oroku);
-
-	std::vector<Item*> RemoveItem(std::vector<Item*> &entitiesIn, Item *item);
-	std::vector<Oroku*> RemoveOroku(std::vector<Oroku*> &entitiesIn, Oroku *oroku);
+	void RemoveItem(Item *item);
+	void RemoveOroku(Oroku *oroku);
 
 	void SetPlayer(Player* player);
 	Player* GetPlayer();

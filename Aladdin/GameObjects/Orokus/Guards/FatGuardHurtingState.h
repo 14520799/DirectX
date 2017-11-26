@@ -1,12 +1,13 @@
 #pragma once
-#include "ThinGuard.h"
+#include "FatGuard.h"
+#include "../Oroku.h"
 #include "../OrokuState.h"
 
-class ThinGuardStandingState : public OrokuState
+class FatGuardHurtingState : public OrokuState
 {
 public:
-	ThinGuardStandingState(OrokuData *orokuData);
-	~ThinGuardStandingState();
+	FatGuardHurtingState(OrokuData *orokuData);
+	~FatGuardHurtingState();
 
 	void Update(float dt);
 
@@ -15,4 +16,5 @@ public:
 	virtual StateName GetState();
 
 protected:
+	float timeDelay;
 };

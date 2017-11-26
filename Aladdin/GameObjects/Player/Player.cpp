@@ -51,8 +51,6 @@ Player::Player()
 	allowDelayState = true;
 	timeDeath = 0; //time duoc mien sat thuong sau khi hoi sinh
 	timeDelayStates = 0; //time delay thuc thi xong state nay roi chuyen sang state khac
-
-	collisionApple = false; //cham vao qua tao
 }
 
 Player::~Player()
@@ -78,7 +76,7 @@ void Player::Update(float dt)
 	{
 		for (size_t i = 0; i < mListAppleFly.size(); i++)
 		{
-			if (mListAppleFly.at(i)->collisionWithOroku)
+			if (mListAppleFly.at(i)->collisionWithOroku || mListAppleFly.at(i)->weaponCollided)
 			{
 				//them hieu ung apple effect vao list tai vi tri qua tao trung oroku
 				appleEffect = new AppleEffect(mListAppleFly.at(i)->GetPosition());
@@ -138,13 +136,6 @@ void Player::Update(float dt)
 					//bay sang ben phai
 					SetAppleFlyRight(mListAppleFly, mListAppleFly.at(i), i, dt);
 				}
-			}
-
-			//khi delete apple thi vong lap se lui lai vi listapple da mat 1 apple
-			if (removedApple)
-			{
-				i--;
-				removedApple = false;
 			}
 		}
 	}
@@ -238,29 +229,15 @@ void Player::SetAppleFlyLeft(std::vector<Item*> &listAppleFly, Item *item, int i
 	//khi di chuyen player sang trai ma apple da duoc nem sang phai thi no se van bay sang phai
 	if (item->mSettingRightItem)
 	{
-		item->AddVx(Define::APPLE_SPEED);
+		item->AddVx(Define::ITEM_SPEED_X);
+		item->AddVy(Define::ITEM_SPEED_Y);
 		item->Entity::Update(dt);
-		//sau khi apple bay toc do max se bien mat
-		if (item->GetVx() >= Define::APPLE_MAX_SPEED && item != nullptr)
-		{
-			listAppleFly.erase(listAppleFly.begin() + i);
-			delete item;
-			item = nullptr;
-			removedApple = true;
-		}
 		return;
 	}
 	item->mSettingLeftItem = true;
-	item->AddVx(-Define::APPLE_SPEED);
+	item->AddVx(-Define::ITEM_SPEED_X);
+	item->AddVy(Define::ITEM_SPEED_Y);
 	item->Entity::Update(dt);
-	//sau khi apple bay toc do max se bien mat
-	if (item->GetVx() <= -Define::APPLE_MAX_SPEED && item != nullptr)
-	{
-		listAppleFly.erase(listAppleFly.begin() + i);
-		delete item;
-		item = nullptr;
-		removedApple = true;
-	}
 }
 
 void Player::SetAppleFlyRight(std::vector<Item*> &listAppleFly, Item *item, int i, float dt)
@@ -268,27 +245,15 @@ void Player::SetAppleFlyRight(std::vector<Item*> &listAppleFly, Item *item, int 
 	//khi di chuyen player sang phai ma apple da duoc nem sang trai thi no se van bay sang trai
 	if (item->mSettingLeftItem)
 	{
-		item->AddVx(-Define::APPLE_SPEED && item != nullptr);
+		item->AddVx(-Define::ITEM_SPEED_X);
+		item->AddVy(Define::ITEM_SPEED_Y);
 		item->Entity::Update(dt);
-		//sau khi apple bay toc do max se bien mat
-		if (item->GetVx() <= -Define::APPLE_MAX_SPEED)
-		{
-			listAppleFly.erase(listAppleFly.begin() + i);
-			delete item;
-			removedApple = true;
-		}
 		return;
 	}
 	item->mSettingRightItem = true;
-	item->AddVx(Define::APPLE_SPEED);
+	item->AddVx(Define::ITEM_SPEED_X);
+	item->AddVy(Define::ITEM_SPEED_Y);
 	item->Entity::Update(dt);
-	//sau khi apple bay toc do max se bien mat
-	if (item->GetVx() >= Define::APPLE_MAX_SPEED && item != nullptr)
-	{
-		listAppleFly.erase(listAppleFly.begin() + i);
-		delete item;
-		removedApple = true;
-	}
 }
 
 std::vector<Item*> Player::GetListAppleFly()
@@ -392,8 +357,11 @@ void Player::OnKeyPressed(int key)
 		if (mListApplePlayer.size() > 0)
 		{
 			apple = mListApplePlayer.at(mListApplePlayer.size() - 1);
-			apple->SetPosition(this->GetPosition());
-			apple->collisionWithOroku = false;
+			if(mCurrentReverse)
+				apple->SetPosition(this->GetPosition().x - this->GetWidth() / 2, this->GetPosition().y - this->GetHeight() / 4);
+			else
+				apple->SetPosition(this->GetPosition().x + this->GetWidth() / 2, this->GetPosition().y - this->GetHeight() / 4);
+			apple->Tag = Entity::EntityTypes::AppleWeapon;
 			mListAppleFly.push_back(apple); //lay ra qua tao trong player roi dua vao listapple quan ly viec bay ra ngoai
 			mListApplePlayer.pop_back(); //lay qua tao ra khoi listapple cua player sau khi nem ra ngoai
 		}
@@ -408,7 +376,7 @@ void Player::OnKeyUp(int key)
 	}
 	else if (key == VK_DOWN || key == VK_UP)
 	{
-		if(mCurrentState != PlayerState::VerticalClimbing)
+		if(mCurrentState != PlayerState::VerticalClimbing && mCurrentState != PlayerState::VerticalClimbingJump && mCurrentState != PlayerState::VerticalClimbingDefault)
 			this->SetState(new PlayerDefaultState(this->mPlayerData));
 		if (key == VK_UP)
 			this->onKeyUpPressing = false;
@@ -436,15 +404,6 @@ void Player::SetCamera(Camera *camera)
 void Player::SetMap(GameMap *map)
 {
 	this->mMap = map;
-}
-
-void Player::AddListApple(Item *Item)
-{
-	// neu va cham voi apple thi apple se duoc dua vao listapple cua player
-	if (collisionApple)
-	{
-		mListApplePlayer.push_back(Item);
-	}
 }
 
 void Player::Draw(D3DXVECTOR3 position, RECT sourceRect, D3DXVECTOR2 scale, D3DXVECTOR2 transform, float angle, D3DXVECTOR2 rotationCenter, D3DXCOLOR colorKey)
@@ -767,7 +726,7 @@ void Player::OnNoCollisionWithBottom()
 		mCurrentState != PlayerState::JumpingAttack && mCurrentState != PlayerState::JumpingThrowApple &&
 		mCurrentState != PlayerState::HorizontalClimbing && mCurrentState != PlayerState::HorizontalClimbingDefault &&
 		mCurrentState != PlayerState::ClimbingAttack && mCurrentState != PlayerState::ClimbingThrowApple &&
-		mCurrentState != PlayerState::VerticalClimbing || allowFalling)
+		mCurrentState != PlayerState::VerticalClimbing && allowFalling)
 	{
 		this->SetState(new PlayerFallingState(this->mPlayerData));
 	}

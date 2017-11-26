@@ -58,9 +58,12 @@ protected:
 	OrokuData *mOrokuData;
 
 	Animation	*mCurrentAnimation,
+				*mPreCurrentAnimation,
+				*mAnimationDefault,
 				*mAnimationStanding,
 				*mAnimationRunning,
-				*mAnimationAttack;
+				*mAnimationAttack,
+				*mAnimationHurting;
 
 	virtual void changeAnimation(OrokuState::StateName state);
 

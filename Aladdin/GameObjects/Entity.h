@@ -33,17 +33,10 @@ public:
     enum EntityTypes
     {
         None, Aladdin, Static,
-		VerticalRope, HorizontalRope, Fire, Apple,
+		VerticalRope, HorizontalRope, Fire, AppleItem, AppleWeapon,
 		Stairs, UpStairs, UpStairsControl, CenterStairs, DownStairs, DownStairsControl, GroundControl, FallControl,
 		Guard, Sword
     };
-
-	enum EntityId
-	{
-		ThinGuard_1, ThinGuard_2, ThinGuard_3,
-		FatGuard_1, FatGuard_2, FatGuard_3,
-		StrongGuard_1, StrongGuard_2, StrongGuard_3
-	};
 	
 	enum EntityCurrentMoveStairs
 	{
@@ -51,8 +44,6 @@ public:
 	};
 
     EntityTypes Tag; //Tag de nhan dien loai Entity
-
-	EntityId Id; //Id de nhan dien Entity
 
 	EntityCurrentMoveStairs CurrentMoveStairs; //MoveStairs luu trang thai hien tai cua player khi toi noi co nhieu cau thang len xuong
 
@@ -100,6 +91,8 @@ public:
 
 	//vi tri tam position x va y
 	float posX, posY;
+	//mau cua entity
+	float bloodOfEntity;
 	//huong nem qua tao da duoc nem ra se khong doi huong
 	bool mSettingRightItem;
 	bool mSettingLeftItem;
@@ -114,6 +107,7 @@ public:
 	bool allowFalling;
 
 	bool collisionWithOroku;
+	bool weaponCollided; //qua tao hoac kiem khi va cham xuong dat hay tuong thi se mat
 	bool collisionWithPlayer;
 protected:
 
