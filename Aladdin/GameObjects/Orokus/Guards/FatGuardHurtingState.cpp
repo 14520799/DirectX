@@ -1,5 +1,6 @@
 #include "FatGuardHurtingState.h"
 #include "FatGuardAttackState.h"
+#include "FatGuardDefaultState.h"
 
 FatGuardHurtingState::FatGuardHurtingState(OrokuData *orokuData)
 {
@@ -27,6 +28,7 @@ void FatGuardHurtingState::Update(float dt)
 	if (timeDelay > 1.0f)
 	{
 		this->mOrokuData->fatGuard->allowDefault = false;
+		this->mOrokuData->fatGuard->SetState(new FatGuardDefaultState(this->mOrokuData));
 	}
 }
 

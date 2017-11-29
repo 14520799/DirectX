@@ -44,8 +44,8 @@ public:
 
 	virtual void OnNoCollisionWithBottom();
 
-	bool mCurrentReverse, settedPlayer, settingAttack;
-	bool allowDrawSword, allowDefault;
+	bool mCurrentReverse, mPreCurrentReverse, settedPlayer, settingAttack;
+	bool allowDrawSword, allowDefault, collisionFire; //xy ly khi oroku cham vao lua se chuyen sang state default
 
 	Player *mPlayer;
 
@@ -62,6 +62,7 @@ protected:
 				*mAnimationDefault,
 				*mAnimationStanding,
 				*mAnimationRunning,
+				*mAnimationRunningFire,
 				*mAnimationAttack,
 				*mAnimationHurting;
 

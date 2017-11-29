@@ -217,6 +217,18 @@ void Scene1::checkCollision()
 				child->OnCollision(listCollisionGuards.at(i), r, sideGuard);
 				listCollisionGuards.at(i)->OnCollision(child, r, sideImpactor);
 
+				if (sideGuard == Entity::Bottom || sideGuard == Entity::BottomLeft
+					|| sideGuard == Entity::BottomRight)
+				{
+					//kiem cha do dai ma player tiep xuc phia duoi day
+					int bot = r.RegionCollision.right - r.RegionCollision.left;
+
+					if (bot > WidthBottomStrongGuard)
+					{
+						WidthBottomStrongGuard = bot;
+					}
+				}
+
 				if (child->sword != nullptr)
 				{
 					Entity::CollisionReturn r = GameCollision::RecteAndRect(child->sword->GetBound(), listCollisionGuards.at(i)->GetBound());
@@ -248,6 +260,11 @@ void Scene1::checkCollision()
 					}
 				}
 			}
+		}
+
+		if (WidthBottomStrongGuard < Define::PLAYER_BOTTOM_RANGE_FALLING)
+		{
+			child->OnNoCollisionWithBottom();
 		}
 	}
 #pragma endregion

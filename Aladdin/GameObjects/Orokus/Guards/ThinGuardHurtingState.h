@@ -1,12 +1,12 @@
 #pragma once
-#include "StrongGuard.h"
+#include "ThinGuard.h"
 #include "../OrokuState.h"
 
-class StrongGuardStandingState : public OrokuState
+class ThinGuardHurtingState : public OrokuState
 {
 public:
-	StrongGuardStandingState(OrokuData *orokuData);
-	~StrongGuardStandingState();
+	ThinGuardHurtingState(OrokuData *orokuData);
+	~ThinGuardHurtingState();
 
 	void Update(float dt);
 

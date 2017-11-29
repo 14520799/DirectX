@@ -150,10 +150,10 @@ void GameMap::LoadMap(char* filePath)
 
 	//tao oroku
 #pragma region -OROKU-
-	//createOroku(mListOrokus, D3DXVECTOR3(576, 632, 0), 1);
-	//createOroku(mListOrokus, D3DXVECTOR3(1230, 665, 0), 1);
-	createOroku(mListOrokus, D3DXVECTOR3(1230, 985, 0), 2);
-	//createOroku(mListOrokus, D3DXVECTOR3(776, 630.5f, 0), 3);
+	//createOroku(mListOrokus, D3DXVECTOR3(1065, 972.5f, 0), 1);
+	//createOroku(mListOrokus, D3DXVECTOR3(2950, 1032.5f, 0), 1);
+	createOroku(mListOrokus, D3DXVECTOR3(1230, 980, 0), 2);
+	//createOroku(mListOrokus, D3DXVECTOR3(1545, 977.5f, 0), 3);
 
 	for (auto child : mListOrokus)
 	{

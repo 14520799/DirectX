@@ -1,7 +1,6 @@
 #pragma once
 #include "StrongGuard.h"
 #include "../OrokuState.h"
-#include "../../../GameDefines/GameDefine.h"
 
 class StrongGuardHurtingState : public OrokuState
 {
@@ -14,6 +13,7 @@ public:
 	void OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data);
 
 	virtual StateName GetState();
+
 protected:
-	float originPosX;
+	float timeDelay;
 };

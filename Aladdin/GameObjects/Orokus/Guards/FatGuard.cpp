@@ -11,8 +11,6 @@
 FatGuard::FatGuard(D3DXVECTOR3 position)
 {
 	mAnimationDefault = new Animation("Resources/Orokus/Guards/FatGuardDefault.png", 1, 1, 1, 0.0f);
-	mAnimationStanding = new Animation("Resources/Orokus/Guards/FatGuardStanding.png", 7, 1, 7, 0.15f);
-	mAnimationRunning = new Animation("Resources/Orokus/Guards/FatGuardRunning.png", 8, 1, 8, 0.1f);
 
 	this->mOriginPosition = position;
 	this->SetPosition(mOriginPosition);
@@ -72,8 +70,8 @@ void FatGuard::Update(float dt)
 	{
 #pragma region OROKU ATTACK PLAYER
 		// khi co khoang cach voi player 0 < player < 200 thi oroku se tan cong player
-		if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN &&
-			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX)
+		if ((this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
+			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X))
 		{
 			Mode = RunMode::None;
 
@@ -117,8 +115,8 @@ void FatGuard::Update(float dt)
 			this->SetState(new FatGuardAttackState(this->mOrokuData));
 			this->mSettingLeftAttack = true;
 		}
-		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX &&
-			(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN)
+		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X &&
+			(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN_X)
 		{
 			Mode = RunMode::None;
 
@@ -162,11 +160,11 @@ void FatGuard::Update(float dt)
 #pragma endregion
 
 #pragma region OROKU DEFAULT
-		else if (((this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN &&
-			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX * 1.5f)
+		else if (((this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
+			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 1.5f)
 			||
-			(this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX * 1.5f &&
-				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MIN)) 
+			(this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X * 1.5f &&
+				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MIN_X)) 
 			&& Mode != Oroku::RunMode::RunAttack)
 		{
 			if (this->sword->mSettingLeftItem)
@@ -198,8 +196,8 @@ void FatGuard::Update(float dt)
 
 #pragma region OROKU RUN TO ATTACK PLAYER
 		// khi co khoang cach voi player -30 < player < 200 thi oroku se chay toi tan cong player
-		else if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN &&
-			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX * 2)
+		else if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
+			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 2)
 		{
  			Mode = RunMode::RunAttack;
 
@@ -213,10 +211,14 @@ void FatGuard::Update(float dt)
 			this->SetReverse(false);
 			this->timeDelayDefaultState = 0;
 			this->mSettingLeftRun = true;
-			this->SetState(new FatGuardRunningState(this->mOrokuData));
+			if (mPreCurrentReverse != mCurrentReverse || !collisionFire)
+			{
+				collisionFire = false;
+				this->SetState(new FatGuardRunningState(this->mOrokuData));
+			}
 		}
-		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX * 2 &&
-			(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN)
+		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X * 2 &&
+			(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN_X)
 		{
 			Mode = RunMode::RunAttack;
 
@@ -230,14 +232,18 @@ void FatGuard::Update(float dt)
 			this->SetReverse(true);
 			this->timeDelayDefaultState = 0;
 			this->mSettingRightRun = true;
-			this->SetState(new FatGuardRunningState(this->mOrokuData));
+			if (mPreCurrentReverse != mCurrentReverse || !collisionFire)
+			{
+				collisionFire = false;
+				this->SetState(new FatGuardRunningState(this->mOrokuData));
+			}
 		}
 #pragma endregion
 
 #pragma region OROKU RUN COMEBACK
 		// khi co khoang cach voi player -600 --> 600 thi oroku se quay ve cho cu
-		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < -Define::DANGEROUS_AREA_MAX * 2 ||
-			this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MAX * 2) &&
+		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < -Define::DANGEROUS_AREA_MAX_X * 2 ||
+			this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MAX_X * 2) &&
 			Mode == Oroku::RunMode::RunAttack)
 		{
 			Mode = Oroku::RunMode::RunComeback;
@@ -317,10 +323,14 @@ void FatGuard::changeAnimation(OrokuState::StateName state)
 		break;
 
 	case OrokuState::FatGuardStanding:
+		delete mAnimationStanding;
+		mAnimationStanding = new Animation("Resources/Orokus/Guards/FatGuardStanding.png", 7, 1, 7, 0.15f);
 		mCurrentAnimation = mAnimationStanding;
 		break;
 
 	case OrokuState::FatGuardRunning:
+		delete mAnimationRunning;
+		mAnimationRunning = new Animation("Resources/Orokus/Guards/FatGuardRunning.png", 8, 1, 8, 0.1f);
 		mCurrentAnimation = mAnimationRunning;
 		break;
 

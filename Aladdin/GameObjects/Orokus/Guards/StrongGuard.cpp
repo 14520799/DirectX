@@ -1,15 +1,14 @@
 #include "StrongGuard.h"
 #include "StrongGuardStandingState.h"
 #include "StrongGuardRunningState.h"
-#include "StrongGuardHurtingState.h"
+#include "StrongGuardRunningFireState.h"
 #include "StrongGuardAttackState.h"
+#include "StrongGuardHurtingState.h"
 #include "../../../GameDefines/GameDefine.h"
 
 StrongGuard::StrongGuard(D3DXVECTOR3 position)
 {
-	mAnimationRunning = new Animation("Resources/Orokus/Guards/StrongGuardRunning.png", 8, 1, 8, 0.1f);
-	mAnimationHurting = new Animation("Resources/Orokus/Guards/StrongGuardHurting.png", 9, 1, 9, 0.1f);
-	mAnimationAttack = new Animation("Resources/Orokus/Guards/StrongGuardAttack.png", 5, 1, 5, 0.05f);
+	mAnimationHurting = new Animation("Resources/Orokus/Guards/StrongGuardHurting.png", 6, 1, 6, 0.1f);
 
 	this->mOriginPosition = position;
 	this->SetPosition(mOriginPosition);
@@ -45,77 +44,99 @@ void StrongGuard::Update(float dt)
 
 	this->Entity::Update(dt);
 
+	if (!allowDefault)
+	{
 #pragma region OROKU RUN TO ATTACK PLAYER
-	// khi co khoang cach voi player -30 < player < 200 thi oroku se chay toi tan cong player
-	if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN &&
-		this->GetPosition().x - this->mPlayer->GetPosition().x <= Define::DANGEROUS_AREA_MAX && !settingAttack)
-	{
-		Mode = RunMode::RunAttack;
+		// khi co khoang cach voi player 0 < player < 300 thi oroku se chay toi tan cong player
+		if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
+			this->GetPosition().x - this->mPlayer->GetPosition().x <= Define::DANGEROUS_AREA_MAX_X && !settingAttack)
+		{
+			Mode = RunMode::RunAttack;
 
-		if (mSettingRightRun)
-			mSettingRightRun = false;
-		//neu oroku dang di sang ben trai thi return k can set state lai nua
-		if (mSettingLeftRun)
-		{
-			return;
-		}
-		this->SetReverse(false);
-		this->mSettingLeftRun = true;
+			if (mSettingRightRun)
+				mSettingRightRun = false;
+			//neu oroku dang di sang ben trai thi return k can set state lai nua
+			if (mSettingLeftRun)
+			{
+				return;
+			}
+			this->SetReverse(false);
+			this->mSettingLeftRun = true;
 
-		if (runningFire)
-		{
-			this->SetState(new StrongGuardHurtingState(this->mOrokuData));
+			if (runningFire)
+			{
+				this->SetState(new StrongGuardRunningFireState(this->mOrokuData));
+			}
+			else
+			{
+				this->SetState(new StrongGuardRunningState(this->mOrokuData));
+			}
 		}
-		else
+		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X &&
+			(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN_X && !settingAttack)
 		{
-			this->SetState(new StrongGuardRunningState(this->mOrokuData));
-		}
-	}
-	else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX &&
-			 (this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN && !settingAttack)
-	{
-		Mode = RunMode::RunAttack;
+			Mode = RunMode::RunAttack;
 
-		if (mSettingLeftRun)
-			mSettingLeftRun = false;
-		//neu oroku dang di sang ben phai thi return k can set state lai nua
-		if (mSettingRightRun)
-		{
-			return;
-		}
-		this->SetReverse(true);
-		this->mSettingRightRun = true;
+			if (mSettingLeftRun)
+				mSettingLeftRun = false;
+			//neu oroku dang di sang ben phai thi return k can set state lai nua
+			if (mSettingRightRun)
+			{
+				return;
+			}
+			this->SetReverse(true);
+			this->mSettingRightRun = true;
 
-		if (runningFire)
-		{
-			this->SetState(new StrongGuardHurtingState(this->mOrokuData));
+			if (runningFire)
+			{
+				this->SetState(new StrongGuardRunningFireState(this->mOrokuData));
+			}
+			else
+			{
+				this->SetState(new StrongGuardRunningState(this->mOrokuData));
+			}
 		}
-		else
+#pragma endregion
+
+#pragma region OROKU AROUSE
+		else if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
+			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 2 && !settingAttack)
 		{
-			this->SetState(new StrongGuardRunningState(this->mOrokuData));
-		}				
-	}
+			if (mCurrentState == OrokuState::StrongGuardStanding)
+				return;
+			this->SetReverse(false);
+			this->SetState(new StrongGuardStandingState(this->mOrokuData));
+		}
+		else if (this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X * 2 &&
+			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MIN_X && !settingAttack)
+		{
+			if (mCurrentState == OrokuState::StrongGuardStanding)
+				return;
+			this->SetReverse(true);
+			this->SetState(new StrongGuardStandingState(this->mOrokuData));
+		}
 #pragma endregion
 
 #pragma region OROKU RUN COMEBACK
-	// khi co khoang cach voi player -600 --> 600 thi oroku se quay ve cho cu
-	else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < (-Define::DANGEROUS_AREA_MAX * 2) ||
-			  this->GetPosition().x - this->mPlayer->GetPosition().x >(Define::DANGEROUS_AREA_MAX * 2)) &&
-			  Mode == Oroku::RunMode::RunAttack)
-	{
-		Mode = Oroku::RunMode::RunComeback;
-		mSettingRightRun = false;
-		mSettingLeftRun = false;
-		if (runningFire)
+		// khi co khoang cach voi player -600 --> 600 thi oroku se quay ve cho cu
+		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < -Define::DANGEROUS_AREA_MAX_X * 2 ||
+			this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MAX_X * 2) &&
+			Mode == Oroku::RunMode::RunAttack)
 		{
-			this->SetState(new StrongGuardHurtingState(this->mOrokuData));
+			Mode = Oroku::RunMode::RunComeback;
+			mSettingRightRun = false;
+			mSettingLeftRun = false;
+			if (runningFire)
+			{
+				this->SetState(new StrongGuardRunningFireState(this->mOrokuData));
+			}
+			else
+			{
+				this->SetState(new StrongGuardRunningState(this->mOrokuData));
+			}
 		}
-		else
-		{
-			this->SetState(new StrongGuardRunningState(this->mOrokuData));
-		}
-	}
 #pragma endregion
+	}
 }
 
 void StrongGuard::SetState(OrokuState *newState)
@@ -124,7 +145,11 @@ void StrongGuard::SetState(OrokuState *newState)
 
 	this->mOrokuData->state = newState;
 
+	mPreCurrentAnimation = mCurrentAnimation;
 	this->changeAnimation(newState->GetState());
+
+	if (mPreCurrentAnimation != nullptr)
+		this->posY += (mPreCurrentAnimation->GetHeight() - mCurrentAnimation->GetHeight()) / 2.0f;
 
 	mCurrentState = newState->GetState();
 }
@@ -159,6 +184,11 @@ void StrongGuard::Draw(D3DXVECTOR2 trans)
 
 void StrongGuard::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)
 {
+	if (impactor->Tag == Entity::EntityTypes::AppleWeapon)
+	{
+		this->mOrokuData->strongGuard->SetState(new StrongGuardHurtingState(this->mOrokuData));
+		return;
+	}
 	this->mOrokuData->state->OnCollision(impactor, side, data);
 }
 
@@ -168,20 +198,30 @@ void StrongGuard::changeAnimation(OrokuState::StateName state)
 	{
 	case OrokuState::StrongGuardStanding:
 		delete mAnimationStanding;
-		mAnimationStanding = new Animation("Resources/Orokus/Guards/StrongGuardStanding_1.png", 6, 1, 6, 0.1f);
+		mAnimationStanding = new Animation("Resources/Orokus/Guards/StrongGuardStanding.png", 6, 1, 6, 0.1f);
 		mCurrentAnimation = mAnimationStanding;
 		break;
 
 	case OrokuState::StrongGuardRunning:
+		delete mAnimationRunning;
+		mAnimationRunning = new Animation("Resources/Orokus/Guards/StrongGuardRunning.png", 8, 1, 8, 0.1f);
 		mCurrentAnimation = mAnimationRunning;
+		break;
+
+	case OrokuState::StrongGuardRunningFire:
+		delete mAnimationRunningFire;
+		mAnimationRunningFire = new Animation("Resources/Orokus/Guards/StrongGuardRunningFire.png", 9, 1, 9, 0.1f);
+		mCurrentAnimation = mAnimationRunningFire;
+		break;
+
+	case OrokuState::StrongGuardAttack:
+		delete mAnimationAttack;
+		mAnimationAttack = new Animation("Resources/Orokus/Guards/StrongGuardAttack.png", 5, 1, 5, 0.05f);
+		mCurrentAnimation = mAnimationAttack;
 		break;
 
 	case OrokuState::StrongGuardHurting:
 		mCurrentAnimation = mAnimationHurting;
-		break;
-
-	case OrokuState::StrongGuardAttack:
-		mCurrentAnimation = mAnimationAttack;
 		break;
 
 	default:
@@ -190,6 +230,12 @@ void StrongGuard::changeAnimation(OrokuState::StateName state)
 
 	this->width = mCurrentAnimation->GetWidth();
 	this->height = mCurrentAnimation->GetHeight();
+}
+
+void StrongGuard::OnNoCollisionWithBottom()
+{
+	if(mCurrentState == OrokuState::StrongGuardRunningFire)
+		this->AddPosition(0, 5);
 }
 
 OrokuState::StateName StrongGuard::getState()

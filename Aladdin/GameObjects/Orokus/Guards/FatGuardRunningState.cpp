@@ -42,7 +42,7 @@ void FatGuardRunningState::Update(float dt)
 	//tang van toc sau khi xac dinh huong
 	if (this->mOrokuData->fatGuard->mCurrentReverse)
 	{
-		this->mOrokuData->fatGuard->AddVx(Define::OROKU_NORMAL_SPPED_X);
+		this->mOrokuData->fatGuard->AddVx(Define::OROKU_RUN_SPPED_X);
 		if (this->mOrokuData->fatGuard->GetVx() > Define::OROKU_MAX_RUNNING_SPEED)
 		{
 			this->mOrokuData->fatGuard->SetVx(Define::OROKU_MAX_RUNNING_SPEED);
@@ -50,7 +50,7 @@ void FatGuardRunningState::Update(float dt)
 	}
 	else if (!this->mOrokuData->fatGuard->mCurrentReverse)
 	{
-		this->mOrokuData->fatGuard->AddVx(-Define::OROKU_NORMAL_SPPED_X);
+		this->mOrokuData->fatGuard->AddVx(-Define::OROKU_RUN_SPPED_X);
 		if (this->mOrokuData->fatGuard->GetVx() < -Define::OROKU_MAX_RUNNING_SPEED)
 		{
 			this->mOrokuData->fatGuard->SetVx(-Define::OROKU_MAX_RUNNING_SPEED);
@@ -62,6 +62,22 @@ void FatGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisions 
 {
 	if (impactor->Tag == Entity::EntityTypes::Fire)
 	{
+		switch (side)
+		{
+		case Entity::BottomLeft: case Entity::Left:
+			this->mOrokuData->fatGuard->AddPosition(10, 0);
+			break;
+
+		case Entity::BottomRight: case Entity::Right:
+			this->mOrokuData->fatGuard->AddPosition(-10, 0);
+			break;
+
+		default:
+			break;
+		}
+
+		this->mOrokuData->fatGuard->mPreCurrentReverse = this->mOrokuData->fatGuard->mCurrentReverse;
+		this->mOrokuData->fatGuard->collisionFire = true;
 		this->mOrokuData->fatGuard->SetState(new FatGuardDefaultState(this->mOrokuData));
 	}
 	if (impactor->Tag != Entity::EntityTypes::Guard && impactor->Tag != Entity::EntityTypes::Aladdin &&

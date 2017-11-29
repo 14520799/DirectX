@@ -24,6 +24,8 @@ public:
 
 	RECT GetBound();
 
+	void OnNoCollisionWithBottom();
+
 	OrokuState::StateName StrongGuard::getState();
 
 	bool runningFire;

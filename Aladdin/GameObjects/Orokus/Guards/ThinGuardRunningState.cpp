@@ -5,7 +5,6 @@
 ThinGuardRunningState::ThinGuardRunningState(OrokuData *orokuData)
 {
 	this->mOrokuData = orokuData;
-	originPosX = this->mOrokuData->thinGuard->GetPosition().x;
 	this->mOrokuData->thinGuard->SetVx(0);
 	this->mOrokuData->thinGuard->SetVy(0);
 }
@@ -17,19 +16,7 @@ ThinGuardRunningState::~ThinGuardRunningState()
 void ThinGuardRunningState::Update(float dt)
 {
 	//xac dinh huong
-	if (this->mOrokuData->thinGuard->Mode == Oroku::RunMode::RunAround)
-	{
-		//oroku di qua di lai trong 1 vung bang Define::AREA_OROKU_RUNAROUND 
-		if (this->mOrokuData->thinGuard->GetPosition().x < originPosX - Define::AREA_OROKU_RUNAROUND)
-		{
-			this->mOrokuData->thinGuard->SetReverse(true);
-		}
-		else if(this->mOrokuData->thinGuard->GetPosition().x >= originPosX)
-		{
-			this->mOrokuData->thinGuard->SetReverse(false);
-		}
-	}
-	else if (this->mOrokuData->thinGuard->Mode == Oroku::RunMode::RunComeback)
+	if (this->mOrokuData->thinGuard->Mode == Oroku::RunMode::RunComeback)
 	{
 		//oroku quay lai cho cu
 		if (this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mOriginPosition.x < -1)
@@ -50,7 +37,7 @@ void ThinGuardRunningState::Update(float dt)
 	//tang van toc sau khi xac dinh huong
 	if (this->mOrokuData->thinGuard->mCurrentReverse)
 	{
-		this->mOrokuData->thinGuard->AddVx(Define::OROKU_NORMAL_SPPED_X);
+		this->mOrokuData->thinGuard->AddVx(Define::OROKU_RUN_SPPED_X);
 		if (this->mOrokuData->thinGuard->GetVx() > Define::OROKU_MAX_RUNNING_SPEED)
 		{
 			this->mOrokuData->thinGuard->SetVx(Define::OROKU_MAX_RUNNING_SPEED);
@@ -58,7 +45,7 @@ void ThinGuardRunningState::Update(float dt)
 	}
 	else if (!this->mOrokuData->thinGuard->mCurrentReverse)
 	{
-		this->mOrokuData->thinGuard->AddVx(-Define::OROKU_NORMAL_SPPED_X);
+		this->mOrokuData->thinGuard->AddVx(-Define::OROKU_RUN_SPPED_X);
 		if (this->mOrokuData->thinGuard->GetVx() < -Define::OROKU_MAX_RUNNING_SPEED)
 		{
 			this->mOrokuData->thinGuard->SetVx(-Define::OROKU_MAX_RUNNING_SPEED);
@@ -85,6 +72,25 @@ void ThinGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisions
 		default:
 			break;
 		}
+	}
+	else if (impactor->Tag == Entity::EntityTypes::Fire)
+	{
+		switch (side)
+		{
+		case Entity::BottomLeft: case Entity::Left:
+			this->mOrokuData->thinGuard->AddPosition(10, 0);
+			break;
+
+		case Entity::BottomRight: case Entity::Right:
+			this->mOrokuData->thinGuard->AddPosition(-10, 0);
+			break;
+
+		default:
+			break;
+		}
+		this->mOrokuData->thinGuard->mPreCurrentReverse = this->mOrokuData->thinGuard->mCurrentReverse;
+		this->mOrokuData->thinGuard->collisionFire = true;
+		this->mOrokuData->thinGuard->SetState(new ThinGuardDefaultState(this->mOrokuData));
 	}
 	else if(impactor->Tag != Entity::EntityTypes::Guard && impactor->Tag != Entity::EntityTypes::Sword &&
 			impactor->Tag != Entity::EntityTypes::AppleItem)

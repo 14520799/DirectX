@@ -238,9 +238,6 @@
     <ClCompile Include="GameObjects\Orokus\Guards\StrongGuardAttackState.cpp">
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\Orokus\Guards\StrongGuardHurtingState.cpp">
-      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
-    </ClCompile>
     <ClCompile Include="GameObjects\Orokus\Guards\StrongGuardRunningState.cpp">
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClCompile>
@@ -305,6 +302,15 @@
       <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClCompile>
     <ClCompile Include="GameObjects\Orokus\Guards\FatGuardHurtingState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Guards\StrongGuardRunningFireState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Guards\StrongGuardHurtingState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Guards\ThinGuardHurtingState.cpp">
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClCompile>
   </ItemGroup>
@@ -507,9 +513,6 @@
     <ClInclude Include="GameObjects\Orokus\Guards\StrongGuardAttackState.h">
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\Orokus\Guards\StrongGuardHurtingState.h">
-      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
-    </ClInclude>
     <ClInclude Include="GameObjects\Orokus\Guards\StrongGuardRunningState.h">
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClInclude>
@@ -574,6 +577,15 @@
       <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\Orokus\Guards\FatGuardHurtingState.h">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Guards\StrongGuardRunningFireState.h">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Guards\StrongGuardHurtingState.h">
+      <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Guards\ThinGuardHurtingState.h">
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClInclude>
   </ItemGroup>

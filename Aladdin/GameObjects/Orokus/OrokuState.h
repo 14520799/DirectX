@@ -12,6 +12,7 @@ public:
 		ThinGuardDefault,
 		ThinGuardRunning,
 		ThinGuardAttack,
+		ThinGuardHurting,
 		FatGuardDefault,
 		FatGuardStanding,
 		FatGuardRunning,
@@ -19,6 +20,7 @@ public:
 		FatGuardHurting,
 		StrongGuardStanding,
 		StrongGuardRunning,
+		StrongGuardRunningFire,
 		StrongGuardHurting,
 		StrongGuardAttack
 	};

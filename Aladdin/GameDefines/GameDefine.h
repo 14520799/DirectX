@@ -21,15 +21,12 @@ namespace Define
 	const float ITEM_SPEED_Y = 10.0f;
 #pragma endregion
 
-	const float DANGEROUS_AREA_MIN = 0.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
-	const float DANGEROUS_AREA_MAX = 300.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
-	const float AREA_OROKU_RUNAROUND = 50.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
-
+	const float DANGEROUS_AREA_MIN_X = 0.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
+	const float DANGEROUS_AREA_MAX_X = 200.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
+	const float DANGEROUS_AREA_MAX_Y = 150.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
 #pragma region OROKU
 	const float OROKU_MAX_RUNNING_SPEED = 100.0f;
-	const float OROKU_MAX_HURTING_SPEED = 500.0f;
-	const float OROKU_NORMAL_SPPED_X = 15.0f;
-	const float OROKU_HURT_SPPED_X = 50.0f;
+	const float OROKU_RUN_SPPED_X = 10.0f;
 #pragma endregion
 
 #pragma region BLOOD

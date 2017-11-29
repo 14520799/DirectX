@@ -22,18 +22,18 @@ void ThinGuardAttackState::Update(float dt)
 	//cho phep oroku thuc hien xong state attack roi moi co the sang state khac
 	timeDelayState += dt;
 
-	if (timeDelayState > 0.3f)
+	if (timeDelayState > 1.3f)
 	{
-		if (this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN &&
-			this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX)
+		if (this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
+			this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 2)
 		{
 			this->mOrokuData->thinGuard->SetReverse(false);
 			this->mOrokuData->thinGuard->mSettingLeftRun = true;
 			this->mOrokuData->thinGuard->settingAttack = false;
 			this->mOrokuData->thinGuard->SetState(new ThinGuardRunningState(this->mOrokuData));
 		}
-		else if ((this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX &&
-			(this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN)
+		else if ((this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X * 2 &&
+			(this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN_X)
 		{
 			this->mOrokuData->thinGuard->SetReverse(true);
 			this->mOrokuData->thinGuard->mSettingRightRun = true;

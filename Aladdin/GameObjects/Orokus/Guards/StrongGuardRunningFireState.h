@@ -1,19 +1,19 @@
 #pragma once
 #include "StrongGuard.h"
 #include "../OrokuState.h"
+#include "../../../GameDefines/GameDefine.h"
 
-class StrongGuardStandingState : public OrokuState
+class StrongGuardRunningFireState : public OrokuState
 {
 public:
-	StrongGuardStandingState(OrokuData *orokuData);
-	~StrongGuardStandingState();
+	StrongGuardRunningFireState(OrokuData *orokuData);
+	~StrongGuardRunningFireState();
 
 	void Update(float dt);
 
 	void OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data);
 
 	virtual StateName GetState();
-
 protected:
-	float timeDelay;
+	float originPosX;
 };

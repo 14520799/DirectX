@@ -91,9 +91,9 @@
   <object id="50" name="UpStairsControl" x="3562.67" y="672" width="15" height="259.333"/>
   <object id="52" name="DownStairsControl" x="4256" y="839.337" width="15" height="258"/>
   <object id="54" name="GroundControl" x="3920" y="1093.33" width="188" height="4"/>
-  <object id="55" name="Fire" x="753" y="1026" width="130" height="5"/>
-  <object id="56" name="Fire" x="1345" y="1026.5" width="130" height="5"/>
-  <object id="57" name="Fire" x="1626" y="1026.5" width="130" height="5"/>
+  <object id="55" name="Fire" x="753" y="1025" width="130" height="5"/>
+  <object id="56" name="Fire" x="1339" y="1025" width="130" height="5"/>
+  <object id="57" name="Fire" x="1626" y="1025" width="130" height="5"/>
   <object id="58" name="Fire" x="3228" y="1084.5" width="130" height="5"/>
   <object id="59" name="FallControl" x="2351" y="909.333" width="24" height="2"/>
   <object id="65" name="FallControl" x="4340.67" y="824.333" width="24" height="2"/>

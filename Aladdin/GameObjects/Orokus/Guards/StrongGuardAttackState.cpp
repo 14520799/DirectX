@@ -1,5 +1,6 @@
 #include "StrongGuardAttackState.h"
 #include "StrongGuardRunningState.h"
+#include "StrongGuardRunningFireState.h"
 #include "../../../GameDefines/GameDefine.h"
 
 StrongGuardAttackState::StrongGuardAttackState(OrokuData *orokuData)
@@ -24,21 +25,27 @@ void StrongGuardAttackState::Update(float dt)
 
 	if (timeDelayState > 0.3f)
 	{
-		if (this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN &&
-			this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX)
+		if (this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
+			this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X)
 		{
 			this->mOrokuData->strongGuard->SetReverse(false);
 			this->mOrokuData->strongGuard->mSettingLeftRun = true;
 			this->mOrokuData->strongGuard->settingAttack = false;
-			this->mOrokuData->strongGuard->SetState(new StrongGuardRunningState(this->mOrokuData));
+			if(this-mOrokuData->strongGuard->runningFire)
+				this->mOrokuData->strongGuard->SetState(new StrongGuardRunningFireState(this->mOrokuData));
+			else
+				this->mOrokuData->strongGuard->SetState(new StrongGuardRunningState(this->mOrokuData));
 		}
-		else if ((this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX &&
-			(this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN)
+		else if ((this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X &&
+			(this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN_X)
 		{
 			this->mOrokuData->strongGuard->SetReverse(true);
 			this->mOrokuData->strongGuard->mSettingRightRun = true;
 			this->mOrokuData->strongGuard->settingAttack = false;
-			this->mOrokuData->strongGuard->SetState(new StrongGuardRunningState(this->mOrokuData));
+			if (this - mOrokuData->strongGuard->runningFire)
+				this->mOrokuData->strongGuard->SetState(new StrongGuardRunningFireState(this->mOrokuData));
+			else
+				this->mOrokuData->strongGuard->SetState(new StrongGuardRunningState(this->mOrokuData));
 		}
 	}
 }

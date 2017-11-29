@@ -1,23 +1,22 @@
+#include "StrongGuardRunningFireState.h"
+#include "StrongGuardStandingState.h"
 #include "StrongGuardRunningState.h"
 #include "StrongGuardAttackState.h"
-#include "StrongGuardStandingState.h"
-#include "StrongGuardRunningFireState.h"
 
-StrongGuardRunningState::StrongGuardRunningState(OrokuData *orokuData)
+StrongGuardRunningFireState::StrongGuardRunningFireState(OrokuData *orokuData)
 {
 	this->mOrokuData = orokuData;
-	originPosX = this->mOrokuData->strongGuard->GetPosition().x;
-	this->mOrokuData->strongGuard->SetVx(0);
+	this->mOrokuData->strongGuard->runningFire = true;
+	this->mOrokuData->strongGuard->SetVx(this->mOrokuData->strongGuard->GetVx());
 	this->mOrokuData->strongGuard->SetVy(0);
 }
 
-StrongGuardRunningState::~StrongGuardRunningState()
+StrongGuardRunningFireState::~StrongGuardRunningFireState()
 {
 }
 
-void StrongGuardRunningState::Update(float dt)
+void StrongGuardRunningFireState::Update(float dt)
 {
-	//xac dinh huong
 	if (this->mOrokuData->strongGuard->Mode == Oroku::RunMode::RunComeback)
 	{
 		//oroku quay lai cho cu
@@ -32,10 +31,7 @@ void StrongGuardRunningState::Update(float dt)
 		else
 		{
 			this->mOrokuData->strongGuard->Mode = Oroku::RunMode::None;
-			if(this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mPlayer->GetPosition().x > 0)
-				this->mOrokuData->strongGuard->SetReverse(false);
-			else
-				this->mOrokuData->strongGuard->SetReverse(true);
+			this->mOrokuData->strongGuard->mCurrentReverse = !this->mOrokuData->strongGuard->mCurrentReverse;
 			this->mOrokuData->strongGuard->SetState(new StrongGuardStandingState(this->mOrokuData));
 			return;
 		}
@@ -59,7 +55,7 @@ void StrongGuardRunningState::Update(float dt)
 	}
 }
 
-void StrongGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
+void StrongGuardRunningFireState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
 	if (impactor->Tag == Entity::EntityTypes::Aladdin)
 	{
@@ -79,32 +75,13 @@ void StrongGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisio
 			break;
 		}
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Fire)
+	else if (impactor->Tag != Entity::EntityTypes::Fire)
 	{
 		switch (side)
 		{
 		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
-			this->mOrokuData->strongGuard->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
-			this->mOrokuData->strongGuard->SetState(new StrongGuardRunningFireState(this->mOrokuData));
-			break;
-
-		default:
-			break;
-		}
-	}
-	else if (impactor->Tag != Entity::EntityTypes::Guard && impactor->Tag != Entity::EntityTypes::Sword &&
-			impactor->Tag != Entity::EntityTypes::AppleItem)
-	{
- 		switch (side)
-		{
-		case Entity::Left:
-			this->mOrokuData->strongGuard->AddPosition(data.RegionCollision.right - data.RegionCollision.left, 0);
-			this->mOrokuData->strongGuard->SetState(new StrongGuardStandingState(this->mOrokuData));
-			break;
-
-		case Entity::Right:
-			this->mOrokuData->strongGuard->AddPosition(-(data.RegionCollision.right - data.RegionCollision.left), 0);
-			this->mOrokuData->strongGuard->SetState(new StrongGuardStandingState(this->mOrokuData));
+			this->mOrokuData->strongGuard->runningFire = false;
+			this->mOrokuData->strongGuard->SetState(new StrongGuardRunningState(this->mOrokuData));
 			break;
 
 		default:
@@ -113,7 +90,7 @@ void StrongGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisio
 	}
 }
 
-OrokuState::StateName StrongGuardRunningState::GetState()
+OrokuState::StateName StrongGuardRunningFireState::GetState()
 {
-	return OrokuState::StrongGuardRunning;
+	return OrokuState::StrongGuardRunningFire;
 }
