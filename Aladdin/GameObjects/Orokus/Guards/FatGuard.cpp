@@ -6,7 +6,7 @@
 #include "FatGuardHurtingState.h"
 #include "../../Player/Player.h"
 #include "../../../GameDefines/GameDefine.h"
-#include "../../MapObjects/SwordFatGuard.h"
+#include "../../MapObjects/SwordWeapon.h"
 
 FatGuard::FatGuard(D3DXVECTOR3 position)
 {
@@ -29,11 +29,8 @@ FatGuard::FatGuard(D3DXVECTOR3 position)
 		settedPlayer = false;
 	}
 
-	this->sword = new SwordFatGuard(D3DXVECTOR3(
-		this->mOrokuData->fatGuard->GetPosition().x,
-		this->mOrokuData->fatGuard->GetPosition().y - this->mOrokuData->fatGuard->GetHeight() / 2,
-		0));
-	this->mOrokuData->fatGuard->sword->Tag = Entity::EntityTypes::Sword;
+	this->weapon = new SwordWeapon(D3DXVECTOR3(this->GetPosition().x, this->GetPosition().y - this->mOrokuData->fatGuard->GetHeight() / 2, 0));
+	this->weapon->Tag = Entity::EntityTypes::Sword;
 }
 
 FatGuard::~FatGuard()
@@ -48,21 +45,21 @@ void FatGuard::Update(float dt)
 	if (this->mOrokuData->state)
 	{
 		this->mOrokuData->state->Update(dt);
-		if (allowDrawSword)
+		if (allowDrawWeapon)
 		{
-			sword->Update(dt);
-			sword->Entity::Update(dt);
+			weapon->Update(dt);
+			weapon->Entity::Update(dt);
 		}
 	}
 
 	this->Entity::Update(dt);
 
 	//neu sword va cham voi player thi se bien mat
-	if (sword->collisionWithPlayer || sword->weaponCollided)
+	if (weapon->collisionWithPlayer || weapon->weaponCollided)
 	{
-		allowDrawSword = false;
-		sword->collisionWithPlayer = false;
-		sword->weaponCollided = false;
+		allowDrawWeapon = false;
+		weapon->collisionWithPlayer = false;
+		weapon->weaponCollided = false;
 	}
 
 	//delay 1 khoang time de thuc hien statedefault
@@ -77,10 +74,10 @@ void FatGuard::Update(float dt)
 
 			//khi cay kiem dang bay ra theo huong nao thi se tiep tuc bay theo huong do 
 			//cho du player co di qua phia ben kia cua fatguard
-			if (this->sword->mSettingLeftItem)
+			if (this->weapon->mSettingLeftItem)
 			{
-				this->sword->AddVx(-Define::ITEM_SPEED_X);
-				this->sword->AddVy(Define::ITEM_SPEED_Y);
+				this->weapon->AddVx(-Define::ITEM_SPEED_X);
+				this->weapon->AddVy(Define::ITEM_SPEED_Y);
 				this->timeDelayDefaultState += dt;
 				if (this->timeDelayDefaultState > 0.8f)
 				{
@@ -89,10 +86,10 @@ void FatGuard::Update(float dt)
 				}
 				return;
 			}
-			else if (this->sword->mSettingRightItem)
+			else if (this->weapon->mSettingRightItem)
 			{
-				this->sword->AddVx(Define::ITEM_SPEED_X);
-				this->sword->AddVy(Define::ITEM_SPEED_Y);
+				this->weapon->AddVx(Define::ITEM_SPEED_X);
+				this->weapon->AddVy(Define::ITEM_SPEED_Y);
 				this->timeDelayDefaultState += dt;
 				if (this->timeDelayDefaultState > 0.8f)
 				{
@@ -110,7 +107,7 @@ void FatGuard::Update(float dt)
 				return;
 			}
 			this->SetReverse(false);
-			this->allowDrawSword = true;
+			this->allowDrawWeapon = true;
 			this->timeDelayDefaultState = 0;
 			this->SetState(new FatGuardAttackState(this->mOrokuData));
 			this->mSettingLeftAttack = true;
@@ -120,10 +117,10 @@ void FatGuard::Update(float dt)
 		{
 			Mode = RunMode::None;
 
-			if (this->sword->mSettingLeftItem)
+			if (this->weapon->mSettingLeftItem)
 			{
-				this->sword->AddVx(-Define::ITEM_SPEED_X);
-				this->sword->AddVy(Define::ITEM_SPEED_Y);
+				this->weapon->AddVx(-Define::ITEM_SPEED_X);
+				this->weapon->AddVy(Define::ITEM_SPEED_Y);
 				this->timeDelayDefaultState += dt;
 				if (this->timeDelayDefaultState > 0.8f)
 				{
@@ -132,10 +129,10 @@ void FatGuard::Update(float dt)
 				}
 				return;
 			}
-			else if (this->sword->mSettingRightItem)
+			else if (this->weapon->mSettingRightItem)
 			{
-				this->sword->AddVx(Define::ITEM_SPEED_X);
-				this->sword->AddVy(Define::ITEM_SPEED_Y);
+				this->weapon->AddVx(Define::ITEM_SPEED_X);
+				this->weapon->AddVy(Define::ITEM_SPEED_Y);
 				this->timeDelayDefaultState += dt;
 				if (this->timeDelayDefaultState > 0.8f)
 				{
@@ -152,7 +149,7 @@ void FatGuard::Update(float dt)
 				return;
 			}
 			this->SetReverse(true);
-			this->allowDrawSword = true;
+			this->allowDrawWeapon = true;
 			this->timeDelayDefaultState = 0;
 			this->SetState(new FatGuardAttackState(this->mOrokuData));
 			this->mSettingRightAttack = true;
@@ -167,10 +164,10 @@ void FatGuard::Update(float dt)
 				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MIN_X)) 
 			&& Mode != Oroku::RunMode::RunAttack)
 		{
-			if (this->sword->mSettingLeftItem)
+			if (this->weapon->mSettingLeftItem)
 			{
-				this->sword->AddVx(-Define::ITEM_SPEED_X);
-				this->sword->AddVy(Define::ITEM_SPEED_Y);
+				this->weapon->AddVx(-Define::ITEM_SPEED_X);
+				this->weapon->AddVy(Define::ITEM_SPEED_Y);
 				this->timeDelayDefaultState += dt;
 				if (this->timeDelayDefaultState > 0.8f)
 				{
@@ -179,10 +176,10 @@ void FatGuard::Update(float dt)
 				}
 				return;
 			}
-			else if (this->sword->mSettingRightItem)
+			else if (this->weapon->mSettingRightItem)
 			{
-				this->sword->AddVx(Define::ITEM_SPEED_X);
-				this->sword->AddVy(Define::ITEM_SPEED_Y);
+				this->weapon->AddVx(Define::ITEM_SPEED_X);
+				this->weapon->AddVy(Define::ITEM_SPEED_Y);
 				this->timeDelayDefaultState += dt;
 				if (this->timeDelayDefaultState > 0.8f)
 				{
@@ -249,7 +246,7 @@ void FatGuard::Update(float dt)
 			Mode = Oroku::RunMode::RunComeback;
 			mSettingRightRun = false;
 			mSettingLeftRun = false;
-			this->allowDrawSword = false;
+			this->allowDrawWeapon = false;
 			this->SetState(new FatGuardRunningState(this->mOrokuData));
 		}
 #pragma endregion
@@ -298,9 +295,9 @@ void FatGuard::Draw(D3DXVECTOR2 trans)
 	mCurrentAnimation->FlipVertical(this->mCurrentReverse);
 	mCurrentAnimation->SetPosition(this->GetPosition());
 	mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0), trans);
-	if (allowDrawSword)
+	if (allowDrawWeapon)
 	{
-		sword->Draw(D3DXVECTOR3(sword->posX, sword->posY, 0), trans);
+		weapon->Draw(D3DXVECTOR3(weapon->posX, weapon->posY, 0), trans);
 	}
 }
 

@@ -3,6 +3,7 @@
 StrongGuardHurtingState::StrongGuardHurtingState(OrokuData *orokuData)
 {
 	this->mOrokuData = orokuData;
+	timeDelay = 0;
 	this->mOrokuData->strongGuard->allowDefault = true;
 	this->mOrokuData->strongGuard->settingAttack = false;
 	this->mOrokuData->strongGuard->runningFire = false;
@@ -20,7 +21,7 @@ void StrongGuardHurtingState::Update(float dt)
 {
 	timeDelay += dt;
 
-	if (timeDelay > 0.8f)
+	if (timeDelay > 1.0f)
 	{
 		this->mOrokuData->strongGuard->allowDefault = false;
 	}

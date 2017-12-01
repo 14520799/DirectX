@@ -1,11 +1,11 @@
 #pragma once
 #include "Item.h"
-class SwordFatGuard : public Item
+class SwordWeapon : public Item
 {
 public:
-    ~SwordFatGuard();
+    ~SwordWeapon();
 
-	SwordFatGuard(D3DXVECTOR3 position);
+	SwordWeapon(D3DXVECTOR3 position);
 
     virtual const char* FileName();
     virtual int TotalFrame();

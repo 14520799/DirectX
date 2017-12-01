@@ -3,6 +3,8 @@ class OrokuState;
 class ThinGuard;
 class FatGuard;
 class StrongGuard;
+class Camel;
+class CivilianWindow;
 
 class OrokuData
 {
@@ -10,10 +12,12 @@ public:
 	OrokuData();
 	~OrokuData();
 
-	OrokuState	*state;
-	ThinGuard	*thinGuard;
-	FatGuard	*fatGuard;
-	StrongGuard	*strongGuard;
+	OrokuState		*state;
+	ThinGuard		*thinGuard;
+	FatGuard		*fatGuard;
+	StrongGuard		*strongGuard;
+	Camel			*camel;
+	CivilianWindow	*civilianWindow;
 
 protected:
 };

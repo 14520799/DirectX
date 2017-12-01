@@ -1,6 +1,7 @@
 #include "PlayerHorizontalClimbingState.h"
 #include "PlayerHorizontalClimbingDefaultState.h"
 #include "PlayerFallingState.h"
+#include "../MapObjects/AppleWeapon.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 
@@ -67,8 +68,16 @@ void PlayerHorizontalClimbingState::HandleKeyboard(std::map<int, bool> keys)
 
 void PlayerHorizontalClimbingState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
-	switch (side)
+	if (impactor->Tag == Entity::EntityTypes::AppleItem)
 	{
+		this->mPlayerData->player->collisionAppleItem = true;
+		this->mPlayerData->player->apple = new AppleWeapon();
+		this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
+	}
+	else
+	{
+		switch (side)
+		{
 		case Entity::Left: case Entity::TopLeft:
 			//va cham phia ben trai player
 			if (this->mPlayerData->player->getMoveDirection() == Player::MoveToLeft)
@@ -90,6 +99,7 @@ void PlayerHorizontalClimbingState::OnCollision(Entity *impactor, Entity::SideCo
 
 		default:
 			break;
+		}
 	}
 }
 

@@ -6,6 +6,7 @@
 StrongGuardRunningState::StrongGuardRunningState(OrokuData *orokuData)
 {
 	this->mOrokuData = orokuData;
+	this->mOrokuData->strongGuard->runningFire = false;
 	originPosX = this->mOrokuData->strongGuard->GetPosition().x;
 	this->mOrokuData->strongGuard->SetVx(0);
 	this->mOrokuData->strongGuard->SetVy(0);
@@ -84,7 +85,7 @@ void StrongGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisio
 		switch (side)
 		{
 		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
-			this->mOrokuData->strongGuard->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
+			this->mOrokuData->strongGuard->AddPosition(0, -4);
 			this->mOrokuData->strongGuard->SetState(new StrongGuardRunningFireState(this->mOrokuData));
 			break;
 
@@ -93,7 +94,7 @@ void StrongGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisio
 		}
 	}
 	else if (impactor->Tag != Entity::EntityTypes::Guard && impactor->Tag != Entity::EntityTypes::Sword &&
-			impactor->Tag != Entity::EntityTypes::AppleItem)
+			impactor->Tag != Entity::EntityTypes::AppleItem && impactor->Tag != Entity::EntityTypes::FireControl)
 	{
  		switch (side)
 		{

@@ -12,6 +12,7 @@
 PlayerStandingJumpState::PlayerStandingJumpState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
+	this->mPlayerData->player->AddPosition(0, -10);
 	this->mPlayerData->player->SetVy(Define::PLAYER_MIN_JUMP_VELOCITY);
 	noPressed = false;
 }
@@ -28,8 +29,7 @@ void PlayerStandingJumpState::Update(float dt)
 
 	if (mPlayerData->player->GetVy() >= Define::PLAYER_MAX_JUMP_VELOCITY)
 	{
-		this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
-		return;
+		this->mPlayerData->player->SetVy(Define::PLAYER_MAX_JUMP_VELOCITY);
 	}
 
 	if (noPressed)
@@ -103,6 +103,13 @@ void PlayerStandingJumpState::HandleKeyboard(std::map<int, bool> keys)
 
 void PlayerStandingJumpState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
+	if (impactor->Tag == Entity::EntityTypes::GroundControl)
+	{
+		this->mPlayerData->player->CurrentMoveStairs = Entity::EntityCurrentMoveStairs::CurrentGround;
+		return;
+	}
+
+
 	if (impactor->Tag == Entity::EntityTypes::VerticalRope)
 	{
 		this->mPlayerData->player->SetPosition(impactor->GetPosition().x, this->mPlayerData->player->GetPosition().y);
@@ -119,13 +126,27 @@ void PlayerStandingJumpState::OnCollision(Entity *impactor, Entity::SideCollisio
 		this->mPlayerData->player->apple = new AppleWeapon();
 		this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard)
+	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard ||
+		impactor->Tag == Entity::EntityTypes::Pot)
 	{
 
 	}
-	else if (impactor->Tag == Entity::EntityTypes::DownStairsControl || impactor->Tag == Entity::EntityTypes::UpStairsControl)
+	else if (impactor->Tag == Entity::EntityTypes::DownStairsControl || impactor->Tag == Entity::EntityTypes::UpStairsControl ||
+		impactor->Tag == Entity::EntityTypes::FallControl)
 	{
 
+	}
+	else if (impactor->Tag == Entity::EntityTypes::Camel)
+	{
+		switch (side)
+		{
+		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
+			this->mPlayerData->player->SetState(new PlayerStandingJumpState(this->mPlayerData));
+			break;
+
+		default:
+			break;
+		}
 	}
 	else
 	{
@@ -148,6 +169,7 @@ void PlayerStandingJumpState::OnCollision(Entity *impactor, Entity::SideCollisio
 
 		case Entity::BottomRight: case Entity::BottomLeft: case Entity::Bottom:
 			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
+			this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
 
 		default:
 			break;

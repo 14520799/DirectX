@@ -22,7 +22,11 @@ public:
 		StrongGuardRunning,
 		StrongGuardRunningFire,
 		StrongGuardHurting,
-		StrongGuardAttack
+		StrongGuardAttack,
+		CamelDefault,
+		CamelLying,
+		CivilianWindowDefault,
+		CivilianWindowThrowPot
 	};
 
 	~OrokuState();

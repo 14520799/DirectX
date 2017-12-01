@@ -22,8 +22,10 @@ namespace Define
 #pragma endregion
 
 	const float DANGEROUS_AREA_MIN_X = 0.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
+	const float DANGEROUS_AREA_POT_MAX_X = 100.0f; //vung nguy hiem khi player buoc vao co the se gap oroku nem binh
 	const float DANGEROUS_AREA_MAX_X = 200.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
 	const float DANGEROUS_AREA_MAX_Y = 150.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
+
 #pragma region OROKU
 	const float OROKU_MAX_RUNNING_SPEED = 100.0f;
 	const float OROKU_RUN_SPPED_X = 10.0f;

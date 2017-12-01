@@ -43,21 +43,19 @@ void PlayerFallingStopState::OnCollision(Entity *impactor, Entity::SideCollision
 	{
 		this->mPlayerData->player->SetState(new PlayerDeathState(this->mPlayerData));
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Fire && !this->mPlayerData->player->allowDeath)
-	{
-		//giam toc do khi player chay vao bai lua
-		//acceletoryX = Define::PLAYER_HURT_SPEED_X;
-	}
 	//bi thuong khi trung kiem
-	else if (impactor->Tag == Entity::EntityTypes::Sword && this->mPlayerData->player->allowDeath)
+	else if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot) &&
+		this->mPlayerData->player->allowDeath)
 	{
 		this->mPlayerData->player->SetState(new PlayerDeathState(this->mPlayerData));
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard)
+	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard ||
+		impactor->Tag == Entity::EntityTypes::Camel || impactor->Tag == Entity::EntityTypes::Fire)
 	{
 
 	}
-	else if (impactor->Tag == Entity::EntityTypes::UpStairsControl || impactor->Tag == Entity::EntityTypes::DownStairsControl || impactor->Tag == Entity::EntityTypes::GroundControl)
+	else if (impactor->Tag == Entity::EntityTypes::UpStairsControl || impactor->Tag == Entity::EntityTypes::DownStairsControl ||
+		impactor->Tag == Entity::EntityTypes::GroundControl || impactor->Tag == Entity::EntityTypes::FallControl)
 	{
 
 	}

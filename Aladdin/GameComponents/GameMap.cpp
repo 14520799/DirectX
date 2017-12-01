@@ -4,6 +4,8 @@
 #include "../GameObjects/Orokus/Guards/ThinGuard.h"
 #include "../GameObjects/Orokus/Guards/FatGuard.h"
 #include "../GameObjects/Orokus/Guards/StrongGuard.h"
+#include "../GameObjects/Orokus/Camel/Camel.h"
+#include "../GameObjects/Orokus/Civilians/CivilianWindow.h"
 
 GameMap::GameMap(char* filePath)
 {
@@ -88,6 +90,10 @@ void GameMap::LoadMap(char* filePath)
 			{
 				entity->Tag = Entity::EntityTypes::Fire;
 			}
+			else if (object->GetName() == "FireControl")
+			{
+				entity->Tag = Entity::EntityTypes::FireControl;
+			}
 			else if (object->GetName() == "Stairs")
 			{
 				entity->Tag = Entity::EntityTypes::Stairs;
@@ -117,6 +123,10 @@ void GameMap::LoadMap(char* filePath)
 			else if (object->GetName() == "DownStairsControl")
 			{
 				entity->Tag = Entity::EntityTypes::DownStairsControl;
+			}
+			else if (object->GetName() == "Ground")
+			{
+				entity->Tag = Entity::EntityTypes::Ground;
 			}
 			else if (object->GetName() == "GroundControl")
 			{
@@ -150,12 +160,18 @@ void GameMap::LoadMap(char* filePath)
 
 	//tao oroku
 #pragma region -OROKU-
-	//createOroku(mListOrokus, D3DXVECTOR3(1065, 972.5f, 0), 1);
-	//createOroku(mListOrokus, D3DXVECTOR3(2950, 1032.5f, 0), 1);
-	createOroku(mListOrokus, D3DXVECTOR3(1230, 980, 0), 2);
-	//createOroku(mListOrokus, D3DXVECTOR3(1545, 977.5f, 0), 3);
+	//1 - ThinGuard, 2 - FatGuard, 3 - StrongGuard, 4 - Camel, 5 - CivilianWindow
+	createOroku(mListOrokus, D3DXVECTOR3(1065, 972.5f, 0), 1);
+	createOroku(mListOrokus, D3DXVECTOR3(2900, 1035, 0), 2);
+	createOroku(mListOrokus, D3DXVECTOR3(1545, 977.5f, 0), 3);
+	createOroku(mListOrokusSupport, D3DXVECTOR3(2575, 1047.5f, 0), 4);
+	createOroku(mListOrokus, D3DXVECTOR3(2848, 780, 0), 5);
 
 	for (auto child : mListOrokus)
+	{
+		mQuadTree->insertEntity(child);
+	}
+	for (auto child : mListOrokusSupport)
 	{
 		mQuadTree->insertEntity(child);
 	}
@@ -226,6 +242,17 @@ void GameMap::createOroku(std::vector<Oroku*> &entitiesOut, D3DXVECTOR3 position
 		oroku = new StrongGuard(position);
 		oroku->Tag = Entity::EntityTypes::Guard;
 		entitiesOut.push_back(oroku);
+		break;
+	case 4:
+		oroku = new Camel(position);
+		oroku->Tag = Entity::EntityTypes::Camel;
+		entitiesOut.push_back(oroku);
+		break;
+	case 5:
+		oroku = new CivilianWindow(position);
+		oroku->Tag = Entity::EntityTypes::CivilianWindow;
+		entitiesOut.push_back(oroku);
+		return;
 		break;
 
 	default:
@@ -301,7 +328,6 @@ void GameMap::Update(float dt)
 	{
 		mListItems[i]->Update(dt);
 	}
-
 	for (size_t i = 0; i < mListOrokus.size(); i++)
 	{
 		/*neu oroku chua set player thi se set player
@@ -314,6 +340,15 @@ void GameMap::Update(float dt)
 			mListOrokus[i]->settedPlayer = true;
 		}
 		mListOrokus[i]->Update(dt);
+	}
+	for (size_t i = 0; i < mListOrokusSupport.size(); i++)
+	{
+		if (!mListOrokusSupport[i]->settedPlayer)
+		{
+			mListOrokusSupport[i]->SetPlayer(this->GetPlayer());
+			mListOrokusSupport[i]->settedPlayer = true;
+		}
+		mListOrokusSupport[i]->Update(dt);
 	}
 }
 
@@ -408,6 +443,10 @@ void GameMap::Draw()
 	{
 		mListOrokus[i]->Draw(trans);
 	}
+	for (size_t i = 0; i < mListOrokusSupport.size(); i++)
+	{
+		mListOrokusSupport[i]->Draw(trans);
+	}
 #pragma endregion
 }
 
@@ -446,6 +485,11 @@ void GameMap::RemoveOroku(Oroku *oroku)
 std::vector<Oroku*> GameMap::GetListOroku()
 {
 	return mListOrokus;
+}
+
+std::vector<Oroku*> GameMap::GetListOrokuSupport()
+{
+	return mListOrokusSupport;
 }
 
 void GameMap::SetPlayer(Player* player)

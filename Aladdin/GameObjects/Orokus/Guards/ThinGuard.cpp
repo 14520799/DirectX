@@ -179,13 +179,13 @@ void ThinGuard::changeAnimation(OrokuState::StateName state)
 
 	case OrokuState::ThinGuardRunning:
 		delete mAnimationRunning;
-		mAnimationRunning = new Animation("Resources/Orokus/Guards/ThinGuardRunning.png", 8, 1, 8, 0.01f);
+		mAnimationRunning = new Animation("Resources/Orokus/Guards/ThinGuardRunning.png", 8, 1, 8, 0.05f);
 		mCurrentAnimation = mAnimationRunning;
 		break;
 
 	case OrokuState::ThinGuardAttack:
 		delete mAnimationAttack;
-		mAnimationAttack = new Animation("Resources/Orokus/Guards/ThinGuardAttack.png", 6, 1, 6, 0.01f);
+		mAnimationAttack = new Animation("Resources/Orokus/Guards/ThinGuardAttack.png", 6, 1, 6, 0.05f);
 		mCurrentAnimation = mAnimationAttack;
 		break;
 

@@ -32,10 +32,12 @@ public:
 	//dung them CenterStairs de xu ly xoa cau thang luc ban dau
     enum EntityTypes
     {
-        None, Aladdin, Static,
-		VerticalRope, HorizontalRope, Fire, AppleItem, AppleWeapon,
+        None, Aladdin, Static, Ground,
+		VerticalRope, HorizontalRope, Fire, FireControl, AppleItem, AppleWeapon,
 		Stairs, UpStairs, UpStairsControl, CenterStairs, DownStairs, DownStairsControl, GroundControl, FallControl,
-		Guard, Sword
+		Guard, Sword,
+		Camel,
+		CivilianWindow, Pot
     };
 	
 	enum EntityCurrentMoveStairs
@@ -107,6 +109,7 @@ public:
 	bool allowFalling;
 
 	bool collisionWithOroku;
+	bool collisionWithCamel;
 	bool weaponCollided; //qua tao hoac kiem khi va cham xuong dat hay tuong thi se mat
 	bool collisionWithPlayer;
 protected:

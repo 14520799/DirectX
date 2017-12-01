@@ -76,6 +76,8 @@ public:
 	Item *apple;
 	Item *appleEffect;
 
+	PlayerState::StateName mCurrentState, mPreCurrentState;
+
 	GameMap *mMap;
 protected:
     Camera      *mCamera;
@@ -116,11 +118,10 @@ protected:
 
     void changeAnimation(PlayerState::StateName state);
 
-    PlayerState::StateName mCurrentState, mPreCurrentState;
-
     //chi cho phep jump khi nhan nhim space, muon nhay lai phai tha phim space roi nhan lai
     bool allowJump, removedApple, mCurrentReverse;
 	float timeDeath;
 	float timeDelayStates;
+	float timeDelayForFalling;
 };
 

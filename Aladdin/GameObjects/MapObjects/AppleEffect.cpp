@@ -2,7 +2,7 @@
 
 AppleEffect::AppleEffect(D3DXVECTOR3 position)
 {
-	timeDelayAppleEffect = 0;
+	timeDelayWeaponEffect = 0;
 	init(position);
 }
 

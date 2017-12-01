@@ -45,11 +45,13 @@ public:
 	virtual void OnNoCollisionWithBottom();
 
 	bool mCurrentReverse, mPreCurrentReverse, settedPlayer, settingAttack;
-	bool allowDrawSword, allowDefault, collisionFire; //xy ly khi oroku cham vao lua se chuyen sang state default
+	bool allowDrawWeapon, allowDefault;
+	bool collisionFire; //xy ly khi oroku cham vao lua se chuyen sang state default
 
 	Player *mPlayer;
 
-	Item *sword;
+	Item	*weapon,
+			*weaponEffect;
 
 	QuadTree *mQuadTree;
 
@@ -60,11 +62,13 @@ protected:
 	Animation	*mCurrentAnimation,
 				*mPreCurrentAnimation,
 				*mAnimationDefault,
+				*mAnimationLying,
 				*mAnimationStanding,
 				*mAnimationRunning,
 				*mAnimationRunningFire,
 				*mAnimationAttack,
-				*mAnimationHurting;
+				*mAnimationHurting,
+				*mAnimationThrowPot;
 
 	virtual void changeAnimation(OrokuState::StateName state);
 

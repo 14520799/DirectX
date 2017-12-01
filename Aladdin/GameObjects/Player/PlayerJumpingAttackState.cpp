@@ -1,6 +1,7 @@
 #include "PlayerJumpingAttackState.h"
 #include "PlayerDefaultState.h"
 #include "PlayerStandingState.h"
+#include "PlayerStandingJumpState.h"
 #include "PlayerFallingState.h"
 #include "PlayerVerticalClimbingState.h"
 #include "PlayerHorizontalClimbingState.h"
@@ -111,9 +112,30 @@ void PlayerJumpingAttackState::OnCollision(Entity *impactor, Entity::SideCollisi
 		this->mPlayerData->player->apple = new AppleWeapon();
 		this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard)
+	else if (impactor->Tag == Entity::EntityTypes::Guard)
+	{
+		this->mPlayerData->player->collisionWithOroku = true;
+	}
+	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot)
 	{
 
+	}
+	else if (impactor->Tag == Entity::EntityTypes::DownStairsControl || impactor->Tag == Entity::EntityTypes::UpStairsControl ||
+		impactor->Tag == Entity::EntityTypes::FallControl)
+	{
+
+	}
+	else if (impactor->Tag == Entity::EntityTypes::Camel)
+	{
+		switch (side)
+		{
+		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
+			this->mPlayerData->player->SetState(new PlayerStandingJumpState(this->mPlayerData));
+			break;
+
+		default:
+			break;
+		}
 	}
 	else
 	{

@@ -37,8 +37,8 @@ RECT Item::GetBound()
 
 	rect.left = this->posX - 5;
 	rect.right = this->posX + 5;
-	rect.top = this->posY + 5;
-	rect.bottom = this->posY - 5;
+	rect.top = this->posY - 5;
+	rect.bottom = this->posY + 5;
 
 	return rect;
 }

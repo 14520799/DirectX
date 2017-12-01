@@ -21,7 +21,7 @@ public:
 	virtual RECT GetBound();
 	virtual void OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side);
 
-	float timeDelayAppleEffect;
+	float timeDelayWeaponEffect;
 
 	D3DXVECTOR3 originPos;
 protected:

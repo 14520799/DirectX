@@ -43,6 +43,7 @@ public:
     ~GameMap();
 
 	std::vector<Oroku*> GetListOroku();
+	std::vector<Oroku*> GetListOrokuSupport();
 	void RemoveItem(Item *item);
 	void RemoveOroku(Oroku *oroku);
 
@@ -67,6 +68,7 @@ private:
     QuadTree                        *mQuadTree;
     std::vector<Item*>				mListItems;
 	std::vector<Oroku*>             mListOrokus;
+	std::vector<Oroku*>				mListOrokusSupport;
 	std::vector<Entity*>			mListUpStairs;
 	std::vector<Entity*>			mListDownStairs;
 };

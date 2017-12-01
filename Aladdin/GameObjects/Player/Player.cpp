@@ -92,8 +92,8 @@ void Player::Update(float dt)
 	for (size_t i = 0; i < mListAppleEffect.size(); i++)
 	{
 		mListAppleEffect.at(i)->Update(dt);
-		mListAppleEffect.at(i)->timeDelayAppleEffect += dt;
-		if (mListAppleEffect.at(i)->timeDelayAppleEffect > 0.25f)
+		mListAppleEffect.at(i)->timeDelayWeaponEffect += dt;
+		if (mListAppleEffect.at(i)->timeDelayWeaponEffect > 0.25f)
 		{
 			delete mListAppleEffect.at(i);
 			mListAppleEffect.at(i) = nullptr;
@@ -721,13 +721,16 @@ void Player::OnNoCollisionWithBottom()
 		return;
 	}
 
+	timeDelayForFalling += 0.1f;
+
 	if (mCurrentState != PlayerState::StandingJump && mCurrentState != PlayerState::RunningJump && mCurrentState != PlayerState::VerticalClimbingJump &&
 		mCurrentState != PlayerState::VerticalClimbing && mCurrentState != PlayerState::VerticalClimbingDefault &&
 		mCurrentState != PlayerState::JumpingAttack && mCurrentState != PlayerState::JumpingThrowApple &&
 		mCurrentState != PlayerState::HorizontalClimbing && mCurrentState != PlayerState::HorizontalClimbingDefault &&
 		mCurrentState != PlayerState::ClimbingAttack && mCurrentState != PlayerState::ClimbingThrowApple &&
-		mCurrentState != PlayerState::VerticalClimbing && allowFalling)
+		mCurrentState != PlayerState::VerticalClimbing && allowFalling && timeDelayForFalling > 0.5f)
 	{
+		timeDelayForFalling = 0;
 		this->SetState(new PlayerFallingState(this->mPlayerData));
 	}
 }

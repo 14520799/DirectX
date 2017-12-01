@@ -47,6 +47,12 @@
     <Filter Include="Framework\GameObjects\Orokus\Guards">
       <UniqueIdentifier>{7a14dc18-730c-47c6-a546-69c87666cabd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\GameObjects\Orokus\Camel">
+      <UniqueIdentifier>{13a1ece7-6426-4d71-a70b-64ff86134dbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\GameObjects\Orokus\Civilians">
+      <UniqueIdentifier>{5c0a42ab-f441-4d46-bf58-72031bb6df7f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameComponents\Game.cpp">
@@ -250,9 +256,6 @@
     <ClCompile Include="GameObjects\Orokus\Guards\FatGuardDefaultState.cpp">
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\MapObjects\SwordFatGuard.cpp">
-      <Filter>Framework\GameObjects\MapObjects</Filter>
-    </ClCompile>
     <ClCompile Include="GameObjects\MapObjects\AppleEffect.cpp">
       <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClCompile>
@@ -312,6 +315,33 @@
     </ClCompile>
     <ClCompile Include="GameObjects\Orokus\Guards\ThinGuardHurtingState.cpp">
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Camel\Camel.cpp">
+      <Filter>Framework\GameObjects\Orokus\Camel</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Camel\CamelDefaultState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Camel</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Camel\CamelLyingState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Camel</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Civilians\CivilianWindow.cpp">
+      <Filter>Framework\GameObjects\Orokus\Civilians</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Civilians\CivilianWindowThrowPotState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Civilians</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\SwordWeapon.cpp">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\PotWeapon.cpp">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Civilians\CivilianWindowDefaultState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Civilians</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\PotWeaponEffect.cpp">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -525,9 +555,6 @@
     <ClInclude Include="GameObjects\Orokus\Guards\FatGuardDefaultState.h">
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\MapObjects\SwordFatGuard.h">
-      <Filter>Framework\GameObjects\MapObjects</Filter>
-    </ClInclude>
     <ClInclude Include="GameObjects\MapObjects\AppleEffect.h">
       <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClInclude>
@@ -587,6 +614,33 @@
     </ClInclude>
     <ClInclude Include="GameObjects\Orokus\Guards\ThinGuardHurtingState.h">
       <Filter>Framework\GameObjects\Orokus\Guards</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Camel\Camel.h">
+      <Filter>Framework\GameObjects\Orokus\Camel</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Camel\CamelDefaultState.h">
+      <Filter>Framework\GameObjects\Orokus\Camel</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Camel\CamelLyingState.h">
+      <Filter>Framework\GameObjects\Orokus\Camel</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Civilians\CivilianWindow.h">
+      <Filter>Framework\GameObjects\Orokus\Civilians</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Civilians\CivilianWindowThrowPotState.h">
+      <Filter>Framework\GameObjects\Orokus\Civilians</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\SwordWeapon.h">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\PotWeapon.h">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Civilians\CivilianWindowDefaultState.h">
+      <Filter>Framework\GameObjects\Orokus\Civilians</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\PotWeaponEffect.h">
+      <Filter>Framework\GameObjects\MapObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

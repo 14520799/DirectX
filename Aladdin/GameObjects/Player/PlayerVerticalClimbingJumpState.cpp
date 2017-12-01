@@ -107,18 +107,19 @@ void PlayerVerticalClimbingJumpState::OnCollision(Entity *impactor, Entity::Side
 			return;
 		}
 	}
-	//else if (impactor->Tag == Entity::EntityTypes::HorizontalRope)
-	//{
-	//	//this->mPlayerData->player->SetPosition(this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y + (this->mPlayerData->player->GetPosition().y - impactor->GetPosition().y));
-	//	this->mPlayerData->player->SetState(new PlayerHorizontalClimbingDefaultState(this->mPlayerData));
-	//}
+	else if (impactor->Tag == Entity::EntityTypes::HorizontalRope)
+	{
+		//this->mPlayerData->player->SetPosition(this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y + (this->mPlayerData->player->GetPosition().y - impactor->GetPosition().y));
+		this->mPlayerData->player->SetState(new PlayerHorizontalClimbingDefaultState(this->mPlayerData));
+	}
 	else if (impactor->Tag == Entity::EntityTypes::AppleItem)
 	{
 		this->mPlayerData->player->collisionAppleItem = true;
 		this->mPlayerData->player->apple = new AppleWeapon();
 		this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard)
+	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard ||
+		impactor->Tag == Entity::EntityTypes::Pot)
 	{
 
 	}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="68" height="10" tilewidth="112" tileheight="112" nextobjectid="66">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="68" height="10" tilewidth="112" tileheight="112" nextobjectid="73">
  <tileset firstgid="1" source="Scene_1.tsx"/>
  <layer name="Tile Layer 1" width="68" height="10">
   <data encoding="csv">
@@ -54,7 +54,7 @@
   <object id="8" name="Stairs" x="2210" y="911.5" width="165" height="16"/>
   <object id="9" x="2274" y="929" width="63" height="189"/>
   <object id="11" x="3499.5" y="421.5" width="63" height="697"/>
-  <object id="12" x="2337" y="1090" width="1162" height="28"/>
+  <object id="12" name="Ground" x="2337" y="1085" width="1162" height="34"/>
   <object id="13" x="2785" y="683" width="407.667" height="19"/>
   <object id="15" x="2530.5" y="401.5" width="1076" height="19"/>
   <object id="16" x="2339.5" y="685.5" width="160" height="19"/>
@@ -91,11 +91,17 @@
   <object id="50" name="UpStairsControl" x="3562.67" y="672" width="15" height="259.333"/>
   <object id="52" name="DownStairsControl" x="4256" y="839.337" width="15" height="258"/>
   <object id="54" name="GroundControl" x="3920" y="1093.33" width="188" height="4"/>
-  <object id="55" name="Fire" x="753" y="1025" width="130" height="5"/>
-  <object id="56" name="Fire" x="1339" y="1025" width="130" height="5"/>
-  <object id="57" name="Fire" x="1626" y="1025" width="130" height="5"/>
-  <object id="58" name="Fire" x="3228" y="1084.5" width="130" height="5"/>
+  <object id="55" name="Fire" x="773" y="1025" width="100" height="5"/>
+  <object id="56" name="Fire" x="1358" y="1025" width="100" height="5"/>
+  <object id="57" name="Fire" x="1637" y="1025" width="100" height="5"/>
+  <object id="58" name="Fire" x="3248" y="1080" width="100" height="5"/>
   <object id="59" name="FallControl" x="2351" y="909.333" width="24" height="2"/>
   <object id="65" name="FallControl" x="4340.67" y="824.333" width="24" height="2"/>
+  <object id="66" name="FireControl" x="1586" y="1025" width="5" height="5"/>
+  <object id="68" name="FireControl" x="1783.5" y="1025" width="5" height="5"/>
+  <object id="69" name="FireControl" x="1505.5" y="1025" width="5" height="5"/>
+  <object id="70" name="FireControl" x="1306.5" y="1025" width="5" height="5"/>
+  <object id="71" name="FireControl" x="916.5" y="1025" width="5" height="5"/>
+  <object id="72" name="FireControl" x="720.5" y="1025" width="5" height="5"/>
  </objectgroup>
 </map>

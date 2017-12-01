@@ -75,12 +75,12 @@ void StrongGuardRunningFireState::OnCollision(Entity *impactor, Entity::SideColl
 			break;
 		}
 	}
-	else if (impactor->Tag != Entity::EntityTypes::Fire)
+	else if (impactor->Tag == Entity::EntityTypes::FireControl)
 	{
 		switch (side)
 		{
 		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
-			this->mOrokuData->strongGuard->runningFire = false;
+			this->mOrokuData->strongGuard->AddPosition(0, 4);
 			this->mOrokuData->strongGuard->SetState(new StrongGuardRunningState(this->mOrokuData));
 			break;
 

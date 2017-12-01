@@ -39,15 +39,14 @@ void PlayerPushingState::HandleKeyboard(std::map<int, bool> keys)
 
 void PlayerPushingState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
-	if (impactor->Tag == Entity::EntityTypes::Fire && this->mPlayerData->player->allowDeath)
+	if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot ||
+		impactor->Tag == Entity::EntityTypes::Fire) &&
+		this->mPlayerData->player->allowDeath)
 	{
 		this->mPlayerData->player->SetState(new PlayerDeathState(this->mPlayerData));
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Sword && this->mPlayerData->player->allowDeath)
-	{
-		this->mPlayerData->player->SetState(new PlayerDeathState(this->mPlayerData));
-	}
-	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard)
+	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard ||
+		impactor->Tag == Entity::EntityTypes::Camel || impactor->Tag == Entity::EntityTypes::Pot)
 	{
 
 	}

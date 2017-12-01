@@ -3,6 +3,7 @@
 #include "PlayerDeathState.h"
 #include "PlayerDefaultState.h"
 #include "PlayerFallingState.h"
+#include "../MapObjects/AppleWeapon.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 
@@ -45,21 +46,21 @@ void PlayerRunningStopState::OnCollision(Entity *impactor, Entity::SideCollision
 {
 	//lay phia va cham so voi player
 	//GameCollision::SideCollisions side = GameCollision::getSideCollision(this->mPlayerData->player, data);
-	if (impactor->Tag == Entity::EntityTypes::Fire && this->mPlayerData->player->allowDeath)
+	if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot ||
+		impactor->Tag == Entity::EntityTypes::Fire) &&
+		this->mPlayerData->player->allowDeath)
 	{
 		this->mPlayerData->player->SetState(new PlayerDeathState(this->mPlayerData));
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Fire && !this->mPlayerData->player->allowDeath)
+	else if (impactor->Tag == Entity::EntityTypes::AppleItem)
 	{
-		//giam toc do khi player chay vao bai lua
-		//acceletoryX = Define::PLAYER_HURT_SPEED_X;
+		this->mPlayerData->player->collisionAppleItem = true;
+		this->mPlayerData->player->apple = new AppleWeapon();
+		this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
 	}
-	//bi thuong khi trung kiem
-	else if (impactor->Tag == Entity::EntityTypes::Sword && this->mPlayerData->player->allowDeath)
-	{
-		this->mPlayerData->player->SetState(new PlayerDeathState(this->mPlayerData));
-	}
-	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard)
+	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard ||
+		impactor->Tag == Entity::EntityTypes::Camel || impactor->Tag == Entity::EntityTypes::Pot || 
+		impactor->Tag == Entity::EntityTypes::Fire)
 	{
 
 	}

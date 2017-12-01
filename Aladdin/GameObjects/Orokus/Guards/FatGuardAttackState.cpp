@@ -12,12 +12,12 @@ FatGuardAttackState::FatGuardAttackState(OrokuData *orokuData)
 	this->mOrokuData->fatGuard->mSettingRightRun = false;
 	this->mOrokuData->fatGuard->SetVx(0);
 	this->mOrokuData->fatGuard->SetVy(0);
-	this->mOrokuData->fatGuard->sword->SetPosition(D3DXVECTOR3(
+	this->mOrokuData->fatGuard->weapon->SetPosition(D3DXVECTOR3(
 		this->mOrokuData->fatGuard->GetPosition().x,
 		this->mOrokuData->fatGuard->GetPosition().y - this->mOrokuData->fatGuard->GetHeight() / 2,
 		0));
-	this->mOrokuData->fatGuard->sword->SetVx(0);
-	this->mOrokuData->fatGuard->sword->SetVy(0);
+	this->mOrokuData->fatGuard->weapon->SetVx(0);
+	this->mOrokuData->fatGuard->weapon->SetVy(0);
 }
 
 FatGuardAttackState::~FatGuardAttackState()
@@ -36,32 +36,32 @@ void FatGuardAttackState::Update(float dt)
 		return;
 	}
 
-	if (this->mOrokuData->fatGuard->allowDrawSword)
+	if (this->mOrokuData->fatGuard->allowDrawWeapon)
 	{
 		//xet huong hien tai cua fatguard
 		if (this->mOrokuData->fatGuard->mCurrentReverse)
 		{
-			if (this->mOrokuData->fatGuard->sword->mSettingLeftItem)
+			if (this->mOrokuData->fatGuard->weapon->mSettingLeftItem)
 			{
-				this->mOrokuData->fatGuard->sword->AddVx(-Define::ITEM_SPEED_X);
-				this->mOrokuData->fatGuard->sword->AddVy(Define::ITEM_SPEED_Y);
+				this->mOrokuData->fatGuard->weapon->AddVx(-Define::ITEM_SPEED_X);
+				this->mOrokuData->fatGuard->weapon->AddVy(Define::ITEM_SPEED_Y);
 				return;
 			}
-			this->mOrokuData->fatGuard->sword->mSettingRightItem = true;
-			this->mOrokuData->fatGuard->sword->AddVx(Define::ITEM_SPEED_X);
-			this->mOrokuData->fatGuard->sword->AddVy(Define::ITEM_SPEED_Y);
+			this->mOrokuData->fatGuard->weapon->mSettingRightItem = true;
+			this->mOrokuData->fatGuard->weapon->AddVx(Define::ITEM_SPEED_X);
+			this->mOrokuData->fatGuard->weapon->AddVy(Define::ITEM_SPEED_Y);
 		}
 		else if (!this->mOrokuData->fatGuard->mCurrentReverse)
 		{
-			if (this->mOrokuData->fatGuard->sword->mSettingRightItem)
+			if (this->mOrokuData->fatGuard->weapon->mSettingRightItem)
 			{
-				this->mOrokuData->fatGuard->sword->AddVx(Define::ITEM_SPEED_X);
-				this->mOrokuData->fatGuard->sword->AddVy(Define::ITEM_SPEED_Y);
+				this->mOrokuData->fatGuard->weapon->AddVx(Define::ITEM_SPEED_X);
+				this->mOrokuData->fatGuard->weapon->AddVy(Define::ITEM_SPEED_Y);
 				return;
 			}
-			this->mOrokuData->fatGuard->sword->mSettingLeftItem = true;
-			this->mOrokuData->fatGuard->sword->AddVx(-Define::ITEM_SPEED_X);
-			this->mOrokuData->fatGuard->sword->AddVy(Define::ITEM_SPEED_Y);
+			this->mOrokuData->fatGuard->weapon->mSettingLeftItem = true;
+			this->mOrokuData->fatGuard->weapon->AddVx(-Define::ITEM_SPEED_X);
+			this->mOrokuData->fatGuard->weapon->AddVy(Define::ITEM_SPEED_Y);
 		}
 	}
 }

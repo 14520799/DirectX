@@ -31,7 +31,7 @@ void StrongGuardAttackState::Update(float dt)
 			this->mOrokuData->strongGuard->SetReverse(false);
 			this->mOrokuData->strongGuard->mSettingLeftRun = true;
 			this->mOrokuData->strongGuard->settingAttack = false;
-			if(this-mOrokuData->strongGuard->runningFire)
+			if(this->mOrokuData->strongGuard->runningFire)
 				this->mOrokuData->strongGuard->SetState(new StrongGuardRunningFireState(this->mOrokuData));
 			else
 				this->mOrokuData->strongGuard->SetState(new StrongGuardRunningState(this->mOrokuData));
@@ -42,7 +42,7 @@ void StrongGuardAttackState::Update(float dt)
 			this->mOrokuData->strongGuard->SetReverse(true);
 			this->mOrokuData->strongGuard->mSettingRightRun = true;
 			this->mOrokuData->strongGuard->settingAttack = false;
-			if (this - mOrokuData->strongGuard->runningFire)
+			if (this->mOrokuData->strongGuard->runningFire)
 				this->mOrokuData->strongGuard->SetState(new StrongGuardRunningFireState(this->mOrokuData));
 			else
 				this->mOrokuData->strongGuard->SetState(new StrongGuardRunningState(this->mOrokuData));

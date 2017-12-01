@@ -1,6 +1,7 @@
 #include "PlayerVerticalClimbingState.h"
 #include "PlayerVerticalClimbingDefaultState.h"
 #include "PlayerFallingState.h"
+#include "../MapObjects/AppleWeapon.h"
 #include "../../GameDefines/GameDefine.h"
 #include "../../GameComponents/GameCollision.h"
 
@@ -54,6 +55,12 @@ void PlayerVerticalClimbingState::HandleKeyboard(std::map<int, bool> keys)
 
 void PlayerVerticalClimbingState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
+	if (impactor->Tag == Entity::EntityTypes::AppleItem)
+	{
+		this->mPlayerData->player->collisionAppleItem = true;
+		this->mPlayerData->player->apple = new AppleWeapon();
+		this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
+	}
 	if (impactor->Tag != Entity::EntityTypes::VerticalRope)
 	{
 		switch (side)
@@ -72,6 +79,8 @@ void PlayerVerticalClimbingState::OnCollision(Entity *impactor, Entity::SideColl
 			break;
 		}
 	}
+
+
 
 }
 

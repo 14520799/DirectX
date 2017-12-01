@@ -100,17 +100,17 @@ void StrongGuard::Update(float dt)
 
 #pragma region OROKU AROUSE
 		else if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
-			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 2 && !settingAttack)
+			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 3 && !settingAttack)
 		{
-			if (mCurrentState == OrokuState::StrongGuardStanding)
+			if (mCurrentState == OrokuState::StrongGuardStanding || runningFire)
 				return;
 			this->SetReverse(false);
 			this->SetState(new StrongGuardStandingState(this->mOrokuData));
 		}
-		else if (this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X * 2 &&
+		else if (this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X * 3 &&
 			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MIN_X && !settingAttack)
 		{
-			if (mCurrentState == OrokuState::StrongGuardStanding)
+			if (mCurrentState == OrokuState::StrongGuardStanding || runningFire)
 				return;
 			this->SetReverse(true);
 			this->SetState(new StrongGuardStandingState(this->mOrokuData));
@@ -119,8 +119,8 @@ void StrongGuard::Update(float dt)
 
 #pragma region OROKU RUN COMEBACK
 		// khi co khoang cach voi player -600 --> 600 thi oroku se quay ve cho cu
-		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < -Define::DANGEROUS_AREA_MAX_X * 2 ||
-			this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MAX_X * 2) &&
+		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < -Define::DANGEROUS_AREA_MAX_X * 3 ||
+			this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MAX_X * 3) &&
 			Mode == Oroku::RunMode::RunAttack)
 		{
 			Mode = Oroku::RunMode::RunComeback;
@@ -167,10 +167,21 @@ void StrongGuard::SetPlayer(Player *player)
 RECT StrongGuard::GetBound()
 {
 	RECT rect;
-	rect.left = this->posX - mCurrentAnimation->GetWidth() / 2;
-	rect.right = rect.left + mCurrentAnimation->GetWidth();
-	rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;
-	rect.bottom = rect.top + mCurrentAnimation->GetHeight();
+
+	if (mCurrentState == OrokuState::StrongGuardAttack)
+	{
+		rect.left = this->posX - mCurrentAnimation->GetWidth() / 2;
+		rect.right = rect.left + mCurrentAnimation->GetWidth();
+		rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;
+		rect.bottom = rect.top + mCurrentAnimation->GetHeight();
+	}
+	else
+	{
+		rect.left = this->posX - mCurrentAnimation->GetWidth() / 10;
+		rect.right = this->posX + mCurrentAnimation->GetWidth() / 10;
+		rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;
+		rect.bottom = rect.top + mCurrentAnimation->GetHeight();
+	}
 
 	return rect;
 }
@@ -230,12 +241,6 @@ void StrongGuard::changeAnimation(OrokuState::StateName state)
 
 	this->width = mCurrentAnimation->GetWidth();
 	this->height = mCurrentAnimation->GetHeight();
-}
-
-void StrongGuard::OnNoCollisionWithBottom()
-{
-	if(mCurrentState == OrokuState::StrongGuardRunningFire)
-		this->AddPosition(0, 5);
 }
 
 OrokuState::StateName StrongGuard::getState()

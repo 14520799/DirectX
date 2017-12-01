@@ -22,7 +22,7 @@ void ThinGuardAttackState::Update(float dt)
 	//cho phep oroku thuc hien xong state attack roi moi co the sang state khac
 	timeDelayState += dt;
 
-	if (timeDelayState > 1.3f)
+	if (timeDelayState > 0.5f)
 	{
 		if (this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
 			this->mOrokuData->thinGuard->GetPosition().x - this->mOrokuData->thinGuard->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 2)
