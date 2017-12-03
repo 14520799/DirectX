@@ -23,7 +23,7 @@ void CamelLyingState::Update(float dt)
 
 void CamelLyingState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
-	if (impactor->Tag == Entity::EntityTypes::Guard)
+	if (impactor->Tag == Entity::EntityTypes::Oroku && impactor->Id != Entity::EntityId::Camel)
 		this->mOrokuData->camel->collisionWithOroku = true;
 }
 

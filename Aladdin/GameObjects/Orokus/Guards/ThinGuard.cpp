@@ -44,6 +44,17 @@ void ThinGuard::Update(float dt)
 
 	this->Entity::Update(dt);
 
+	if (allowImunity)
+	{
+		timeImunity += dt;
+
+		if (timeImunity > 0.5f)
+		{
+			allowImunity = false;
+			timeImunity = 0;
+		}
+	}
+
 	if (!allowDefault)
 	{
 #pragma region OROKU RUN TO ATTACK PLAYER
@@ -161,9 +172,9 @@ void ThinGuard::Draw(D3DXVECTOR2 trans)
 
 void ThinGuard::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)
 {
-	if (impactor->Tag == Entity::EntityTypes::AppleWeapon)
+	if (this->allowImunity && mCurrentState != OrokuState::ThinGuardHurting)
 	{
-		this->mOrokuData->thinGuard->SetState(new ThinGuardHurtingState(this->mOrokuData));
+		this->SetState(new ThinGuardHurtingState(this->mOrokuData));
 		return;
 	}
 	this->mOrokuData->state->OnCollision(impactor, side, data);

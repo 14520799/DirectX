@@ -6,7 +6,7 @@
 #include "OrokuState.h"
 #include "../Player/Player.h"
 #include "../../GameComponents/QuadTree.h"
-#include "../../GameObjects/MapObjects/Item.h"
+#include "../../GameObjects/MapObjects/MapObject.h"
 
 class Oroku : public Entity
 {
@@ -40,22 +40,14 @@ public:
 
 	virtual void SetPlayer(Player *player);
 
-	virtual void SetQuadTree(QuadTree *quadTree);
-
-	virtual void OnNoCollisionWithBottom();
-
 	bool mCurrentReverse, mPreCurrentReverse, settedPlayer, settingAttack;
 	bool allowDrawWeapon, allowDefault;
 	bool collisionFire; //xy ly khi oroku cham vao lua se chuyen sang state default
 
 	Player *mPlayer;
 
-	Item	*weapon,
-			*weaponEffect;
-
-	QuadTree *mQuadTree;
-
-	D3DXVECTOR3 mOriginPosition;
+	MapObject	*weapon,
+				*weaponEffect;
 protected:
 	OrokuData *mOrokuData;
 
@@ -73,4 +65,6 @@ protected:
 	virtual void changeAnimation(OrokuState::StateName state);
 
 	OrokuState::StateName mCurrentState;
+
+	float timeImunity;
 };

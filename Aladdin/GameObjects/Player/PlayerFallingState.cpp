@@ -8,7 +8,7 @@
 #include "PlayerFallingStopState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
-#include "../MapObjects/AppleWeapon.h"
+#include "../MapObjects/Weapons/AppleWeapon.h"
 
 PlayerFallingState::PlayerFallingState(PlayerData *playerData)
 {
@@ -94,26 +94,19 @@ void PlayerFallingState::OnCollision(Entity *impactor, Entity::SideCollisions si
 		this->mPlayerData->player->SetPosition(impactor->GetPosition().x, this->mPlayerData->player->GetPosition().y);
 		this->mPlayerData->player->SetState(new PlayerVerticalClimbingState(this->mPlayerData));
 	}
-	else if (impactor->Tag == Entity::EntityTypes::AppleItem)
+	else if (impactor->Tag == Entity::EntityId::AppleItem || impactor->Tag == Entity::EntityId::AppleGod || impactor->Tag == Entity::EntityId::HeadGenie ||
+		impactor->Tag == Entity::EntityId::Heart || impactor->Tag == Entity::EntityId::Life)
 	{
-		this->mPlayerData->player->collisionAppleItem = true;
-		this->mPlayerData->player->apple = new AppleWeapon();
-		this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
+		this->mPlayerData->player->allowEffect = true;
+		this->mPlayerData->player->collisionItem = true;
+		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
+		if (impactor->Tag == Entity::EntityId::AppleItem)
+		{
+			this->mPlayerData->player->apple = new AppleWeapon();
+			this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
+		}
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Guard || impactor->Tag == Entity::EntityTypes::Sword || 
-		impactor->Tag == Entity::EntityTypes::Pot)
-	{
-
-	}
-	else if (impactor->Tag == Entity::EntityTypes::UpStairsControl || impactor->Tag == Entity::EntityTypes::DownStairsControl || impactor->Tag == Entity::EntityTypes::GroundControl)
-	{
-
-	}
-	else if (impactor->Tag == Entity::EntityTypes::FallControl)
-	{
-
-	}
-	else if (impactor->Tag == Entity::EntityTypes::Camel)
+	else if (impactor->Id == Entity::EntityId::Camel)
 	{
 		switch (side)
 		{
@@ -124,6 +117,16 @@ void PlayerFallingState::OnCollision(Entity *impactor, Entity::SideCollisions si
 		default:
 			break;
 		}
+	}
+	else if ((impactor->Tag == Entity::EntityTypes::Oroku && impactor->Id != Entity::EntityId::Camel) || 
+		impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot)
+	{
+
+	}
+	else if (impactor->Tag == Entity::EntityTypes::UpStairsControl || impactor->Tag == Entity::EntityTypes::DownStairsControl || 
+		impactor->Tag == Entity::EntityTypes::GroundControl || impactor->Tag == Entity::EntityTypes::FallControl)
+	{
+
 	}
 	else
 	{

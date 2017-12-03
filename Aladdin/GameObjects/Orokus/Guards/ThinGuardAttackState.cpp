@@ -46,7 +46,8 @@ void ThinGuardAttackState::Update(float dt)
 
 void ThinGuardAttackState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
-
+	if (impactor->Tag == Entity::EntityTypes::Aladdin && !impactor->allowImunity && timeDelayState > 0.4f)
+		this->mOrokuData->thinGuard->collisionWithPlayer = true;
 }
 
 OrokuState::StateName ThinGuardAttackState::GetState()

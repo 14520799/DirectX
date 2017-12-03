@@ -26,7 +26,8 @@ public:
 		CamelDefault,
 		CamelLying,
 		CivilianWindowDefault,
-		CivilianWindowThrowPot
+		CivilianWindowThrowPot,
+		CivilianCircusStanding
 	};
 
 	~OrokuState();

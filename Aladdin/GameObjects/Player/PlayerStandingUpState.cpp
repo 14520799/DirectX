@@ -30,12 +30,12 @@ void PlayerStandingUpState::OnCollision(Entity *impactor, Entity::SideCollisions
 {
 	if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot ||
 		impactor->Tag == Entity::EntityTypes::Fire) &&
-		this->mPlayerData->player->allowDeath)
+		!this->mPlayerData->player->allowImunity)
 	{
-		this->mPlayerData->player->SetState(new PlayerDeathState(this->mPlayerData));
+		this->mPlayerData->player->bloodOfEntity--;
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard ||
-		impactor->Tag == Entity::EntityTypes::Camel || impactor->Tag == Entity::EntityTypes::Pot)
+	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Oroku ||
+		impactor->Tag == Entity::EntityTypes::Fire || impactor->Tag == Entity::EntityTypes::FallControl)
 	{
 
 	}

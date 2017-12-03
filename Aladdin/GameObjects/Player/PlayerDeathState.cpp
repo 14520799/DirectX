@@ -4,11 +4,11 @@
 PlayerDeathState::PlayerDeathState(PlayerData *playerData)
 {
     this->mPlayerData = playerData;
-	this->mPlayerData->player->allowDeath = false;
+	this->mPlayerData->player->allowImunity = true;
     this->mPlayerData->player->SetVx(0);
     this->mPlayerData->player->SetVy(0);
-	allowDelayDeath = true; //dang trong khoang thoi gian thuc hien animationDeath
-	timeDelayDeath = 0;
+	allowDelayHurting = true; //dang trong khoang thoi gian thuc hien animationDeath
+	timeDelayHurting = 0;
 }
 
 
@@ -18,14 +18,14 @@ PlayerDeathState::~PlayerDeathState()
 
 void PlayerDeathState::Update(float dt)
 {
-	if (allowDelayDeath)
+	if (allowDelayHurting)
 	{
-		timeDelayDeath += dt;
+		timeDelayHurting += dt;
 
-		if (timeDelayDeath > 0.5f)
+		if (timeDelayHurting > 0.5f)
 		{
-			allowDelayDeath = false;
-			timeDelayDeath = 0;
+			allowDelayHurting = false;
+			timeDelayHurting = 0;
 		}
 	}
 }
@@ -35,7 +35,7 @@ void PlayerDeathState::HandleKeyboard(std::map<int, bool> keys)
     if (keys[VK_LEFT] || keys[VK_RIGHT])
     {
 		//cho phep thuc hien animation khac khi animationDeath thuc hien xong
-		if (!allowDelayDeath)
+		if (!allowDelayHurting)
 		{
 			this->mPlayerData->player->SetState(new PlayerRunningState(this->mPlayerData));
 			return;

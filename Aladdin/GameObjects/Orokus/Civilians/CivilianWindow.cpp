@@ -1,8 +1,8 @@
 #include "CivilianWindow.h"
 #include "CivilianWindowDefaultState.h"
 #include "CivilianWindowThrowPotState.h"
-#include "../../MapObjects/PotWeapon.h"
-#include "../../MapObjects/PotWeaponEffect.h"
+#include "../../MapObjects/Weapons/PotWeapon.h"
+#include "../../MapObjects/Weapons/PotWeaponEffect.h"
 #include "../../Player/Player.h"
 #include "../../../GameDefines/GameDefine.h"
 
@@ -53,18 +53,21 @@ void CivilianWindow::Update(float dt)
 	//neu pot va cham voi player thi se bien mat
 	if (weapon->collisionWithPlayer || weapon->weaponCollided)
 	{
+		weaponEffect = new PotWeaponEffect(weapon->GetPosition());
+		if(weapon->weaponCollided)
+			weaponEffect->SetPosition(weaponEffect->GetPosition().x, weaponEffect->GetPosition().y - 50);
+		//can set lai pos cho weapon de khong va cham lien tiep nua
+		this->mOrokuData->civilianWindow->weapon->SetPosition(this->GetPosition().x, this->GetPosition().y + 20);
 		allowDrawWeapon = false;
 		weapon->collisionWithPlayer = false;
 		weapon->weaponCollided = false;
-		weaponEffect = new PotWeaponEffect(weapon->GetPosition());
-		this->mOrokuData->civilianWindow->weapon->SetPosition(D3DXVECTOR3(this->GetPosition().x + 20, this->GetPosition().y + 20, 0));
 	}
 
 	if (weaponEffect != nullptr)
 	{
 		weaponEffect->Update(dt);
 		weaponEffect->timeDelayWeaponEffect += dt;
-		if (weaponEffect->timeDelayWeaponEffect > 0.2f)
+		if (weaponEffect->timeDelayWeaponEffect > 0.25f)
 		{
 			delete weaponEffect;
 			weaponEffect = nullptr;

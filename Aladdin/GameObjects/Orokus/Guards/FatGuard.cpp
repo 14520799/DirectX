@@ -6,7 +6,7 @@
 #include "FatGuardHurtingState.h"
 #include "../../Player/Player.h"
 #include "../../../GameDefines/GameDefine.h"
-#include "../../MapObjects/SwordWeapon.h"
+#include "../../MapObjects/Weapons/SwordWeapon.h"
 
 FatGuard::FatGuard(D3DXVECTOR3 position)
 {
@@ -60,6 +60,17 @@ void FatGuard::Update(float dt)
 		allowDrawWeapon = false;
 		weapon->collisionWithPlayer = false;
 		weapon->weaponCollided = false;
+	}
+
+	if (allowImunity)
+	{
+		timeImunity += dt;
+
+		if (timeImunity > 0.5f)
+		{
+			allowImunity = false;
+			timeImunity = 0;
+		}
 	}
 
 	//delay 1 khoang time de thuc hien statedefault
@@ -303,9 +314,9 @@ void FatGuard::Draw(D3DXVECTOR2 trans)
 
 void FatGuard::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)
 {
-	if (impactor->Tag == Entity::EntityTypes::AppleWeapon)
+	if (this->allowImunity && mCurrentState != OrokuState::FatGuardHurting)
 	{
-		this->mOrokuData->fatGuard->SetState(new FatGuardHurtingState(this->mOrokuData));
+		this->SetState(new FatGuardHurtingState(this->mOrokuData));
 		return;
 	}
 	this->mOrokuData->state->OnCollision(impactor, side, data);

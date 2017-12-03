@@ -23,7 +23,7 @@ void StrongGuardAttackState::Update(float dt)
 	//cho phep oroku thuc hien xong state attack roi moi co the sang state khac
 	timeDelayState += dt;
 
-	if (timeDelayState > 0.3f)
+	if (timeDelayState > 0.5f)
 	{
 		if (this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
 			this->mOrokuData->strongGuard->GetPosition().x - this->mOrokuData->strongGuard->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X)
@@ -52,7 +52,8 @@ void StrongGuardAttackState::Update(float dt)
 
 void StrongGuardAttackState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
-
+	if (impactor->Tag == Entity::EntityTypes::Aladdin && !impactor->allowImunity && timeDelayState > 0.4f)
+		this->mOrokuData->strongGuard->collisionWithPlayer = true;
 }
 
 OrokuState::StateName StrongGuardAttackState::GetState()

@@ -1,7 +1,7 @@
 #include "PlayerVerticalClimbingState.h"
 #include "PlayerVerticalClimbingDefaultState.h"
 #include "PlayerFallingState.h"
-#include "../MapObjects/AppleWeapon.h"
+#include "../MapObjects/Weapons/AppleWeapon.h"
 #include "../../GameDefines/GameDefine.h"
 #include "../../GameComponents/GameCollision.h"
 
@@ -55,11 +55,20 @@ void PlayerVerticalClimbingState::HandleKeyboard(std::map<int, bool> keys)
 
 void PlayerVerticalClimbingState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
-	if (impactor->Tag == Entity::EntityTypes::AppleItem)
+	if (impactor->Tag == Entity::EntityTypes::Item && impactor->Id != Entity::EntityId::Revitalization_Default)
 	{
-		this->mPlayerData->player->collisionAppleItem = true;
-		this->mPlayerData->player->apple = new AppleWeapon();
-		this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
+		this->mPlayerData->player->allowEffect = true;
+		this->mPlayerData->player->collisionItem = true;
+		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
+		if (impactor->Id == Entity::EntityId::AppleItem)
+		{
+			this->mPlayerData->player->apple = new AppleWeapon();
+			this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
+		}
+	}
+	else if (impactor->Tag == Entity::EntityTypes::FallControl)
+	{
+		return;
 	}
 	if (impactor->Tag != Entity::EntityTypes::VerticalRope)
 	{

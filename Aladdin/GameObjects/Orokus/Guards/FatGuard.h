@@ -3,7 +3,7 @@
 #include "../Oroku.h"
 #include "../OrokuData.h"
 #include "../OrokuState.h"
-#include "../../MapObjects/Item.h"
+#include "../../MapObjects/MapObject.h"
 
 class FatGuard : public Oroku
 {

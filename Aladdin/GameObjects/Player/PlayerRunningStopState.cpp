@@ -3,7 +3,7 @@
 #include "PlayerDeathState.h"
 #include "PlayerDefaultState.h"
 #include "PlayerFallingState.h"
-#include "../MapObjects/AppleWeapon.h"
+#include "../MapObjects/Weapons/AppleWeapon.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 
@@ -48,23 +48,28 @@ void PlayerRunningStopState::OnCollision(Entity *impactor, Entity::SideCollision
 	//GameCollision::SideCollisions side = GameCollision::getSideCollision(this->mPlayerData->player, data);
 	if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot ||
 		impactor->Tag == Entity::EntityTypes::Fire) &&
-		this->mPlayerData->player->allowDeath)
+		!this->mPlayerData->player->allowImunity)
 	{
-		this->mPlayerData->player->SetState(new PlayerDeathState(this->mPlayerData));
+		this->mPlayerData->player->bloodOfEntity--;
 	}
-	else if (impactor->Tag == Entity::EntityTypes::AppleItem)
+	else if (impactor->Tag == Entity::EntityTypes::Item && impactor->Id != Entity::EntityId::Revitalization_Default)
 	{
-		this->mPlayerData->player->collisionAppleItem = true;
-		this->mPlayerData->player->apple = new AppleWeapon();
-		this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
+		this->mPlayerData->player->allowEffect = true;
+		this->mPlayerData->player->collisionItem = true;
+		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
+		if (impactor->Id == Entity::EntityId::AppleItem)
+		{
+			this->mPlayerData->player->apple = new AppleWeapon();
+			this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
+		}
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard ||
-		impactor->Tag == Entity::EntityTypes::Camel || impactor->Tag == Entity::EntityTypes::Pot || 
-		impactor->Tag == Entity::EntityTypes::Fire)
+	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Oroku ||
+		impactor->Tag == Entity::EntityTypes::Pot || impactor->Tag == Entity::EntityTypes::Fire)
 	{
 
 	}
-	else if (impactor->Tag == Entity::EntityTypes::UpStairsControl || impactor->Tag == Entity::EntityTypes::DownStairsControl || impactor->Tag == Entity::EntityTypes::GroundControl)
+	else if (impactor->Tag == Entity::EntityTypes::UpStairsControl || impactor->Tag == Entity::EntityTypes::DownStairsControl || 
+		impactor->Tag == Entity::EntityTypes::GroundControl || impactor->Tag == Entity::EntityTypes::FallControl)
 	{
 
 	}

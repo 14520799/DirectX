@@ -8,8 +8,6 @@
 
 StrongGuard::StrongGuard(D3DXVECTOR3 position)
 {
-	mAnimationHurting = new Animation("Resources/Orokus/Guards/StrongGuardHurting.png", 6, 1, 6, 0.1f);
-
 	this->mOriginPosition = position;
 	this->SetPosition(mOriginPosition);
 
@@ -43,6 +41,17 @@ void StrongGuard::Update(float dt)
 	}
 
 	this->Entity::Update(dt);
+
+	if (allowImunity)
+	{
+		timeImunity += dt;
+
+		if (timeImunity > 0.5f)
+		{
+			allowImunity = false;
+			timeImunity = 0;
+		}
+	}
 
 	if (!allowDefault)
 	{
@@ -195,9 +204,9 @@ void StrongGuard::Draw(D3DXVECTOR2 trans)
 
 void StrongGuard::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)
 {
-	if (impactor->Tag == Entity::EntityTypes::AppleWeapon)
+	if (this->allowImunity && mCurrentState != OrokuState::StrongGuardHurting)
 	{
-		this->mOrokuData->strongGuard->SetState(new StrongGuardHurtingState(this->mOrokuData));
+		this->SetState(new StrongGuardHurtingState(this->mOrokuData));
 		return;
 	}
 	this->mOrokuData->state->OnCollision(impactor, side, data);
@@ -232,6 +241,8 @@ void StrongGuard::changeAnimation(OrokuState::StateName state)
 		break;
 
 	case OrokuState::StrongGuardHurting:
+		delete mAnimationHurting;
+		mAnimationHurting = new Animation("Resources/Orokus/Guards/StrongGuardHurting.png", 6, 1, 6, 0.1f);
 		mCurrentAnimation = mAnimationHurting;
 		break;
 

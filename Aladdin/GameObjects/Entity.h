@@ -33,12 +33,18 @@ public:
     enum EntityTypes
     {
         None, Aladdin, Static, Ground,
-		VerticalRope, HorizontalRope, Fire, FireControl, AppleItem, AppleWeapon,
+		VerticalRope, HorizontalRope, Fire, FireControl, AppleWeapon,
 		Stairs, UpStairs, UpStairsControl, CenterStairs, DownStairs, DownStairsControl, GroundControl, FallControl,
-		Guard, Sword,
-		Camel,
-		CivilianWindow, Pot
+		Oroku, Sword, Pot,
+		Item
     };
+
+	enum EntityId
+	{
+		Guard, Camel, CivilianWindow, CivilianCircus,
+		AppleItem, AppleGod, Life, Heart, HeadGenie, Lamp,
+		Revitalization_Default, Revitalization_Action, Revitalization_ActionStop
+	};
 	
 	enum EntityCurrentMoveStairs
 	{
@@ -46,6 +52,8 @@ public:
 	};
 
     EntityTypes Tag; //Tag de nhan dien loai Entity
+
+	EntityId Id; //Id de nhan dien loai oroku
 
 	EntityCurrentMoveStairs CurrentMoveStairs; //MoveStairs luu trang thai hien tai cua player khi toi noi co nhieu cau thang len xuong
 
@@ -95,6 +103,7 @@ public:
 	float posX, posY;
 	//mau cua entity
 	float bloodOfEntity;
+	float preBloodOfEntity;
 	//huong nem qua tao da duoc nem ra se khong doi huong
 	bool mSettingRightItem;
 	bool mSettingLeftItem;
@@ -108,10 +117,17 @@ public:
 	bool collisionStairs;
 	bool allowFalling;
 
+	bool allowImunity;
+	//khi player cham vao item se co hieu ung xuat hien
+	bool allowEffect;
+
 	bool collisionWithOroku;
 	bool collisionWithCamel;
 	bool weaponCollided; //qua tao hoac kiem khi va cham xuong dat hay tuong thi se mat
 	bool collisionWithPlayer;
+
+	D3DXVECTOR3 mOriginPosition;
+	D3DXVECTOR3 mOriginPositionItem;
 protected:
 
     //duoc goi khi set position cua Entity, dung cho ke thua

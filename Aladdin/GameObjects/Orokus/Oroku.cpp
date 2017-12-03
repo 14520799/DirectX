@@ -45,13 +45,3 @@ void Oroku::SetPlayer(Player *player)
 	this->mPlayer = player;
 }
 
-void Oroku::SetQuadTree(QuadTree *quadTree)
-{
-	this->mQuadTree = quadTree;
-}
-
-void Oroku::OnNoCollisionWithBottom()
-{
-
-}
-

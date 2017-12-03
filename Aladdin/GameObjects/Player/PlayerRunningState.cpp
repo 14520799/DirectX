@@ -4,7 +4,7 @@
 #include "PlayerDefaultState.h"
 #include "PlayerFallingState.h"
 #include "PlayerPushingState.h"
-#include "../MapObjects/AppleWeapon.h"
+#include "../MapObjects/Weapons/AppleWeapon.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 
@@ -73,18 +73,23 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	//GameCollision::SideCollisions side = GameCollision::getSideCollision(this->mPlayerData->player, data);
 	if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot ||
 		impactor->Tag == Entity::EntityTypes::Fire) &&
-		this->mPlayerData->player->allowDeath)
+		!this->mPlayerData->player->allowImunity)
 	{
-		this->mPlayerData->player->SetState(new PlayerDeathState(this->mPlayerData));
+		this->mPlayerData->player->bloodOfEntity--;
 	}
-	else if (impactor->Tag == Entity::EntityTypes::AppleItem)
+	else if (impactor->Tag == Entity::EntityTypes::Item && impactor->Id != Entity::EntityId::Revitalization_Default)
 	{
-		this->mPlayerData->player->collisionAppleItem = true;
-		this->mPlayerData->player->apple = new AppleWeapon();
-		this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
+		this->mPlayerData->player->allowEffect = true;
+		this->mPlayerData->player->collisionItem = true;
+		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
+		if (impactor->Id == Entity::EntityId::AppleItem)
+		{
+			this->mPlayerData->player->apple = new AppleWeapon();
+			this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
+		}
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard ||
-		impactor->Tag == Entity::EntityTypes::Camel || impactor->Tag == Entity::EntityTypes::Fire)
+	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Oroku ||
+		impactor->Tag == Entity::EntityTypes::Fire || impactor->Tag == Entity::EntityTypes::FallControl)
 	{
 
 	}

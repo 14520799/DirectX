@@ -1,11 +1,21 @@
 ﻿#include "GameMap.h"
 #include "../GameDefines/GameDefine.h"
-#include "../GameObjects/MapObjects/AppleItem.h"
+#include "../GameObjects/MapObjects/Items/AppleItem.h"
+#include "../GameObjects/MapObjects/Items/RevitalizationDefault.h"
+#include "../GameObjects/MapObjects/Items/RevitalizationAction.h"
+#include "../GameObjects/MapObjects/Items/RevitalizationActionStop.h"
+#include "../GameObjects/MapObjects/Items/Lamp.h"
+#include "../GameObjects/MapObjects/Items/AppleGod.h"
+#include "../GameObjects/MapObjects/Items/HeadGenie.h"
+#include "../GameObjects/MapObjects/Items/Heart.h"
+#include "../GameObjects/MapObjects/Items/Life.h"
+#include "../GameObjects/MapObjects/Items/ItemEffect.h"
 #include "../GameObjects/Orokus/Guards/ThinGuard.h"
 #include "../GameObjects/Orokus/Guards/FatGuard.h"
 #include "../GameObjects/Orokus/Guards/StrongGuard.h"
 #include "../GameObjects/Orokus/Camel/Camel.h"
 #include "../GameObjects/Orokus/Civilians/CivilianWindow.h"
+#include "../GameObjects/Orokus/Civilians/CivilianCircus.h"
 
 GameMap::GameMap(char* filePath)
 {
@@ -17,12 +27,12 @@ GameMap::~GameMap()
 {
 	delete mMap;
 
-	for (size_t i = 0; i < mListItems.size(); i++)
+	for (size_t i = 0; i < mListMapObjects.size(); i++)
 	{
-		if (mListItems[i])
-			delete mListItems[i];
+		if (mListMapObjects[i])
+			delete mListMapObjects[i];
 	}
-	mListItems.clear();
+	mListMapObjects.clear();
 
 	for (size_t i = 0; i < mListOrokus.size(); i++)
 	{
@@ -148,11 +158,18 @@ void GameMap::LoadMap(char* filePath)
 
 	//khoi tao nhung tang qua tao
 #pragma region -APPLE LAYER-
-	createApple(mListItems, D3DXVECTOR3(820, 880, 0), 3);
-	createApple(mListItems, D3DXVECTOR3(1400, 880, 0), 2);
-	createApple(mListItems, D3DXVECTOR3(1680, 880, 0), 2);
+	createApple(mListMapObjects, D3DXVECTOR3(820, 880, 0), 3);
+	createApple(mListMapObjects, D3DXVECTOR3(1400, 880, 0), 2);
+	createApple(mListMapObjects, D3DXVECTOR3(1680, 880, 0), 2);
+	//1 - Revitalization, 2 - Lamp, 3 - AppleGod, 4 - HeadGenie, 5 - Heart, 6 - Life
+	createItem(mListMapObjects, D3DXVECTOR3(2330, 877, 0), 1);
+	//createItem(mListMapObjects, D3DXVECTOR3(1250, 900, 0), 2);
+	//createItem(mListMapObjects, D3DXVECTOR3(3500, 950, 0), 3);
+	//createItem(mListMapObjects, D3DXVECTOR3(3000, 950, 0), 4);
+	//createItem(mListMapObjects, D3DXVECTOR3(2150, 800, 0), 5);
+	//createItem(mListMapObjects, D3DXVECTOR3(2600, 700, 0), 6);
 
-	for (auto child : mListItems)
+	for (auto child : mListMapObjects)
 	{
 		mQuadTree->insertEntity(child);
 	}
@@ -160,12 +177,13 @@ void GameMap::LoadMap(char* filePath)
 
 	//tao oroku
 #pragma region -OROKU-
-	//1 - ThinGuard, 2 - FatGuard, 3 - StrongGuard, 4 - Camel, 5 - CivilianWindow
+	//1 - ThinGuard, 2 - FatGuard, 3 - StrongGuard, 4 - Camel, 5 - CivilianWindow, 6 - CivilianCircus
 	createOroku(mListOrokus, D3DXVECTOR3(1065, 972.5f, 0), 1);
 	createOroku(mListOrokus, D3DXVECTOR3(2900, 1035, 0), 2);
 	createOroku(mListOrokus, D3DXVECTOR3(1545, 977.5f, 0), 3);
 	createOroku(mListOrokusSupport, D3DXVECTOR3(2575, 1047.5f, 0), 4);
 	createOroku(mListOrokus, D3DXVECTOR3(2848, 780, 0), 5);
+	createOroku(mListOrokus, D3DXVECTOR3(2110, 850, 0), 6);
 
 	for (auto child : mListOrokus)
 	{
@@ -178,14 +196,14 @@ void GameMap::LoadMap(char* filePath)
 #pragma endregion
 }
 
-void GameMap::createApple(std::vector<Item*> &entitiesOut, D3DXVECTOR3 position, int soTang)
+void GameMap::createApple(std::vector<MapObject*> &entitiesOut, D3DXVECTOR3 position, int soTang)
 {
 	if (soTang < 1 || soTang > 3)
 	{
 		return;
 	}
 
-	Item *Item = nullptr;
+	MapObject *Item = nullptr;
 
 	for (size_t i = 1; i <= soTang; i++)
 	{
@@ -217,42 +235,106 @@ void GameMap::createApple(std::vector<Item*> &entitiesOut, D3DXVECTOR3 position,
 
 	for (auto child : entitiesOut)
 	{
-		child->Tag = Entity::EntityTypes::AppleItem;
+		child->Tag = Entity::EntityTypes::Item;
+		child->Id = Entity::EntityId::AppleItem;
 	}
 }
 
-void GameMap::createOroku(std::vector<Oroku*> &entitiesOut, D3DXVECTOR3 position, int orokuType)
+void GameMap::createItem(std::vector<MapObject*> &entitiesOut, D3DXVECTOR3 position, int itemId)
+{
+	MapObject *item = nullptr;
+
+	switch (itemId)
+	{
+	case 1:
+		item = new RevitalizationDefault(position);
+		item->Tag = Entity::EntityTypes::Item;
+		item->Id = Entity::EntityId::Revitalization_Default;
+		entitiesOut.push_back(item);
+		break;
+
+	case 2:
+		item = new Lamp(position);
+		item->Tag = Entity::EntityTypes::Item;
+		item->Id = Entity::EntityId::Lamp;
+		entitiesOut.push_back(item);
+		break;
+
+	case 3:
+		item = new AppleGod(position);
+		item->Tag = Entity::EntityTypes::Item;
+		item->Id = Entity::EntityId::AppleGod;
+		entitiesOut.push_back(item);
+		break;
+
+	case 4:
+		item = new HeadGenie(position);
+		item->Tag = Entity::EntityTypes::Item;
+		item->Id = Entity::EntityId::HeadGenie;
+		entitiesOut.push_back(item);
+		break;
+
+	case 5:
+		item = new Heart(position);
+		item->Tag = Entity::EntityTypes::Item;
+		item->Id = Entity::EntityId::Heart;
+		entitiesOut.push_back(item);
+		break;
+
+	case 6:
+		item = new Life(position);
+		item->Tag = Entity::EntityTypes::Item;
+		item->Id = Entity::EntityId::Life;
+		entitiesOut.push_back(item);
+		break;
+
+	default:
+		break;
+	}
+}
+
+void GameMap::createOroku(std::vector<Oroku*> &entitiesOut, D3DXVECTOR3 position, int orokuId)
 {
 	Oroku *oroku = nullptr;
 
-	switch (orokuType)
+	switch (orokuId)
 	{
 	case 1:
 		oroku = new ThinGuard(position);
-		oroku->Tag = Entity::EntityTypes::Guard;
+		oroku->Tag = Entity::EntityTypes::Oroku;
+		oroku->Id = Entity::EntityId::Guard;
 		entitiesOut.push_back(oroku);
 		break;
 	case 2:
 		oroku = new FatGuard(position);
-		oroku->Tag = Entity::EntityTypes::Guard;
-		oroku->SetQuadTree(this->GetQuadTree());
+		oroku->Tag = Entity::EntityTypes::Oroku;
+		oroku->Id = Entity::EntityId::Guard;
 		entitiesOut.push_back(oroku);
 		break;
 	case 3:
 		oroku = new StrongGuard(position);
-		oroku->Tag = Entity::EntityTypes::Guard;
+		oroku->Tag = Entity::EntityTypes::Oroku;
+		oroku->Id = Entity::EntityId::Guard;
 		entitiesOut.push_back(oroku);
 		break;
 	case 4:
 		oroku = new Camel(position);
-		oroku->Tag = Entity::EntityTypes::Camel;
+		oroku->Tag = Entity::EntityTypes::Oroku;
+		oroku->Id = Entity::EntityId::Camel;
 		entitiesOut.push_back(oroku);
 		break;
 	case 5:
 		oroku = new CivilianWindow(position);
-		oroku->Tag = Entity::EntityTypes::CivilianWindow;
+		oroku->Tag = Entity::EntityTypes::Oroku;
+		oroku->Id = Entity::EntityId::CivilianWindow;
 		entitiesOut.push_back(oroku);
 		return;
+		break;
+	case 6:
+		oroku = new CivilianCircus(position);
+		oroku->Tag = Entity::EntityTypes::Oroku;
+		oroku->Id = Entity::EntityId::CivilianCircus;
+		entitiesOut.push_back(oroku);
 		break;
 
 	default:
@@ -324,9 +406,56 @@ bool GameMap::IsBoundBottom()
 
 void GameMap::Update(float dt)
 {
-	for (size_t i = 0; i < mListItems.size(); i++)
+	for (size_t i = 0; i < mListMapObjects.size(); i++)
 	{
-		mListItems[i]->Update(dt);
+#pragma region Revitalization
+		if (mListMapObjects[i]->Id == Entity::EntityId::Revitalization_Default && mListMapObjects[i]->collisionWithPlayer)
+		{
+			D3DXVECTOR3 pos = mListMapObjects[i]->GetPosition();
+			mQuadTree->removeEntity(mListMapObjects[i]);
+			delete mListMapObjects[i];
+			mListMapObjects[i] = new RevitalizationAction(pos);
+			mListMapObjects[i]->Id = Entity::EntityId::Revitalization_Action;
+			mPlayer->mOriginPosition = pos + D3DXVECTOR3(0, -15, 0);
+		}
+		if (mListMapObjects[i]->Id == Entity::EntityId::Revitalization_Action)
+		{
+			timeDelayRevitalization += dt;
+			if (timeDelayRevitalization > 0.5f)
+			{
+				D3DXVECTOR3 pos = mListMapObjects[i]->GetPosition();
+				delete mListMapObjects[i];
+				mListMapObjects[i] = new RevitalizationActionStop(pos);
+				mListMapObjects[i]->Id = Entity::EntityId::Revitalization_ActionStop;
+			}
+		}
+#pragma endregion
+
+		mListMapObjects[i]->Update(dt);
+
+#pragma region ItemEffect
+		if (mPlayer->allowEffect)
+		{
+			itemEffect = new ItemEffect(mPlayer->mOriginPositionItem);
+			mListItemEffects.push_back(itemEffect);
+			mPlayer->allowEffect = false;
+		}
+		for (size_t i = 0; i < mListItemEffects.size(); i++)
+		{
+			mListItemEffects.at(i)->Update(dt);
+			mListItemEffects.at(i)->timeDelayItemEffect += dt;
+			if (mListItemEffects.at(i)->timeDelayItemEffect > 1.0f)
+			{
+				delete mListItemEffects.at(i);
+				mListItemEffects.at(i) = nullptr;
+				mListItemEffects.erase(mListItemEffects.begin() + i);
+				if (mListItemEffects.size() == 0)
+					break;
+				i--;
+			}
+		}
+#pragma endregion
+
 	}
 	for (size_t i = 0; i < mListOrokus.size(); i++)
 	{
@@ -357,7 +486,6 @@ void GameMap::Draw()
 	D3DXVECTOR2 trans = D3DXVECTOR2(GameGlobal::GetWidth() / 2 - mCamera->GetPosition().x,
 		GameGlobal::GetHeight() / 2 - mCamera->GetPosition().y);
 
-#pragma region DRAW TILESET
 	for (size_t i = 0; i < mMap->GetNumTileLayers(); i++)
 	{
 		const Tmx::TileLayer *layer = mMap->GetTileLayer(i);
@@ -369,7 +497,37 @@ void GameMap::Draw()
 
 		if (layer->GetName() == "Tile Layer 3")
 		{
+			//draw player
 			this->GetPlayer()->Draw();
+
+#pragma region DRAW ITEM
+
+			for (size_t i = 0; i < mListMapObjects.size(); i++)
+			{
+				mListMapObjects[i]->Draw(trans);
+			}
+
+#pragma endregion
+
+			//ve apple effect
+			if (mListItemEffects.size() > 0)
+			{
+				for (size_t i = 0; i < mListItemEffects.size(); i++)
+				{
+					mListItemEffects.at(i)->Draw(trans);
+				}
+			}
+
+#pragma region DRAW OROKU
+			for (size_t i = 0; i < mListOrokus.size(); i++)
+			{
+				mListOrokus[i]->Draw(trans);
+			}
+			for (size_t i = 0; i < mListOrokusSupport.size(); i++)
+			{
+				mListOrokusSupport[i]->Draw(trans);
+			}
+#pragma endregion
 		}
 
 		for (size_t j = 0; j < mMap->GetNumTilesets(); j++)
@@ -427,27 +585,7 @@ void GameMap::Draw()
 			}
 		}
 	}
-#pragma endregion
 
-#pragma region DRAW Item
-
-	for (size_t i = 0; i < mListItems.size(); i++)
-	{
-		mListItems[i]->Draw(trans);
-	}
-
-#pragma endregion
-
-#pragma region DRAW OROKU
-	for (size_t i = 0; i < mListOrokus.size(); i++)
-	{
-		mListOrokus[i]->Draw(trans);
-	}
-	for (size_t i = 0; i < mListOrokusSupport.size(); i++)
-	{
-		mListOrokusSupport[i]->Draw(trans);
-	}
-#pragma endregion
 }
 
 std::map<int, Sprite*> GameMap::GetListTileSet()
@@ -455,15 +593,15 @@ std::map<int, Sprite*> GameMap::GetListTileSet()
 	return mListTileset;
 }
 
-void GameMap::RemoveItem(Item *item)
+void GameMap::RemoveMapObject(MapObject *mapObject)
 {
 	//lay ra vi tri cua Item o trong mang
-	for (size_t i = 0; i < mListItems.size(); i++)
+	for (size_t i = 0; i < mListMapObjects.size(); i++)
 	{
-		if (mListItems.at(i)->GetPosition() == item->GetPosition())
+		if (mListMapObjects.at(i)->GetPosition() == mapObject->GetPosition())
 		{
 			//xoa Item khoi mang
-			mListItems.erase(mListItems.begin() + i);
+			mListMapObjects.erase(mListMapObjects.begin() + i);
 		}
 	}
 }

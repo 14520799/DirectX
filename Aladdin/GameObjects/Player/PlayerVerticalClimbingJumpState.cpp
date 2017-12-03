@@ -4,8 +4,7 @@
 #include "PlayerHorizontalClimbingDefaultState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
-#include "../../GameObjects/MapObjects/Item.h"
-#include "../MapObjects/AppleWeapon.h"
+#include "../MapObjects/Weapons/AppleWeapon.h"
 
 PlayerVerticalClimbingJumpState::PlayerVerticalClimbingJumpState(PlayerData *playerData)
 {
@@ -112,13 +111,18 @@ void PlayerVerticalClimbingJumpState::OnCollision(Entity *impactor, Entity::Side
 		//this->mPlayerData->player->SetPosition(this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y + (this->mPlayerData->player->GetPosition().y - impactor->GetPosition().y));
 		this->mPlayerData->player->SetState(new PlayerHorizontalClimbingDefaultState(this->mPlayerData));
 	}
-	else if (impactor->Tag == Entity::EntityTypes::AppleItem)
+	else if (impactor->Tag == Entity::EntityTypes::Item && impactor->Id != Entity::EntityId::Revitalization_Default)
 	{
-		this->mPlayerData->player->collisionAppleItem = true;
-		this->mPlayerData->player->apple = new AppleWeapon();
-		this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
+		this->mPlayerData->player->allowEffect = true;
+		this->mPlayerData->player->collisionItem = true;
+		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
+		if (impactor->Id == Entity::EntityId::AppleItem)
+		{
+			this->mPlayerData->player->apple = new AppleWeapon();
+			this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
+		}
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Guard ||
+	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Oroku ||
 		impactor->Tag == Entity::EntityTypes::Pot)
 	{
 

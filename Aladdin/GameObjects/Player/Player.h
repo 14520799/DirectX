@@ -6,7 +6,7 @@
 #include "../../GameComponents/GameGlobal.h"
 #include "../../GameComponents/Camera.h"
 #include "../../GameComponents/GameMap.h"
-#include "../../GameObjects/MapObjects/Item.h"
+#include "../../GameObjects/MapObjects/MapObject.h"
 #include "PlayerData.h"
 #include "PlayerState.h"
 #include "PlayerRunningState.h"
@@ -23,6 +23,8 @@ public:
         MoveToRight, //chay tu trai sang phai
         None //dung im
     };
+
+	void InitPlayer();
 
     void SetCamera(Camera *camera);
 
@@ -57,24 +59,22 @@ public:
 	bool GetReverse();
 
 	//set huong bay cua apple sau khi duoc nem ra
-	void SetAppleFlyLeft(std::vector<Item*> &listAppleFly, Item *item, int i, float dt);
-	void SetAppleFlyRight(std::vector<Item*> &listAppleFly, Item *item, int i, float dt);
+	void SetAppleFlyLeft(std::vector<MapObject*> &listAppleFly, MapObject *mapObject, int i, float dt);
+	void SetAppleFlyRight(std::vector<MapObject*> &listAppleFly, MapObject *mapObject, int i, float dt);
 
-	std::vector<Item*> GetListAppleFly();
+	std::vector<MapObject*> GetListAppleFly();
 
-	bool allowMoveLeft;
-	bool allowMoveRight;
-	bool allowMoveUp;
-	bool allowDeath;
+	bool allowMoveLeft, allowMoveRight, allowMoveUp;
+	//player co dang  mien nhiem sat thuong hay khong
 	bool allowDelayState;
 
 	bool onKeyUpPressing; //thong bao aladdin dang nhin len tren
-	bool collisionAppleItem;
+	bool collisionItem;
 
-	std::vector<Item*> mListApplePlayer; //apple cua player dang so huu
+	std::vector<MapObject*> mListApplePlayer; //apple cua player dang so huu
 
-	Item *apple;
-	Item *appleEffect;
+	MapObject *apple;
+	MapObject *appleEffect;
 
 	PlayerState::StateName mCurrentState, mPreCurrentState;
 
@@ -113,15 +113,15 @@ protected:
 				*mAnimationClimbingThrowApple,
 				*mAnimationDeath;
 
-	std::vector<Item*> mListAppleFly; //apple da duoc player nem di
-	std::vector<Item*> mListAppleEffect; //hieu ung cua apple truoc khi bi huy
+	std::vector<MapObject*> mListAppleFly; //apple da duoc player nem di
+	std::vector<MapObject*> mListAppleEffect; //hieu ung cua apple truoc khi bi huy
 
     void changeAnimation(PlayerState::StateName state);
 
     //chi cho phep jump khi nhan nhim space, muon nhay lai phai tha phim space roi nhan lai
-    bool allowJump, removedApple, mCurrentReverse;
-	float timeDeath;
-	float timeDelayStates;
+    bool allowJump, mCurrentReverse;
+	float timeImunity; //time duoc mien sat thuong sau khi hoi sinh
+	float timeDelayStates; //time delay thuc thi xong state nay roi chuyen sang state khac
 	float timeDelayForFalling;
 };
 

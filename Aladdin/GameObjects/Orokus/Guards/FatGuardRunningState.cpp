@@ -60,7 +60,7 @@ void FatGuardRunningState::Update(float dt)
 
 void FatGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
-	if (impactor->Tag == Entity::EntityTypes::Fire || impactor->Tag == Entity::EntityTypes::Camel)
+	if (impactor->Tag == Entity::EntityTypes::Fire || impactor->Id == Entity::EntityId::Camel)
 	{
 		switch (side)
 		{
@@ -80,12 +80,12 @@ void FatGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisions 
 		this->mOrokuData->fatGuard->SetState(new FatGuardDefaultState(this->mOrokuData));
 		if (impactor->Tag == Entity::EntityTypes::Fire)
 			this->mOrokuData->fatGuard->collisionFire = true;
-		if (impactor->Tag == Entity::EntityTypes::Camel)
+		if (impactor->Id == Entity::EntityId::Camel)
 			return;
 	}
 
-	if (impactor->Tag != Entity::EntityTypes::Guard && impactor->Tag != Entity::EntityTypes::Aladdin &&
-		impactor->Tag != Entity::EntityTypes::Sword && impactor->Tag != Entity::EntityTypes::AppleItem)
+	if (impactor->Tag != Entity::EntityTypes::Oroku && impactor->Tag != Entity::EntityTypes::Aladdin &&
+		impactor->Tag != Entity::EntityTypes::Sword && impactor->Tag != Entity::EntityTypes::Item)
 	{
 		switch (side)
 		{

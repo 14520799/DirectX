@@ -92,8 +92,8 @@ void ThinGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisions
 		this->mOrokuData->thinGuard->collisionFire = true;
 		this->mOrokuData->thinGuard->SetState(new ThinGuardDefaultState(this->mOrokuData));
 	}
-	else if(impactor->Tag != Entity::EntityTypes::Guard && impactor->Tag != Entity::EntityTypes::Sword &&
-			impactor->Tag != Entity::EntityTypes::AppleItem)
+	else if(impactor->Tag != Entity::EntityTypes::Oroku && impactor->Tag != Entity::EntityTypes::Sword &&
+			impactor->Tag != Entity::EntityTypes::Item)
 	{
 		switch (side)
 		{

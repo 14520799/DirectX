@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="68" height="10" tilewidth="112" tileheight="112" nextobjectid="73">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="68" height="10" tilewidth="112" tileheight="112" nextobjectid="124">
  <tileset firstgid="1" source="Scene_1.tsx"/>
  <layer name="Tile Layer 1" width="68" height="10">
   <data encoding="csv">
@@ -51,21 +51,19 @@
   <object id="5" name="Stairs" x="2020" y="953.5" width="62" height="16"/>
   <object id="6" name="Stairs" x="2082" y="940.5" width="66" height="16"/>
   <object id="7" name="Stairs" x="2148" y="926.5" width="62" height="16"/>
-  <object id="8" name="Stairs" x="2210" y="911.5" width="165" height="16"/>
+  <object id="8" name="Stairs" x="2210" y="912" width="165" height="16"/>
   <object id="9" x="2274" y="929" width="63" height="189"/>
   <object id="11" x="3499.5" y="421.5" width="63" height="697"/>
   <object id="12" name="Ground" x="2337" y="1085" width="1162" height="34"/>
-  <object id="13" x="2785" y="683" width="407.667" height="19"/>
+  <object id="13" x="2796" y="683" width="396.667" height="19"/>
   <object id="15" x="2530.5" y="401.5" width="1076" height="19"/>
-  <object id="16" x="2339.5" y="685.5" width="160" height="19"/>
-  <object id="17" x="2339" y="597.5" width="55.3333" height="19"/>
+  <object id="16" x="2339.5" y="685.5" width="153" height="19"/>
+  <object id="17" x="2339" y="597.5" width="50.3333" height="19"/>
   <object id="18" x="2274.5" y="4.5" width="63" height="701"/>
-  <object id="19" name="VerticalRope" x="2450" y="167" width="4" height="239"/>
+  <object id="19" name="VerticalRope" x="2450" y="167" width="4" height="307"/>
   <object id="20" x="2437" y="160" width="30" height="6"/>
   <object id="21" x="3304" y="469" width="30" height="6"/>
   <object id="22" name="VerticalRope" x="3317" y="476" width="4" height="420"/>
-  <object id="23" name="HorizontalRope" x="2531" y="157.983" width="1074.01" height="3.99632"/>
-  <object id="24" x="3606.01" y="139" width="11.989" height="191.305"/>
   <object id="25" name="CenterStairs" x="3562.67" y="931.333" width="74.6667" height="15.3333"/>
   <object id="28" name="DownStairs" x="3637" y="947" width="52.3334" height="15.3333"/>
   <object id="29" name="DownStairs" x="3689.33" y="961" width="50" height="15.3333"/>
@@ -95,13 +93,57 @@
   <object id="56" name="Fire" x="1358" y="1025" width="100" height="5"/>
   <object id="57" name="Fire" x="1637" y="1025" width="100" height="5"/>
   <object id="58" name="Fire" x="3248" y="1080" width="100" height="5"/>
-  <object id="59" name="FallControl" x="2351" y="909.333" width="24" height="2"/>
-  <object id="65" name="FallControl" x="4340.67" y="824.333" width="24" height="2"/>
+  <object id="59" name="FallControl" x="2370" y="705.583" width="5" height="205.75"/>
+  <object id="65" name="FallControl" x="4359.76" y="656.636" width="5" height="169.878"/>
   <object id="66" name="FireControl" x="1586" y="1025" width="5" height="5"/>
   <object id="68" name="FireControl" x="1783.5" y="1025" width="5" height="5"/>
   <object id="69" name="FireControl" x="1505.5" y="1025" width="5" height="5"/>
   <object id="70" name="FireControl" x="1306.5" y="1025" width="5" height="5"/>
   <object id="71" name="FireControl" x="916.5" y="1025" width="5" height="5"/>
   <object id="72" name="FireControl" x="720.5" y="1025" width="5" height="5"/>
+  <object id="74" x="4482" y="1088.67" width="2445.33" height="30.6666"/>
+  <object id="75" name="Stairs" x="6912" y="1050.67" width="69.3333" height="38"/>
+  <object id="77" name="Stairs" x="6981.33" y="1035" width="64" height="17.3333"/>
+  <object id="78" name="Stairs" x="7045.33" y="1023.33" width="64" height="17.3333"/>
+  <object id="79" name="Stairs" x="7110" y="1008.67" width="453.333" height="17.3333"/>
+  <object id="80" x="7344" y="796" width="98.6667" height="21.3333"/>
+  <object id="82" x="6853.33" y="738.667" width="132" height="21.3333"/>
+  <object id="83" name="Stairs" x="6342.67" y="681.333" width="134.667" height="25.3333"/>
+  <object id="86" name="Stairs" x="6245.33" y="728" width="49.3337" height="20"/>
+  <object id="87" name="Stairs" x="6207.33" y="749" width="38.0004" height="20"/>
+  <object id="88" x="4863.33" y="769" width="1344" height="20"/>
+  <object id="90" name="Stairs" x="6294" y="707.333" width="50.0004" height="20"/>
+  <object id="91" x="6889.33" y="393.333" width="37.3333" height="134.667"/>
+  <object id="92" name="HorizontalRope" x="6929.66" y="455.335" width="572.677" height="3.99632"/>
+  <object id="93" x="7486.33" y="530.5" width="30" height="6"/>
+  <object id="94" name="VerticalRope" x="7499.33" y="537.5" width="4" height="321.333"/>
+  <object id="95" x="7564" y="2.84217e-14" width="49.3333" height="1120"/>
+  <object id="96" name="Fire" x="4956.67" y="1082.83" width="100" height="5"/>
+  <object id="97" x="4480" y="654" width="414.667" height="20"/>
+  <object id="98" x="4200" y="626" width="278.667" height="29.3333"/>
+  <object id="99" x="4136" y="225.333" width="62.6667" height="420"/>
+  <object id="101" x="4263.44" y="47.6667" width="51.7886" height="10.3577"/>
+  <object id="102" name="VerticalRope" x="4285.88" y="59.7507" width="6.90515" height="412.583"/>
+  <object id="103" x="4366" y="202" width="118.667" height="20"/>
+  <object id="104" x="4007.33" y="204.667" width="192" height="20"/>
+  <object id="105" x="3960.67" y="3.33333" width="45.3334" height="304"/>
+  <object id="106" x="4480" y="430" width="593.333" height="20"/>
+  <object id="107" x="4416.67" y="224.667" width="62.6667" height="225.333"/>
+  <object id="108" x="4722" y="202" width="309.334" height="20"/>
+  <object id="109" x="5347.33" y="486" width="412" height="20"/>
+  <object id="110" x="5066" y="482" width="182.667" height="20"/>
+  <object id="111" x="5249.33" y="454" width="97.334" height="48"/>
+  <object id="112" x="5044.67" y="449.333" width="21.334" height="52"/>
+  <object id="113" x="5731.33" y="287.333" width="1857.33" height="20"/>
+  <object id="114" name="HorizontalRope" x="6928.33" y="60.6685" width="318.01" height="3.99632"/>
+  <object id="115" x="6842.67" y="15.3332" width="84" height="112"/>
+  <object id="116" x="5578" y="118" width="156" height="20"/>
+  <object id="117" x="5667.33" y="139.333" width="62.6667" height="168"/>
+  <object id="118" x="5031.33" y="2.00017" width="34.6667" height="220"/>
+  <object id="119" x="5964.67" y="308" width="69.3334" height="141.333"/>
+  <object id="120" x="4800.67" y="673.333" width="62.6667" height="114.667"/>
+  <object id="121" name="FallControl" x="7452.17" y="861.125" width="95.6667" height="5"/>
+  <object id="122" name="FallControl" x="6472.17" y="507.792" width="5" height="173.75"/>
+  <object id="123" name="FallControl" x="6912.17" y="896.167" width="6.33337" height="153"/>
  </objectgroup>
 </map>

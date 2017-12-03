@@ -93,8 +93,8 @@ void StrongGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisio
 			break;
 		}
 	}
-	else if (impactor->Tag != Entity::EntityTypes::Guard && impactor->Tag != Entity::EntityTypes::Sword &&
-			impactor->Tag != Entity::EntityTypes::AppleItem && impactor->Tag != Entity::EntityTypes::FireControl)
+	else if (impactor->Tag != Entity::EntityTypes::Oroku && impactor->Tag != Entity::EntityTypes::Sword &&
+			impactor->Tag != Entity::EntityTypes::Item && impactor->Tag != Entity::EntityTypes::FireControl)
 	{
  		switch (side)
 		{

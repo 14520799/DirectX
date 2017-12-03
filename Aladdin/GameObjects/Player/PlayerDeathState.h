@@ -15,7 +15,7 @@ public:
 
 	virtual PlayerState::StateName GetState();
 protected:
-	float timeDelayDeath;
+	float timeDelayHurting;
 
-	bool allowDelayDeath; //cho phep mot khoang thoi gian danh cho animationDeath
+	bool allowDelayHurting; //cho phep mot khoang thoi gian danh cho animationDeath
 };

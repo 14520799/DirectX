@@ -33,9 +33,10 @@ void PlayerClimbingAttackState::HandleKeyboard(std::map<int, bool> keys)
 
 void PlayerClimbingAttackState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
-	if (impactor->Tag == Entity::EntityTypes::Guard)
+	if (impactor->Tag == Entity::EntityTypes::Oroku && impactor->Id != Entity::EntityId::Camel)
 	{
-		this->mPlayerData->player->collisionWithOroku = true;
+		if (!impactor->allowImunity)
+			this->mPlayerData->player->collisionWithOroku = true;
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot)
 	{

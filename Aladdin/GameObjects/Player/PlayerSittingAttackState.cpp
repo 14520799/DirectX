@@ -24,16 +24,17 @@ void PlayerSittingAttackState::OnCollision(Entity *impactor, Entity::SideCollisi
 {
 	if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot ||
 		impactor->Tag == Entity::EntityTypes::Fire) &&
-		this->mPlayerData->player->allowDeath)
+		!this->mPlayerData->player->allowImunity)
 	{
-		this->mPlayerData->player->SetState(new PlayerDeathState(this->mPlayerData));
+		this->mPlayerData->player->bloodOfEntity--;
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Guard)
+	else if (impactor->Tag == Entity::EntityTypes::Oroku && impactor->Id != Entity::EntityId::Camel)
 	{
-		this->mPlayerData->player->collisionWithOroku = true;
+		if (!impactor->allowImunity)
+			this->mPlayerData->player->collisionWithOroku = true;
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Sword  || impactor->Tag == Entity::EntityTypes::Camel || 
-		impactor->Tag == Entity::EntityTypes::Pot)
+	else if (impactor->Tag == Entity::EntityTypes::Sword  || impactor->Id == Entity::EntityId::Camel ||
+		impactor->Tag == Entity::EntityTypes::Pot || impactor->Tag == Entity::EntityTypes::FallControl)
 	{
 
 	}

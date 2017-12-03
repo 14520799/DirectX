@@ -5,6 +5,7 @@ class FatGuard;
 class StrongGuard;
 class Camel;
 class CivilianWindow;
+class CivilianCircus;
 
 class OrokuData
 {
@@ -18,6 +19,7 @@ public:
 	StrongGuard		*strongGuard;
 	Camel			*camel;
 	CivilianWindow	*civilianWindow;
+	CivilianCircus	*civilianCircus;
 
 protected:
 };

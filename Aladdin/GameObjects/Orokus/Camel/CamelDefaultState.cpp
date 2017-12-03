@@ -27,7 +27,7 @@ void CamelDefaultState::OnCollision(Entity *impactor, Entity::SideCollisions sid
 			break;
 		}
 	}
-	if (impactor->Tag == Entity::EntityTypes::Guard)
+	if (impactor->Tag == Entity::EntityTypes::Oroku && impactor->Id != Entity::EntityId::Camel)
 	{
 		this->mOrokuData->camel->collisionWithOroku = false;
 	}
