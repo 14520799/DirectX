@@ -9,7 +9,9 @@
 CivilianWindow::CivilianWindow(D3DXVECTOR3 position)
 {
 	mAnimationDefault = new Animation("Resources/Orokus/Civilians/CivilianWindowDefault.png", 1, 1, 1, 0.0f);
+
 	this->SetPosition(position);
+	this->Id = Entity::EntityId::CivilianWindow;
 
 	this->mOrokuData = new OrokuData();
 	this->mOrokuData->civilianWindow = this;
@@ -55,7 +57,7 @@ void CivilianWindow::Update(float dt)
 	{
 		weaponEffect = new PotWeaponEffect(weapon->GetPosition());
 		if(weapon->weaponCollided)
-			weaponEffect->SetPosition(weaponEffect->GetPosition().x, weaponEffect->GetPosition().y - 50);
+			weaponEffect->SetPosition(weaponEffect->GetPosition().x, weaponEffect->GetPosition().y - 10);
 		//can set lai pos cho weapon de khong va cham lien tiep nua
 		this->mOrokuData->civilianWindow->weapon->SetPosition(this->GetPosition().x, this->GetPosition().y + 20);
 		allowDrawWeapon = false;
@@ -74,20 +76,25 @@ void CivilianWindow::Update(float dt)
 		}
 	}
 
-	if (!allowDefault)
+	//xet khoach cach voi player theo truc y < 0
+	if (this->GetPosition().y - this->mPlayer->GetPosition().y < 0 && 
+		this->GetPosition().y - this->mPlayer->GetPosition().y > Define::DANGEROUS_AREA_POT_MIN_Y)
 	{
-		if ((this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_POT_MAX_X &&
-			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_POT_MAX_X))
+		if (!allowDefault)
 		{
-			if (mCurrentState == OrokuState::CivilianWindowThrowPot)
-				return;
-			this->SetState(new CivilianWindowThrowPotState(this->mOrokuData));
-		}
-		else 
-		{
-			if (mCurrentState == OrokuState::CivilianWindowDefault)
-				return;
-			this->SetState(new CivilianWindowThrowPotState(this->mOrokuData));
+			if ((this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_POT_MAX_X &&
+				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_POT_MAX_X))
+			{
+				if (mCurrentState == OrokuState::CivilianWindowThrowPot)
+					return;
+				this->SetState(new CivilianWindowThrowPotState(this->mOrokuData));
+			}
+			else
+			{
+				if (mCurrentState == OrokuState::CivilianWindowDefault)
+					return;
+				this->SetState(new CivilianWindowThrowPotState(this->mOrokuData));
+			}
 		}
 	}
 }
@@ -159,7 +166,7 @@ void CivilianWindow::changeAnimation(OrokuState::StateName state)
 
 	case OrokuState::CivilianWindowThrowPot:
 		delete mAnimationThrowPot;
-		mAnimationThrowPot = new Animation("Resources/Orokus/Civilians/CivilianWindowThrowPot.png", 10, 1, 10, 0.03f);
+		mAnimationThrowPot = new Animation("Resources/Orokus/Civilians/CivilianWindowThrowPot.png", 10, 1, 10, 0.05f);
 		mCurrentAnimation = mAnimationThrowPot;
 		break;
 

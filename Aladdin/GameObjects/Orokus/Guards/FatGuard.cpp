@@ -14,6 +14,7 @@ FatGuard::FatGuard(D3DXVECTOR3 position)
 
 	this->mOriginPosition = position;
 	this->SetPosition(mOriginPosition);
+	this->Id = Entity::EntityId::Guard;
 
 	this->mOrokuData = new OrokuData();
 	this->mOrokuData->fatGuard = this;
@@ -73,196 +74,200 @@ void FatGuard::Update(float dt)
 		}
 	}
 
-	//delay 1 khoang time de thuc hien statedefault
-	if (!allowDefault)
+	//xet khoach cach voi player theo truc y -150 -> 150
+	if (this->GetPosition().y - this->mPlayer->GetPosition().y > -Define::DANGEROUS_AREA_MAX_Y &&
+		this->GetPosition().y - this->mPlayer->GetPosition().y < Define::DANGEROUS_AREA_MAX_Y)
 	{
+		//delay 1 khoang time de thuc hien statedefault
+		if (!allowDefault)
+		{
 #pragma region OROKU ATTACK PLAYER
-		// khi co khoang cach voi player 0 < player < 200 thi oroku se tan cong player
-		if ((this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
-			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X))
-		{
-			Mode = RunMode::None;
+			// khi co khoang cach voi player 0 < player < 200 thi oroku se tan cong player
+			if ((this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
+				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X))
+			{
+				Mode = RunMode::None;
 
-			//khi cay kiem dang bay ra theo huong nao thi se tiep tuc bay theo huong do 
-			//cho du player co di qua phia ben kia cua fatguard
-			if (this->weapon->mSettingLeftItem)
-			{
-				this->weapon->AddVx(-Define::ITEM_SPEED_X);
-				this->weapon->AddVy(Define::ITEM_SPEED_Y);
-				this->timeDelayDefaultState += dt;
-				if (this->timeDelayDefaultState > 0.8f)
+				//khi cay kiem dang bay ra theo huong nao thi se tiep tuc bay theo huong do 
+				//cho du player co di qua phia ben kia cua fatguard
+				if (this->weapon->mSettingLeftItem)
 				{
-					this->timeDelayDefaultState = 0;
-					this->SetState(new FatGuardDefaultState(this->mOrokuData));
+					this->weapon->AddVx(-Define::ITEM_SPEED_X);
+					this->weapon->AddVy(Define::ITEM_SPEED_Y);
+					this->timeDelayDefaultState += dt;
+					if (this->timeDelayDefaultState > 0.8f)
+					{
+						this->timeDelayDefaultState = 0;
+						this->SetState(new FatGuardDefaultState(this->mOrokuData));
+					}
+					return;
 				}
-				return;
-			}
-			else if (this->weapon->mSettingRightItem)
-			{
-				this->weapon->AddVx(Define::ITEM_SPEED_X);
-				this->weapon->AddVy(Define::ITEM_SPEED_Y);
-				this->timeDelayDefaultState += dt;
-				if (this->timeDelayDefaultState > 0.8f)
+				else if (this->weapon->mSettingRightItem)
 				{
-					this->timeDelayDefaultState = 0;
-					this->SetState(new FatGuardDefaultState(this->mOrokuData));
+					this->weapon->AddVx(Define::ITEM_SPEED_X);
+					this->weapon->AddVy(Define::ITEM_SPEED_Y);
+					this->timeDelayDefaultState += dt;
+					if (this->timeDelayDefaultState > 0.8f)
+					{
+						this->timeDelayDefaultState = 0;
+						this->SetState(new FatGuardDefaultState(this->mOrokuData));
+					}
+					return;
 				}
-				return;
-			}
 
-			if (mSettingRightAttack)
-				mSettingRightAttack = false;
-			//neu oroku dang di sang ben trai thi return k can set state lai nua
-			if (mSettingLeftAttack)
-			{
-				return;
+				if (mSettingRightAttack)
+					mSettingRightAttack = false;
+				//neu oroku dang di sang ben trai thi return k can set state lai nua
+				if (mSettingLeftAttack)
+				{
+					return;
+				}
+				this->SetReverse(false);
+				this->allowDrawWeapon = true;
+				this->timeDelayDefaultState = 0;
+				this->SetState(new FatGuardAttackState(this->mOrokuData));
+				this->mSettingLeftAttack = true;
 			}
-			this->SetReverse(false);
-			this->allowDrawWeapon = true;
-			this->timeDelayDefaultState = 0;
-			this->SetState(new FatGuardAttackState(this->mOrokuData));
-			this->mSettingLeftAttack = true;
-		}
-		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X &&
-			(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN_X)
-		{
-			Mode = RunMode::None;
+			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X &&
+				(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN_X)
+			{
+				Mode = RunMode::None;
 
-			if (this->weapon->mSettingLeftItem)
-			{
-				this->weapon->AddVx(-Define::ITEM_SPEED_X);
-				this->weapon->AddVy(Define::ITEM_SPEED_Y);
-				this->timeDelayDefaultState += dt;
-				if (this->timeDelayDefaultState > 0.8f)
+				if (this->weapon->mSettingLeftItem)
 				{
-					this->timeDelayDefaultState = 0;
-					this->SetState(new FatGuardDefaultState(this->mOrokuData));
+					this->weapon->AddVx(-Define::ITEM_SPEED_X);
+					this->weapon->AddVy(Define::ITEM_SPEED_Y);
+					this->timeDelayDefaultState += dt;
+					if (this->timeDelayDefaultState > 0.8f)
+					{
+						this->timeDelayDefaultState = 0;
+						this->SetState(new FatGuardDefaultState(this->mOrokuData));
+					}
+					return;
 				}
-				return;
-			}
-			else if (this->weapon->mSettingRightItem)
-			{
-				this->weapon->AddVx(Define::ITEM_SPEED_X);
-				this->weapon->AddVy(Define::ITEM_SPEED_Y);
-				this->timeDelayDefaultState += dt;
-				if (this->timeDelayDefaultState > 0.8f)
+				else if (this->weapon->mSettingRightItem)
 				{
-					this->timeDelayDefaultState = 0;
-					this->SetState(new FatGuardDefaultState(this->mOrokuData));
+					this->weapon->AddVx(Define::ITEM_SPEED_X);
+					this->weapon->AddVy(Define::ITEM_SPEED_Y);
+					this->timeDelayDefaultState += dt;
+					if (this->timeDelayDefaultState > 0.8f)
+					{
+						this->timeDelayDefaultState = 0;
+						this->SetState(new FatGuardDefaultState(this->mOrokuData));
+					}
+					return;
 				}
-				return;
+				if (mSettingLeftAttack)
+					mSettingLeftAttack = false;
+				//neu oroku dang di sang ben phai thi return k can set state lai nua
+				if (mSettingRightAttack)
+				{
+					return;
+				}
+				this->SetReverse(true);
+				this->allowDrawWeapon = true;
+				this->timeDelayDefaultState = 0;
+				this->SetState(new FatGuardAttackState(this->mOrokuData));
+				this->mSettingRightAttack = true;
 			}
-			if (mSettingLeftAttack)
-				mSettingLeftAttack = false;
-			//neu oroku dang di sang ben phai thi return k can set state lai nua
-			if (mSettingRightAttack)
-			{
-				return;
-			}
-			this->SetReverse(true);
-			this->allowDrawWeapon = true;
-			this->timeDelayDefaultState = 0;
-			this->SetState(new FatGuardAttackState(this->mOrokuData));
-			this->mSettingRightAttack = true;
-		}
 #pragma endregion
 
 #pragma region OROKU DEFAULT
-		else if (((this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
-			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 1.5f)
-			||
-			(this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X * 1.5f &&
-				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MIN_X)) 
-			&& Mode != Oroku::RunMode::RunAttack)
-		{
-			if (this->weapon->mSettingLeftItem)
+			else if (((this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
+				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 1.5f)
+				||
+				(this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X * 1.5f &&
+					this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MIN_X))
+				&& Mode != Oroku::RunMode::RunAttack)
 			{
-				this->weapon->AddVx(-Define::ITEM_SPEED_X);
-				this->weapon->AddVy(Define::ITEM_SPEED_Y);
-				this->timeDelayDefaultState += dt;
-				if (this->timeDelayDefaultState > 0.8f)
+				if (this->weapon->mSettingLeftItem)
 				{
-					this->timeDelayDefaultState = 0;
-					this->SetState(new FatGuardDefaultState(this->mOrokuData));
+					this->weapon->AddVx(-Define::ITEM_SPEED_X);
+					this->weapon->AddVy(Define::ITEM_SPEED_Y);
+					this->timeDelayDefaultState += dt;
+					if (this->timeDelayDefaultState > 0.8f)
+					{
+						this->timeDelayDefaultState = 0;
+						this->SetState(new FatGuardDefaultState(this->mOrokuData));
+					}
+					return;
 				}
-				return;
-			}
-			else if (this->weapon->mSettingRightItem)
-			{
-				this->weapon->AddVx(Define::ITEM_SPEED_X);
-				this->weapon->AddVy(Define::ITEM_SPEED_Y);
-				this->timeDelayDefaultState += dt;
-				if (this->timeDelayDefaultState > 0.8f)
+				else if (this->weapon->mSettingRightItem)
 				{
-					this->timeDelayDefaultState = 0;
-					this->SetState(new FatGuardDefaultState(this->mOrokuData));
+					this->weapon->AddVx(Define::ITEM_SPEED_X);
+					this->weapon->AddVy(Define::ITEM_SPEED_Y);
+					this->timeDelayDefaultState += dt;
+					if (this->timeDelayDefaultState > 0.8f)
+					{
+						this->timeDelayDefaultState = 0;
+						this->SetState(new FatGuardDefaultState(this->mOrokuData));
+					}
+					return;
 				}
-				return;
 			}
-		}
 #pragma endregion
 
 #pragma region OROKU RUN TO ATTACK PLAYER
-		// khi co khoang cach voi player -30 < player < 200 thi oroku se chay toi tan cong player
-		else if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
-			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 2)
-		{
- 			Mode = RunMode::RunAttack;
+			// khi co khoang cach voi player -30 < player < 200 thi oroku se chay toi tan cong player
+			else if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
+				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 2)
+			{
+				Mode = RunMode::RunAttack;
 
-			if (mSettingRightRun)
-				mSettingRightRun = false;
-			//neu oroku dang di sang ben trai thi return k can set state lai nua
-			if (mSettingLeftRun)
-			{
-				return;
+				if (mSettingRightRun)
+					mSettingRightRun = false;
+				//neu oroku dang di sang ben trai thi return k can set state lai nua
+				if (mSettingLeftRun)
+				{
+					return;
+				}
+				this->SetReverse(false);
+				this->timeDelayDefaultState = 0;
+				this->mSettingLeftRun = true;
+				if (mPreCurrentReverse != mCurrentReverse || !collisionFire)
+				{
+					collisionFire = false;
+					this->SetState(new FatGuardRunningState(this->mOrokuData));
+				}
 			}
-			this->SetReverse(false);
-			this->timeDelayDefaultState = 0;
-			this->mSettingLeftRun = true;
-			if (mPreCurrentReverse != mCurrentReverse || !collisionFire)
+			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X * 2 &&
+				(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN_X)
 			{
-				collisionFire = false;
-				this->SetState(new FatGuardRunningState(this->mOrokuData));
-			}
-		}
-		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X * 2 &&
-			(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN_X)
-		{
-			Mode = RunMode::RunAttack;
+				Mode = RunMode::RunAttack;
 
-			if (mSettingLeftRun)
-				mSettingLeftRun = false;
-			//neu oroku dang di sang ben phai thi return k can set state lai nua
-			if (mSettingRightRun)
-			{
-				return;
+				if (mSettingLeftRun)
+					mSettingLeftRun = false;
+				//neu oroku dang di sang ben phai thi return k can set state lai nua
+				if (mSettingRightRun)
+				{
+					return;
+				}
+				this->SetReverse(true);
+				this->timeDelayDefaultState = 0;
+				this->mSettingRightRun = true;
+				if (mPreCurrentReverse != mCurrentReverse || !collisionFire)
+				{
+					collisionFire = false;
+					this->SetState(new FatGuardRunningState(this->mOrokuData));
+				}
 			}
-			this->SetReverse(true);
-			this->timeDelayDefaultState = 0;
-			this->mSettingRightRun = true;
-			if (mPreCurrentReverse != mCurrentReverse || !collisionFire)
-			{
-				collisionFire = false;
-				this->SetState(new FatGuardRunningState(this->mOrokuData));
-			}
-		}
 #pragma endregion
 
 #pragma region OROKU RUN COMEBACK
-		// khi co khoang cach voi player -600 --> 600 thi oroku se quay ve cho cu
-		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < -Define::DANGEROUS_AREA_MAX_X * 2 ||
-			this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MAX_X * 2) &&
-			Mode == Oroku::RunMode::RunAttack)
-		{
-			Mode = Oroku::RunMode::RunComeback;
-			mSettingRightRun = false;
-			mSettingLeftRun = false;
-			this->allowDrawWeapon = false;
-			this->SetState(new FatGuardRunningState(this->mOrokuData));
-		}
+			// khi co khoang cach voi player -600 --> 600 thi oroku se quay ve cho cu
+			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < -Define::DANGEROUS_AREA_MAX_X * 2 ||
+				this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MAX_X * 2) &&
+				Mode == Oroku::RunMode::RunAttack)
+			{
+				Mode = Oroku::RunMode::RunComeback;
+				mSettingRightRun = false;
+				mSettingLeftRun = false;
+				this->allowDrawWeapon = false;
+				this->SetState(new FatGuardRunningState(this->mOrokuData));
+			}
 #pragma endregion
+		}
 	}
-
 }
 
 void FatGuard::SetState(OrokuState *newState)

@@ -3,6 +3,7 @@
 LampAttack::LampAttack(D3DXVECTOR3 position)
 {
 	init(position);
+	this->Id = Entity::EntityId::LampAttack;
 }
 
 LampAttack::LampAttack()
@@ -17,7 +18,7 @@ LampAttack::~LampAttack()
 
 const char * LampAttack::FileName()
 {
-	return "Resources/Items/Lamp/LampAttack.png";
+	return "Resources/MapObjects/Items/LampAttack.png";
 }
 
 int LampAttack::TotalFrame()
@@ -37,7 +38,7 @@ int LampAttack::Column()
 
 float LampAttack::SecondPerFrame()
 {
-	return 0.02f;
+	return 0.1f;
 }
 
 void LampAttack::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)

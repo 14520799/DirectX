@@ -3,6 +3,8 @@
 HeadGenie::HeadGenie(D3DXVECTOR3 position)
 {
 	init(position);
+	this->Tag = Entity::EntityTypes::Item;
+	this->Id = Entity::EntityId::HeadGenie;
 }
 
 HeadGenie::~HeadGenie()
@@ -12,7 +14,7 @@ HeadGenie::~HeadGenie()
 
 const char * HeadGenie::FileName()
 {
-	return "Resources/Items/HeadGenie.png";
+	return "Resources/MapObjects/Items/HeadGenie.png";
 }
 
 int HeadGenie::TotalFrame()

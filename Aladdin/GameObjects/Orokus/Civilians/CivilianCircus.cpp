@@ -8,6 +8,7 @@ CivilianCircus::CivilianCircus(D3DXVECTOR3 position)
 {
 	this->mOriginPosition = position;
 	this->SetPosition(mOriginPosition);
+	this->Id = Entity::EntityId::CivilianCircus;
 
 	this->mOrokuData = new OrokuData();
 	this->mOrokuData->civilianCircus = this;
@@ -69,8 +70,8 @@ void CivilianCircus::Update(float dt)
 	}
 
 	//oroku cach player PosY tu -150 --> 150
-	if (this->GetPosition().y - this->mPlayer->GetPosition().y > -Define::DANGEROUS_AREA_MAX_Y &&
-		this->GetPosition().y - this->mPlayer->GetPosition().y < Define::DANGEROUS_AREA_MAX_Y)
+	if (this->GetPosition().y - this->mPlayer->GetPosition().y > -Define::DANGEROUS_AREA_MAX_Y * 1.5f &&
+		this->GetPosition().y - this->mPlayer->GetPosition().y < Define::DANGEROUS_AREA_MAX_Y * 1.5f)
 	{
 		//oroku cach player PosX tu 0 --> 200
 		if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
@@ -78,7 +79,7 @@ void CivilianCircus::Update(float dt)
 		{
 			if (weapon->GetPosition() == weapon->originPos)
 			{
-				this->weapon->Mode == MapObject::WeaponMode::Nomal;
+				this->weapon->Mode = MapObject::WeaponMode::Nomal;
 				this->weapon->currentReverse = false;
 				allowDrawWeapon = true;
 			}
@@ -89,7 +90,7 @@ void CivilianCircus::Update(float dt)
 		{
 			if (weapon->GetPosition() == weapon->originPos)
 			{
-				this->weapon->Mode == MapObject::WeaponMode::Nomal;
+				this->weapon->Mode = MapObject::WeaponMode::Nomal;
 				this->weapon->currentReverse = true;
 				allowDrawWeapon = true;
 			}
@@ -100,10 +101,10 @@ void CivilianCircus::Update(float dt)
 		{
 			if (weapon->GetPosition() == weapon->originPos)
 			{
-				this->weapon->Mode == MapObject::WeaponMode::Fantastic;
+				this->weapon->Mode = MapObject::WeaponMode::Fantastic;
 				this->weapon->currentReverse = false;
 				allowDrawWeapon = true;
-				this->weapon->SetVy(Define::ITEM_MIN_SPEED_Y);
+				this->weapon->SetVy(Define::CIVILIAN_SWORD_MIN_VELOCITY);
 			}
 		}
 		//oroku cach player PosX tu -400 --> -200
@@ -112,10 +113,10 @@ void CivilianCircus::Update(float dt)
 		{
 			if (weapon->GetPosition() == weapon->originPos)
 			{
-				this->weapon->Mode == MapObject::WeaponMode::Fantastic;
+				this->weapon->Mode = MapObject::WeaponMode::Fantastic;
 				this->weapon->currentReverse = true;
 				allowDrawWeapon = true;
-				this->weapon->SetVy(Define::ITEM_MIN_SPEED_Y);
+				this->weapon->SetVy(Define::CIVILIAN_SWORD_MIN_VELOCITY);
 			}
 		}
 	}

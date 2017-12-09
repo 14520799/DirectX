@@ -40,6 +40,11 @@ void Entity::Update(float dt)
     posY += vy * dt;
 }
 
+void Entity::Draw(D3DXVECTOR2 trans)
+{
+
+}
+
 void Entity::SetPosition(float x, float y)
 {
     SetPosition(D3DXVECTOR2(x, y));

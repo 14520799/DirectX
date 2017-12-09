@@ -59,6 +59,9 @@
     <Filter Include="Framework\GameObjects\MapObjects\Weapons">
       <UniqueIdentifier>{b2d6d1ca-a82e-470e-9949-d6d0a27e9404}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\GameObjects\MapObjects\ObjectsMap">
+      <UniqueIdentifier>{74ef1247-56ca-410f-afb6-167e21b9600a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameComponents\Game.cpp">
@@ -373,19 +376,61 @@
     <ClCompile Include="GameObjects\MapObjects\Items\LampAttack.cpp">
       <Filter>Framework\GameObjects\MapObjects\Items</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\MapObjects\Items\AppleGod.cpp">
-      <Filter>Framework\GameObjects\MapObjects\Items</Filter>
-    </ClCompile>
     <ClCompile Include="GameObjects\MapObjects\Items\HeadGenie.cpp">
       <Filter>Framework\GameObjects\MapObjects\Items</Filter>
     </ClCompile>
     <ClCompile Include="GameObjects\MapObjects\Items\Heart.cpp">
       <Filter>Framework\GameObjects\MapObjects\Items</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\MapObjects\Items\ItemEffect.cpp">
+    <ClCompile Include="GameObjects\MapObjects\Items\Life.cpp">
       <Filter>Framework\GameObjects\MapObjects\Items</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\MapObjects\Items\Life.cpp">
+    <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Stairs.cpp">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerSomersaultState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Spring.cpp">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\Items\Ruby.cpp">
+      <Filter>Framework\GameObjects\MapObjects\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\Items\ItemEffect_1.cpp">
+      <Filter>Framework\GameObjects\MapObjects\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\Items\ItemEffect_2.cpp">
+      <Filter>Framework\GameObjects\MapObjects\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\ObjectsMap\FireEffect.cpp">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerRevivalState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Civilians\CivilianBasket.cpp">
+      <Filter>Framework\GameObjects\Orokus\Civilians</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Civilians\CivilianBasketAttackState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Civilians</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Civilians\CivilianBasketRunningState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Civilians</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Orokus\Civilians\CivilianBasketStandingState.cpp">
+      <Filter>Framework\GameObjects\Orokus\Civilians</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\Items\FeddlerMagic.cpp">
+      <Filter>Framework\GameObjects\MapObjects\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\Items\FeddlerMagicStop.cpp">
+      <Filter>Framework\GameObjects\MapObjects\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\Items\FeddlerStanding.cpp">
+      <Filter>Framework\GameObjects\MapObjects\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\Items\OrokuEffect.cpp">
       <Filter>Framework\GameObjects\MapObjects\Items</Filter>
     </ClCompile>
   </ItemGroup>
@@ -711,19 +756,61 @@
     <ClInclude Include="GameObjects\MapObjects\Items\LampAttack.h">
       <Filter>Framework\GameObjects\MapObjects\Items</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\MapObjects\Items\AppleGod.h">
-      <Filter>Framework\GameObjects\MapObjects\Items</Filter>
-    </ClInclude>
     <ClInclude Include="GameObjects\MapObjects\Items\HeadGenie.h">
       <Filter>Framework\GameObjects\MapObjects\Items</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\MapObjects\Items\Heart.h">
       <Filter>Framework\GameObjects\MapObjects\Items</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\MapObjects\Items\ItemEffect.h">
+    <ClInclude Include="GameObjects\MapObjects\Items\Life.h">
       <Filter>Framework\GameObjects\MapObjects\Items</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\MapObjects\Items\Life.h">
+    <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Stairs.h">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerSomersaultState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Spring.h">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\Items\Ruby.h">
+      <Filter>Framework\GameObjects\MapObjects\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\Items\ItemEffect_1.h">
+      <Filter>Framework\GameObjects\MapObjects\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\Items\ItemEffect_2.h">
+      <Filter>Framework\GameObjects\MapObjects\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\ObjectsMap\FireEffect.h">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerRevivalState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Civilians\CivilianBasket.h">
+      <Filter>Framework\GameObjects\Orokus\Civilians</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Civilians\CivilianBasketAttackState.h">
+      <Filter>Framework\GameObjects\Orokus\Civilians</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Civilians\CivilianBasketRunningState.h">
+      <Filter>Framework\GameObjects\Orokus\Civilians</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Orokus\Civilians\CivilianBasketStandingState.h">
+      <Filter>Framework\GameObjects\Orokus\Civilians</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\Items\FeddlerMagic.h">
+      <Filter>Framework\GameObjects\MapObjects\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\Items\FeddlerMagicStop.h">
+      <Filter>Framework\GameObjects\MapObjects\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\Items\FeddlerStanding.h">
+      <Filter>Framework\GameObjects\MapObjects\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\Items\OrokuEffect.h">
       <Filter>Framework\GameObjects\MapObjects\Items</Filter>
     </ClInclude>
   </ItemGroup>

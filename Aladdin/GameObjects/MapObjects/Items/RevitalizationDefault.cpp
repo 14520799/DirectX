@@ -3,6 +3,8 @@
 RevitalizationDefault::RevitalizationDefault(D3DXVECTOR3 position)
 {
 	init(position);
+	this->Tag = Entity::EntityTypes::Item;
+	this->Id = Entity::EntityId::Revitalization_Default;
 }
 
 RevitalizationDefault::RevitalizationDefault()
@@ -17,7 +19,7 @@ RevitalizationDefault::~RevitalizationDefault()
 
 const char * RevitalizationDefault::FileName()
 {
-	return "Resources/Items/Revitalization/RevitalizationDefault.png";
+	return "Resources/MapObjects/Items/RevitalizationDefault.png";
 }
 
 int RevitalizationDefault::TotalFrame()

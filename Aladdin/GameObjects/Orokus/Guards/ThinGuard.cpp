@@ -12,6 +12,7 @@ ThinGuard::ThinGuard(D3DXVECTOR3 position)
 
 	this->mOriginPosition = position;
 	this->SetPosition(mOriginPosition);
+	this->Id = Entity::EntityId::Guard;
 
 	this->mOrokuData = new OrokuData();
 	this->mOrokuData->thinGuard = this;
@@ -55,75 +56,80 @@ void ThinGuard::Update(float dt)
 		}
 	}
 
-	if (!allowDefault)
+	//xet khoach cach voi player theo truc y -150 -> 150
+	if (this->GetPosition().y - this->mPlayer->GetPosition().y > -Define::DANGEROUS_AREA_MAX_Y &&
+		this->GetPosition().y - this->mPlayer->GetPosition().y < Define::DANGEROUS_AREA_MAX_Y)
 	{
+		if (!allowDefault)
+		{
 #pragma region OROKU RUN TO ATTACK PLAYER
-		// khi co khoang cach voi player 0 < player < 200 thi oroku se chay toi tan cong player
-		if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
-			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 2 && !settingAttack)
-		{
-			Mode = RunMode::RunAttack;
+			// khi co khoang cach voi player 0 < player < 200 thi oroku se chay toi tan cong player
+			if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
+				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 2 && !settingAttack)
+			{
+				Mode = RunMode::RunAttack;
 
-			if (mSettingRightRun)
-				mSettingRightRun = false;
-			//neu oroku dang di sang ben trai thi return k can set state lai nua
-			if (mSettingLeftRun)
-			{
-				return;
+				if (mSettingRightRun)
+					mSettingRightRun = false;
+				//neu oroku dang di sang ben trai thi return k can set state lai nua
+				if (mSettingLeftRun)
+				{
+					return;
+				}
+				this->SetReverse(false);
+				this->mSettingLeftRun = true;
+				if (mPreCurrentReverse != mCurrentReverse || !collisionFire)
+				{
+					collisionFire = false;
+					this->SetState(new ThinGuardRunningState(this->mOrokuData));
+				}
 			}
-			this->SetReverse(false);
-			this->mSettingLeftRun = true;
-			if (mPreCurrentReverse != mCurrentReverse || !collisionFire)
+			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X * 2 &&
+				(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN_X && !settingAttack)
 			{
-				collisionFire = false;
-				this->SetState(new ThinGuardRunningState(this->mOrokuData));
-			}
-		}
-		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X * 2 &&
-			(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN_X && !settingAttack)
-		{
-			Mode = RunMode::RunAttack;
+				Mode = RunMode::RunAttack;
 
-			if (mSettingLeftRun)
-				mSettingLeftRun = false;
-			//neu oroku dang di sang ben phai thi return k can set state lai nua
-			if (mSettingRightRun)
-			{
-				return;
+				if (mSettingLeftRun)
+					mSettingLeftRun = false;
+				//neu oroku dang di sang ben phai thi return k can set state lai nua
+				if (mSettingRightRun)
+				{
+					return;
+				}
+				this->SetReverse(true);
+				this->mSettingRightRun = true;
+				if (mPreCurrentReverse != mCurrentReverse || !collisionFire)
+				{
+					collisionFire = false;
+					this->SetState(new ThinGuardRunningState(this->mOrokuData));
+				}
 			}
-			this->SetReverse(true);
-			this->mSettingRightRun = true;
-			if (mPreCurrentReverse != mCurrentReverse || !collisionFire)
-			{
-				collisionFire = false;
-				this->SetState(new ThinGuardRunningState(this->mOrokuData));
-			}
-		}
 #pragma endregion
 
 #pragma region OROKU DEFAULT
-		// khi co khoang cach voi player -600 --> 600 thi oroku se di xung quanh
-		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X * 3 &&
-			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 3) && !settingAttack &&
-			Mode != Oroku::RunMode::RunComeback)
-		{
-			this->SetState(new ThinGuardDefaultState(this->mOrokuData));
-		}
+			// khi co khoang cach voi player -600 --> 600 thi oroku se di xung quanh
+			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X * 3 &&
+				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 3) && !settingAttack &&
+				Mode != Oroku::RunMode::RunComeback)
+			{
+				this->SetState(new ThinGuardDefaultState(this->mOrokuData));
+			}
 #pragma endregion
 
 #pragma region OROKU RUN COMEBACK
-		// khi co khoang cach voi player -600 --> 600 thi oroku se quay ve cho cu
-		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < (-Define::DANGEROUS_AREA_MAX_X * 3) ||
-			this->GetPosition().x - this->mPlayer->GetPosition().x >(Define::DANGEROUS_AREA_MAX_X * 3)) &&
-			Mode == Oroku::RunMode::RunAttack)
-		{
-			Mode = Oroku::RunMode::RunComeback;
-			mSettingRightRun = false;
-			mSettingLeftRun = false;
-			settingAttack = false;
-			this->SetState(new ThinGuardRunningState(this->mOrokuData));
-		}
+			// khi co khoang cach voi player -600 --> 600 thi oroku se quay ve cho cu
+			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < (-Define::DANGEROUS_AREA_MAX_X * 3) ||
+				this->GetPosition().x - this->mPlayer->GetPosition().x >(Define::DANGEROUS_AREA_MAX_X * 3)) &&
+				Mode == Oroku::RunMode::RunAttack)
+			{
+				Mode = Oroku::RunMode::RunComeback;
+				mSettingRightRun = false;
+				mSettingLeftRun = false;
+				settingAttack = false;
+				this->SetState(new ThinGuardRunningState(this->mOrokuData));
+			}
 #pragma endregion
+		}
 	}
 }
 

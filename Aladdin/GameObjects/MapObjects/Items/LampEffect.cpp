@@ -17,7 +17,7 @@ LampEffect::~LampEffect()
 
 const char * LampEffect::FileName()
 {
-	return "Resources/Items/Lamp/LampEffect.png";
+	return "Resources/MapObjects/Items/LampEffect.png";
 }
 
 int LampEffect::TotalFrame()
@@ -37,5 +37,5 @@ int LampEffect::Column()
 
 float LampEffect::SecondPerFrame()
 {
-	return 0.01f;
+	return 0.14f;
 }

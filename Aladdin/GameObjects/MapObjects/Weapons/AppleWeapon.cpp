@@ -17,7 +17,7 @@ AppleWeapon::~AppleWeapon()
 
 const char * AppleWeapon::FileName()
 {
-    return "Resources/Items/Apple/AppleWeapon.png";
+    return "Resources/MapObjects/Weapons/AppleWeapon.png";
 }
 
 int AppleWeapon::TotalFrame()
@@ -46,7 +46,8 @@ void AppleWeapon::OnCollision(Entity *impactor, Entity::CollisionReturn data, En
 	{
 		this->collisionWithOroku = true;
 	}
-	else if(impactor->Tag != Entity::EntityTypes::Aladdin && impactor->Tag != Entity::EntityTypes::Item)
+	else if(impactor->Tag != Entity::EntityTypes::Aladdin && impactor->Tag != Entity::EntityTypes::Item &&
+		impactor->Tag != Entity::EntityTypes::FallControl)
 	{
 		this->weaponCollided = true;
 	}

@@ -3,6 +3,8 @@
 Life::Life(D3DXVECTOR3 position)
 {
 	init(position);
+	this->Tag = Entity::EntityTypes::Item;
+	this->Id = Entity::EntityId::Life;
 }
 
 Life::~Life()
@@ -12,7 +14,7 @@ Life::~Life()
 
 const char * Life::FileName()
 {
-	return "Resources/Items/Life.png";
+	return "Resources/MapObjects/Items/Life.png";
 }
 
 int Life::TotalFrame()

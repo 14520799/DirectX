@@ -3,6 +3,8 @@
 AppleItem::AppleItem(D3DXVECTOR3 position)
 {
 	init(position);
+	this->Tag = Entity::EntityTypes::Item;
+	this->Id = Entity::EntityId::AppleItem;
 }
 
 AppleItem::~AppleItem()
@@ -12,7 +14,7 @@ AppleItem::~AppleItem()
 
 const char * AppleItem::FileName()
 {
-	return "Resources/Items/Apple/AppleItem.png";
+	return "Resources/MapObjects/Items/AppleItem.png";
 }
 
 int AppleItem::TotalFrame()

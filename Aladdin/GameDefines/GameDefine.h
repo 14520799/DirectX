@@ -17,13 +17,16 @@ namespace Define
 #pragma endregion
 
 #pragma region ITEM
-	const float ITEM_MIN_SPEED_Y = -300.0f;
-	const float ITEM_SPEED_X = 25.0f;
+	const float STAIRS_FALL = 300.0f;
+	const float CIVILIAN_SWORD_MIN_VELOCITY = -500.0f;
+	const float ITEM_MIN_VELOCITY = -50.0f;
+	const float ITEM_SPEED_X = 20.0f;
 	const float ITEM_SPEED_Y = 10.0f;
 #pragma endregion
 
 	const float DANGEROUS_AREA_MIN_X = 0.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
 	const float DANGEROUS_AREA_POT_MAX_X = 100.0f; //vung nguy hiem khi player buoc vao co the se gap oroku nem binh
+	const float DANGEROUS_AREA_POT_MIN_Y = -250.0f; //vung nguy hiem khi player buoc vao co the se gap oroku nem binh
 	const float DANGEROUS_AREA_MAX_X = 200.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
 	const float DANGEROUS_AREA_MAX_Y = 150.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
 
@@ -33,7 +36,7 @@ namespace Define
 #pragma endregion
 
 #pragma region BLOOD
-	const float ALADDIN_BLOOD = 2.0f;
+	const float ALADDIN_BLOOD = 5.0f;
 	const float GUARD_BLOOD = 2.0f;
 #pragma endregion
 

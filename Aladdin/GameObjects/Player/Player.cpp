@@ -25,12 +25,10 @@
 #include "PlayerSittingThrowAppleState.h"
 #include "PlayerJumpingThrowAppleState.h"
 #include "PlayerClimbingThrowAppleState.h"
+#include "PlayerRevivalState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 #include "../../GameObjects/MapObjects/Weapons/AppleWeaponEffect.h"
-#include "../../GameObjects/MapObjects/Items/LampEffect.h"
-#include "../../GameObjects/MapObjects/Items/ItemEffect.h"
-
 
 Player::Player()
 {
@@ -59,7 +57,7 @@ void Player::Update(float dt)
 	//xu ly player bi mat mau va chuyen sang state bi thuong
 	if (this->preBloodOfEntity > this->bloodOfEntity)
 	{
-		this->SetState(new PlayerDeathState(this->mPlayerData));
+		//this->SetState(new PlayerDeathState(this->mPlayerData));
 		this->preBloodOfEntity = this->bloodOfEntity;
 	}
 
@@ -220,7 +218,7 @@ void Player::Update(float dt)
 	{
 		timeImunity += dt;
 
-		if (timeImunity > 5.0f)
+		if (timeImunity > 3.0f)
 		{
 			allowImunity = false;
 			timeImunity = 0;
@@ -229,7 +227,10 @@ void Player::Update(float dt)
 
 	//hoi sinh player
 	if (bloodOfEntity <= 0 && timeImunity > 1.0f)
+	{
 		this->InitPlayer();
+		this->SetState(new PlayerRevivalState(this->mPlayerData));
+	}
 }
 
 void Player::InitPlayer()
@@ -244,7 +245,7 @@ void Player::InitPlayer()
 
 	allowJump = true;
 	allowDelayState = true;
-	allowImunity = false;
+	allowImunity = true;
 	timeImunity = 0;
 	timeDelayStates = 0;
 	timeDelayForFalling = 0;
@@ -304,11 +305,13 @@ void Player::OnKeyPressed(int key)
 			if (mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::Sitting || mCurrentState == PlayerState::Default ||
 				mCurrentState == PlayerState::StandingAttack || mCurrentState == PlayerState::SittingAttack ||
 				mCurrentState == PlayerState::StandingThrowApple || mCurrentState == PlayerState::SittingThrowApple ||
-				mCurrentState == PlayerState::Pushing || mCurrentState == PlayerState::Death)
+				mCurrentState == PlayerState::Pushing || mCurrentState == PlayerState::Death || 
+				mCurrentState == PlayerState::Falling || mCurrentState == PlayerState::FallingStop ||
+				mCurrentState == PlayerState::HorizontalClimbing || mCurrentState == PlayerState::HorizontalClimbingDefault)
 			{
 				this->SetState(new PlayerStandingJumpState(this->mPlayerData));
 			}
-			else if (mCurrentState == PlayerState::Running)
+			else if (mCurrentState == PlayerState::Running || mCurrentState == PlayerState::RunningStop)
 			{
 				this->SetState(new PlayerRunningJumpState(this->mPlayerData));
 			}
@@ -327,6 +330,11 @@ void Player::OnKeyPressed(int key)
 		{
 			this->SetState(new PlayerSittingState(this->mPlayerData));
 		}
+		if (mCurrentState == PlayerState::HorizontalClimbingDefault || mCurrentState == PlayerState::HorizontalClimbing)
+		{
+			this->onKeyDownPressing = true;
+			this->SetState(new PlayerHorizontalClimbingDefaultState(this->mPlayerData));
+		}
 	}
 	else if (key == VK_UP)
 	{
@@ -334,6 +342,11 @@ void Player::OnKeyPressed(int key)
 		{
 			this->onKeyUpPressing = true;
 			this->SetState(new PlayerStandingUpState(this->mPlayerData));
+		}
+		else if (mCurrentState == PlayerState::HorizontalClimbingDefault || mCurrentState == PlayerState::HorizontalClimbing)
+		{
+			this->onKeyUpPressing = true;
+			this->SetState(new PlayerHorizontalClimbingDefaultState(this->mPlayerData));
 		}
 	}
 	else if (key == 0x41) //tan cong bang phim A
@@ -360,36 +373,58 @@ void Player::OnKeyPressed(int key)
 	}
 	else if (key == 0x53) //tan cong bang phim S
 	{
-		if (mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::StandingAttack || mCurrentState == PlayerState::Death ||
-			mCurrentState == PlayerState::Default || mCurrentState == PlayerState::Running || mCurrentState == PlayerState::RunningStop)
-		{
-			this->SetState(new PlayerStandingThrowAppleState(this->mPlayerData));
-		}
-		else if (mCurrentState == PlayerState::Sitting || mCurrentState == PlayerState::SittingAttack)
-		{
-			this->SetState(new PlayerSittingThrowAppleState(this->mPlayerData));
-		}
-		else if (mCurrentState == PlayerState::StandingJump || mCurrentState == PlayerState::RunningJump ||
-			mCurrentState == PlayerState::JumpingAttack || mCurrentState == PlayerState::Falling)
-		{
-			this->SetState(new PlayerJumpingThrowAppleState(this->mPlayerData));
-		}
-		else if (mCurrentState == PlayerState::HorizontalClimbingDefault || mCurrentState == PlayerState::HorizontalClimbing ||
-			mCurrentState == PlayerState::VerticalClimbingDefault || mCurrentState == PlayerState::VerticalClimbing)
-		{
-			this->SetState(new PlayerClimbingThrowAppleState(this->mPlayerData));
-		}
 		//khi an phim s thi qua tao se bay ra
 		if (mListApplePlayer.size() > 0)
 		{
 			apple = mListApplePlayer.at(mListApplePlayer.size() - 1);
-			if (mCurrentReverse)
-				apple->SetPosition(this->GetPosition().x - this->GetWidth() / 2, this->GetPosition().y - this->GetHeight() / 4);
-			else
-				apple->SetPosition(this->GetPosition().x + this->GetWidth() / 2, this->GetPosition().y - this->GetHeight() / 4);
+
+			if (mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::StandingAttack || mCurrentState == PlayerState::Death ||
+				mCurrentState == PlayerState::Default || mCurrentState == PlayerState::Running || mCurrentState == PlayerState::RunningStop)
+			{
+				//set vi tri bay cua qua tao
+				this->SetState(new PlayerStandingThrowAppleState(this->mPlayerData));
+				if (mCurrentReverse)
+					apple->SetPosition(this->GetPosition().x - this->GetWidth() / 2, this->GetPosition().y - this->GetHeight() / 2);
+				else
+					apple->SetPosition(this->GetPosition().x + this->GetWidth() / 2, this->GetPosition().y - this->GetHeight() / 2);
+				mListAppleFly.push_back(apple); //lay ra qua tao trong player roi dua vao listapple quan ly viec bay ra ngoai
+				mListApplePlayer.pop_back(); //lay qua tao ra khoi listapple cua player sau khi nem ra ngoai
+			}
+			else if (mCurrentState == PlayerState::Sitting || mCurrentState == PlayerState::SittingAttack)
+			{				
+				this->SetState(new PlayerSittingThrowAppleState(this->mPlayerData));
+				if (mCurrentReverse)
+					apple->SetPosition(this->GetPosition().x, this->GetPosition().y - this->GetHeight() / 4);
+				else
+					apple->SetPosition(this->GetPosition().x, this->GetPosition().y - this->GetHeight() / 4);
+				mListAppleFly.push_back(apple); //lay ra qua tao trong player roi dua vao listapple quan ly viec bay ra ngoai
+				mListApplePlayer.pop_back(); //lay qua tao ra khoi listapple cua player sau khi nem ra ngoai
+			}
+			else if (mCurrentState == PlayerState::StandingJump || mCurrentState == PlayerState::RunningJump ||
+				mCurrentState == PlayerState::JumpingAttack || mCurrentState == PlayerState::Falling)
+			{				
+				this->SetState(new PlayerJumpingThrowAppleState(this->mPlayerData));
+				if (mCurrentReverse)
+					apple->SetPosition(this->GetPosition().x - this->GetWidth(), this->GetPosition().y - this->GetHeight() / 2 + 10);
+				else
+					apple->SetPosition(this->GetPosition().x + this->GetWidth(), this->GetPosition().y - this->GetHeight() / 2 + 10);
+				mListAppleFly.push_back(apple); //lay ra qua tao trong player roi dua vao listapple quan ly viec bay ra ngoai
+				mListApplePlayer.pop_back(); //lay qua tao ra khoi listapple cua player sau khi nem ra ngoai
+			}
+			else if (mCurrentState == PlayerState::HorizontalClimbingDefault || mCurrentState == PlayerState::HorizontalClimbing ||
+				mCurrentState == PlayerState::VerticalClimbingDefault || mCurrentState == PlayerState::VerticalClimbing)
+			{				
+				this->SetState(new PlayerClimbingThrowAppleState(this->mPlayerData));
+				if (mCurrentReverse)
+					apple->SetPosition(this->GetPosition().x - this->GetWidth() / 2, this->GetPosition().y - this->GetHeight() / 4);
+				else
+					apple->SetPosition(this->GetPosition().x + this->GetWidth() / 2, this->GetPosition().y - this->GetHeight() / 4);
+				mListAppleFly.push_back(apple); //lay ra qua tao trong player roi dua vao listapple quan ly viec bay ra ngoai
+				mListApplePlayer.pop_back(); //lay qua tao ra khoi listapple cua player sau khi nem ra ngoai
+			}
+
+			apple->SetVy(Define::ITEM_MIN_VELOCITY);
 			apple->Tag = Entity::EntityTypes::AppleWeapon;
-			mListAppleFly.push_back(apple); //lay ra qua tao trong player roi dua vao listapple quan ly viec bay ra ngoai
-			mListApplePlayer.pop_back(); //lay qua tao ra khoi listapple cua player sau khi nem ra ngoai
 		}
 	}
 }
@@ -400,12 +435,28 @@ void Player::OnKeyUp(int key)
 	{
 		allowJump = true;
 	}
-	else if (key == VK_DOWN || key == VK_UP)
+	else if (key == VK_DOWN)
 	{
-		if (mCurrentState != PlayerState::VerticalClimbing && mCurrentState != PlayerState::VerticalClimbingJump && mCurrentState != PlayerState::VerticalClimbingDefault)
+		if (mCurrentState == PlayerState::Sitting || mCurrentState == PlayerState::SittingAttack || mCurrentState == PlayerState::SittingThrowApple)
 			this->SetState(new PlayerDefaultState(this->mPlayerData));
-		if (key == VK_UP)
-			this->onKeyUpPressing = false;
+		else if (this->onKeyDownPressing)
+			this->onKeyDownPressing = false;
+	}
+	else if (key == VK_UP)
+	{
+		if (mCurrentState == PlayerState::StandingUp || mCurrentState == PlayerState::StandingUpStop)
+		{
+			if (this->onKeyUpPressing)
+			{
+				this->onKeyUpPressing = false;
+				this->SetState(new PlayerDefaultState(this->mPlayerData));
+			}
+		}
+		else if (mCurrentState == PlayerState::HorizontalClimbingDefault)
+		{
+			if (this->onKeyUpPressing)
+				this->onKeyUpPressing = false;
+		}
 	}
 	else if (key == 0x41 || key == 0x53)
 	{
@@ -501,7 +552,9 @@ void Player::SetState(PlayerState *newState)
 	mPreCurrentState = mCurrentState;
 	mCurrentState = newState->GetState();
 
-	if (mPreCurrentAnimation != nullptr)
+	if (mCurrentState == PlayerState::Revival)
+		this->posY -= 110;
+	else if (mPreCurrentAnimation != nullptr && mPreCurrentState != PlayerState::HorizontalClimbingDefault)
 		this->posY += (mPreCurrentAnimation->GetHeight() - mCurrentAnimation->GetHeight()) / 2.0f;
 
 	if (mCurrentState == PlayerState::Default)
@@ -528,7 +581,7 @@ RECT Player::GetBound()
 	else if (mCurrentState == PlayerState::Sitting || mCurrentState == PlayerState::SittingThrowApple)
 	{
 		rect.left = this->posX - mCurrentAnimation->GetWidth() / 2;
-		rect.right = this->posX;
+		rect.right = this->posX + mCurrentAnimation->GetWidth() / 10;
 		rect.top = this->posY + mCurrentAnimation->GetHeight() / 4;
 		rect.bottom = this->posY + mCurrentAnimation->GetHeight() / 2;
 	}
@@ -577,8 +630,14 @@ void Player::changeAnimation(PlayerState::StateName state)
 
 	case PlayerState::RunningJump:
 		delete mAnimationRunningJump;
-		mAnimationRunningJump = new Animation("Resources/Aladdin/Jumping/RunningJump.png", 4, 1, 4, 0.2f);
+		mAnimationRunningJump = new Animation("Resources/Aladdin/Jumping/RunningJump.png", 4, 1, 4, 0.25f);
 		mCurrentAnimation = mAnimationRunningJump;
+		break;
+
+	case PlayerState::Somersault:
+		delete mAnimationSomersault;
+		mAnimationSomersault = new Animation("Resources/Aladdin/Jumping/Somersault.png", 8, 1, 8, 0.25f);
+		mCurrentAnimation = mAnimationSomersault;
 		break;
 
 	case PlayerState::Standing:
@@ -599,7 +658,7 @@ void Player::changeAnimation(PlayerState::StateName state)
 
 	case PlayerState::StandingJump:
 		delete mAnimationStandingJump;
-		mAnimationStandingJump = new Animation("Resources/Aladdin/Jumping/StandingJump.png", 4, 1, 4, 0.2f);
+		mAnimationStandingJump = new Animation("Resources/Aladdin/Jumping/StandingJump.png", 9, 1, 9, 0.2f);
 		mCurrentAnimation = mAnimationStandingJump;
 		break;
 
@@ -635,7 +694,7 @@ void Player::changeAnimation(PlayerState::StateName state)
 
 	case PlayerState::VerticalClimbingJump:
 		delete mAnimationVerticalClimbingJump;
-		mAnimationVerticalClimbingJump = new Animation("Resources/Aladdin/Climbing/VerticalClimbing/VerticalClimbingJump.png", 9, 1, 9, 0.2f);
+		mAnimationVerticalClimbingJump = new Animation("Resources/Aladdin/Climbing/VerticalClimbing/VerticalClimbingJump.png", 7, 1, 7, 0.2f);
 		mCurrentAnimation = mAnimationVerticalClimbingJump;
 		break;
 
@@ -703,6 +762,12 @@ void Player::changeAnimation(PlayerState::StateName state)
 		mCurrentAnimation = mAnimationDeath;
 		break;
 
+	case PlayerState::Revival:
+		delete mAnimationRevival;
+		mAnimationRevival = new Animation("Resources/Aladdin/Revival/Revival.png", 14, 1, 14, 0.1f);
+		mCurrentAnimation = mAnimationRevival;
+		break;
+
 	default:
 		break;
 	}
@@ -736,13 +801,18 @@ void Player::OnNoCollisionWithBottom()
 	timeDelayForFalling += 0.1f;
 
 	if (mCurrentState != PlayerState::StandingJump && mCurrentState != PlayerState::RunningJump && mCurrentState != PlayerState::VerticalClimbingJump &&
-		mCurrentState != PlayerState::VerticalClimbing && mCurrentState != PlayerState::VerticalClimbingDefault &&
+		mCurrentState != PlayerState::VerticalClimbing && mCurrentState != PlayerState::VerticalClimbingDefault && mCurrentState != PlayerState::Somersault &&
 		mCurrentState != PlayerState::JumpingAttack && mCurrentState != PlayerState::JumpingThrowApple &&
 		mCurrentState != PlayerState::HorizontalClimbing && mCurrentState != PlayerState::HorizontalClimbingDefault &&
 		mCurrentState != PlayerState::ClimbingAttack && mCurrentState != PlayerState::ClimbingThrowApple &&
 		mCurrentState != PlayerState::VerticalClimbing && allowFalling && timeDelayForFalling > 0.5f)
 	{
 		timeDelayForFalling = 0;
+		if (mCurrentReverse)
+			this->AddPosition(D3DXVECTOR3(-5, 0, 0));
+		else
+			this->AddPosition(D3DXVECTOR3(5, 0, 0));
+
 		this->SetState(new PlayerFallingState(this->mPlayerData));
 	}
 }

@@ -27,7 +27,10 @@ public:
 		CamelLying,
 		CivilianWindowDefault,
 		CivilianWindowThrowPot,
-		CivilianCircusStanding
+		CivilianCircusStanding,
+		CivilianBasketStanding,
+		CivilianBasketRunning,
+		CivilianBasketAttack
 	};
 
 	~OrokuState();

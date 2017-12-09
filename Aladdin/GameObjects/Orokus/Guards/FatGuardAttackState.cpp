@@ -17,7 +17,7 @@ FatGuardAttackState::FatGuardAttackState(OrokuData *orokuData)
 		this->mOrokuData->fatGuard->GetPosition().y - this->mOrokuData->fatGuard->GetHeight() / 2,
 		0));
 	this->mOrokuData->fatGuard->weapon->SetVx(0);
-	this->mOrokuData->fatGuard->weapon->SetVy(0);
+	this->mOrokuData->fatGuard->weapon->SetVy(Define::ITEM_MIN_VELOCITY);
 }
 
 FatGuardAttackState::~FatGuardAttackState()

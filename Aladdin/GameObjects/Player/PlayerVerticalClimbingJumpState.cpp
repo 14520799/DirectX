@@ -1,5 +1,6 @@
 #include "PlayerVerticalClimbingJumpState.h"
 #include "PlayerFallingState.h"
+#include "PlayerDefaultState.h"
 #include "PlayerVerticalClimbingDefaultState.h"
 #include "PlayerHorizontalClimbingDefaultState.h"
 #include "../../GameComponents/GameCollision.h"
@@ -9,7 +10,7 @@
 PlayerVerticalClimbingJumpState::PlayerVerticalClimbingJumpState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
-	this->mPlayerData->player->SetVy(Define::PLAYER_MIN_JUMP_VELOCITY);
+	this->mPlayerData->player->SetVy(Define::PLAYER_MIN_JUMP_VELOCITY - 50);
 	noPressed = false;
 }
 
@@ -31,24 +32,18 @@ void PlayerVerticalClimbingJumpState::Update(float dt)
 		if (mPlayerData->player->getMoveDirection() == Player::MoveToLeft)
 		{
 			//player dang di chuyen sang ben trai      
-			if (mPlayerData->player->GetVx() < 0)
-			{
-				this->mPlayerData->player->AddVx(Define::PLAYER_RUN_SPEED_X);
+			this->mPlayerData->player->AddVx(Define::PLAYER_RUN_SPEED_X);
 
-				if (mPlayerData->player->GetVx() > 0)
-					this->mPlayerData->player->SetVx(0);
-			}
+			if (mPlayerData->player->GetVx() > 0)
+				this->mPlayerData->player->SetVx(0);
 		}
 		else if (mPlayerData->player->getMoveDirection() == Player::MoveToRight)
 		{
 			//player dang di chuyen sang phai   
-			if (mPlayerData->player->GetVx() > 0)
-			{
-				this->mPlayerData->player->AddVx(-Define::PLAYER_RUN_SPEED_X);
+			this->mPlayerData->player->AddVx(-Define::PLAYER_RUN_SPEED_X);
 
-				if (mPlayerData->player->GetVx() < 0)
-					this->mPlayerData->player->SetVx(0);
-			}
+			if (mPlayerData->player->GetVx() < 0)
+				this->mPlayerData->player->SetVx(0);
 		}
 	}
 }
@@ -97,22 +92,32 @@ void PlayerVerticalClimbingJumpState::HandleKeyboard(std::map<int, bool> keys)
 
 void PlayerVerticalClimbingJumpState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
-	if (impactor->Tag == Entity::EntityTypes::VerticalRope)
+	if (impactor->Tag == Entity::EntityTypes::HorizontalRope)
+	{
+		this->mPlayerData->player->SetPosition(this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y + this->mPlayerData->player->GetHeight() / 2);
+		this->mPlayerData->player->SetState(new PlayerHorizontalClimbingDefaultState(this->mPlayerData));
+	}
+	else if (impactor->Tag == Entity::EntityTypes::VerticalRope)
 	{
 		if (this->mPlayerData->player->GetVy() >= 0)
 		{
 			this->mPlayerData->player->SetPosition(impactor->GetPosition().x, this->mPlayerData->player->GetPosition().y);
 			this->mPlayerData->player->SetState(new PlayerVerticalClimbingDefaultState(this->mPlayerData));
-			return;
 		}
 	}
-	else if (impactor->Tag == Entity::EntityTypes::HorizontalRope)
+	//else if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot) &&
+	//	!this->mPlayerData->player->allowImunity)
+	//{
+	//	this->mPlayerData->player->bloodOfEntity--;
+	//}
+	else if (impactor->Tag == Entity::EntityTypes::Item)
 	{
-		//this->mPlayerData->player->SetPosition(this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y + (this->mPlayerData->player->GetPosition().y - impactor->GetPosition().y));
-		this->mPlayerData->player->SetState(new PlayerHorizontalClimbingDefaultState(this->mPlayerData));
-	}
-	else if (impactor->Tag == Entity::EntityTypes::Item && impactor->Id != Entity::EntityId::Revitalization_Default)
-	{
+		if (impactor->Id == Entity::EntityId::Revitalization_Default || impactor->Id == Entity::EntityId::Feddler_Standing)
+			return;
+		else if (impactor->Id == Entity::EntityId::Lamp)
+			this->mPlayerData->player->effectLamp = true;
+		else if (impactor->Id == Entity::EntityId::HeadGenie || impactor->Id == Entity::EntityId::Life)
+			this->mPlayerData->player->effectSpecial = true;
 		this->mPlayerData->player->allowEffect = true;
 		this->mPlayerData->player->collisionItem = true;
 		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
@@ -123,7 +128,7 @@ void PlayerVerticalClimbingJumpState::OnCollision(Entity *impactor, Entity::Side
 		}
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Oroku ||
-		impactor->Tag == Entity::EntityTypes::Pot)
+		impactor->Tag == Entity::EntityTypes::Pot || impactor->Tag == Entity::EntityTypes::VerticalRopeControl)
 	{
 
 	}
@@ -143,12 +148,15 @@ void PlayerVerticalClimbingJumpState::OnCollision(Entity *impactor, Entity::Side
 			break;
 		
 		case Entity::Top: case Entity::TopLeft: case Entity::TopRight:
-			this->mPlayerData->player->AddPosition(0, data.RegionCollision.bottom - data.RegionCollision.top);
+			//this->mPlayerData->player->AddPosition(0, data.RegionCollision.bottom - data.RegionCollision.top);
 			break;
 
 		case Entity::BottomRight: case Entity::BottomLeft: case Entity::Bottom:
 			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
-			this->mPlayerData->player->SetState(new PlayerFallingState(this->mPlayerData));
+			if (noPressed)
+				this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
+			else
+				this->mPlayerData->player->SetState(new PlayerRunningState(this->mPlayerData));
 			break;
 		
 

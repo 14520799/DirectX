@@ -35,5 +35,7 @@ protected:
     Player	*mPlayer;
 
     std::map<int, bool> keys;
+
+	RECT mCameraExpand;
 };
 

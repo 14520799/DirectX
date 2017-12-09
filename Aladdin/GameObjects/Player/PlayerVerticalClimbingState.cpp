@@ -55,8 +55,10 @@ void PlayerVerticalClimbingState::HandleKeyboard(std::map<int, bool> keys)
 
 void PlayerVerticalClimbingState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
-	if (impactor->Tag == Entity::EntityTypes::Item && impactor->Id != Entity::EntityId::Revitalization_Default)
+	if (impactor->Tag == Entity::EntityTypes::Item)
 	{
+		if (impactor->Id == Entity::EntityId::Revitalization_Default || impactor->Id == Entity::EntityId::Feddler_Standing)
+			return;
 		this->mPlayerData->player->allowEffect = true;
 		this->mPlayerData->player->collisionItem = true;
 		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
@@ -65,10 +67,6 @@ void PlayerVerticalClimbingState::OnCollision(Entity *impactor, Entity::SideColl
 			this->mPlayerData->player->apple = new AppleWeapon();
 			this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
 		}
-	}
-	else if (impactor->Tag == Entity::EntityTypes::FallControl)
-	{
-		return;
 	}
 	if (impactor->Tag != Entity::EntityTypes::VerticalRope)
 	{
@@ -88,9 +86,11 @@ void PlayerVerticalClimbingState::OnCollision(Entity *impactor, Entity::SideColl
 			break;
 		}
 	}
-
-
-
+	//else if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot) &&
+	//	!this->mPlayerData->player->allowImunity)
+	//{
+	//	this->mPlayerData->player->bloodOfEntity--;
+	//}
 }
 
 PlayerState::StateName PlayerVerticalClimbingState::GetState()

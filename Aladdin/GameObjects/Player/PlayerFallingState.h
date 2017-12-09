@@ -18,8 +18,6 @@ public:
 
 protected:
     //neu nhu van toc ban dau = khong thi se khong cho giam toc do
-    bool allowMoveX;
-
-    bool isLeftOrRightKeyPressed;
+	bool noPressed;
 };
 

@@ -13,7 +13,7 @@ AppleWeaponEffect::~AppleWeaponEffect()
 
 const char * AppleWeaponEffect::FileName()
 {
-	return "Resources/Items/Apple/AppleWeaponEffect.png";
+	return "Resources/MapObjects/Weapons/AppleWeaponEffect.png";
 }
 
 int AppleWeaponEffect::TotalFrame()

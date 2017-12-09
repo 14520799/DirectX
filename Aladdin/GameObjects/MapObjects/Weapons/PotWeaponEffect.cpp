@@ -13,7 +13,7 @@ PotWeaponEffect::~PotWeaponEffect()
 
 const char * PotWeaponEffect::FileName()
 {
-	return "Resources/Orokus/Civilians/PotWeaponEffect.png";
+	return "Resources/MapObjects/Weapons/PotWeaponEffect.png";
 }
 
 int PotWeaponEffect::TotalFrame()

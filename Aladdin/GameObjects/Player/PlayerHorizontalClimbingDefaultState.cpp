@@ -23,11 +23,6 @@ void PlayerHorizontalClimbingDefaultState::HandleKeyboard(std::map<int, bool> ke
 		this->mPlayerData->player->SetState(new PlayerHorizontalClimbingState(this->mPlayerData));
 		return;
 	}
-	else if (keys[VK_DOWN])
-	{
-		this->mPlayerData->player->AddPosition(0, (this->mPlayerData->player->GetBound().bottom - this->mPlayerData->player->GetBound().top) / 2);
-		this->mPlayerData->player->SetState(new PlayerFallingState(this->mPlayerData));
-	}
 	else
 	{
 		this->mPlayerData->player->SetVx(0);
@@ -36,7 +31,13 @@ void PlayerHorizontalClimbingDefaultState::HandleKeyboard(std::map<int, bool> ke
 
 void PlayerHorizontalClimbingDefaultState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
-
+	if (impactor->Tag == Entity::EntityTypes::HorizontalRope)
+		this->mPlayerData->player->SetPosition(this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y + this->mPlayerData->player->GetHeight() / 2);
+	//else if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot) &&
+	//	!this->mPlayerData->player->allowImunity)
+	//{
+	//	this->mPlayerData->player->bloodOfEntity--;
+	//}
 }
 
 PlayerState::StateName PlayerHorizontalClimbingDefaultState::GetState()

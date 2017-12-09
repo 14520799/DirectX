@@ -17,7 +17,7 @@ RevitalizationActionStop::~RevitalizationActionStop()
 
 const char * RevitalizationActionStop::FileName()
 {
-	return "Resources/Items/Revitalization/RevitalizationActionStop.png";
+	return "Resources/MapObjects/Items/RevitalizationActionStop.png";
 }
 
 int RevitalizationActionStop::TotalFrame()

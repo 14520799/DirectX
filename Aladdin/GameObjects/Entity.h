@@ -33,17 +33,19 @@ public:
     enum EntityTypes
     {
         None, Aladdin, Static, Ground,
-		VerticalRope, HorizontalRope, Fire, FireControl, AppleWeapon,
+		VerticalRope, VerticalRopeControl, HorizontalRope, Fire, FireControl, AppleWeapon,
 		Stairs, UpStairs, UpStairsControl, CenterStairs, DownStairs, DownStairsControl, GroundControl, FallControl,
-		Oroku, Sword, Pot,
+		Oroku, Sword, Pot, ObjStairs, Spring,
 		Item
     };
 
 	enum EntityId
 	{
-		Guard, Camel, CivilianWindow, CivilianCircus,
-		AppleItem, AppleGod, Life, Heart, HeadGenie, Lamp,
-		Revitalization_Default, Revitalization_Action, Revitalization_ActionStop
+		Guard, Camel, CivilianWindow, CivilianCircus, CivilianBasket,
+		AppleItem, Ruby, Life, Heart, HeadGenie, Lamp, LampAttack,
+		Revitalization_Default, Revitalization_Action, Revitalization_ActionStop,
+		Feddler_Standing, Feddler_Magic, Feddler_MagicStop,
+		ItemEffect_1, ItemEffect_2, FireEffect, OrokuEffect
 	};
 	
 	enum EntityCurrentMoveStairs
@@ -95,6 +97,8 @@ public:
 
     virtual void Update(float dt);
 
+	virtual void Draw(D3DXVECTOR2 transform);
+
     //kiem soat viec va cham
     //khi xay ra va cham voi 1 thuc the nao do thi ham nay se dc goi de xu ly
     virtual void OnCollision(Entity *impactor, CollisionReturn data, SideCollisions side);
@@ -116,10 +120,15 @@ public:
 	//xu ly di xuong cau thang
 	bool collisionStairs;
 	bool allowFalling;
-
+	//khi bi trung don thi se duoc 0.5s mien sat thuong
 	bool allowImunity;
 	//khi player cham vao item se co hieu ung xuat hien
 	bool allowEffect;
+	//khi player giet oroku thi hieu ung no xuat hien
+	bool allowOrokuEffect;
+	bool effectLamp;
+	bool effectSpecial;
+	bool effectFire;
 
 	bool collisionWithOroku;
 	bool collisionWithCamel;

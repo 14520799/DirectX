@@ -25,8 +25,8 @@ void CivilianCircusStandingState::Update(float dt)
 			}
 			else if (this->mOrokuData->civilianCircus->weapon->Mode == MapObject::WeaponMode::Fantastic)
 			{
-				this->mOrokuData->civilianCircus->weapon->AddVx(Define::ITEM_SPEED_X / 5 * 2);
-				this->mOrokuData->civilianCircus->weapon->AddVy(Define::ITEM_SPEED_Y * 10);
+				this->mOrokuData->civilianCircus->weapon->AddVx(Define::ITEM_SPEED_X / 2);
+				this->mOrokuData->civilianCircus->weapon->AddVy(Define::ITEM_SPEED_Y * 2);
 			}
 		}
 		//kiem bay qua ben trai
@@ -39,8 +39,8 @@ void CivilianCircusStandingState::Update(float dt)
 			}
 			else if (this->mOrokuData->civilianCircus->weapon->Mode == MapObject::WeaponMode::Fantastic)
 			{
-				this->mOrokuData->civilianCircus->weapon->AddVx(-Define::ITEM_SPEED_X / 5 * 2);
-				this->mOrokuData->civilianCircus->weapon->AddVy(Define::ITEM_SPEED_Y * 10);
+				this->mOrokuData->civilianCircus->weapon->AddVx(-Define::ITEM_SPEED_X / 2);
+				this->mOrokuData->civilianCircus->weapon->AddVy(Define::ITEM_SPEED_Y * 2);
 			}
 		}
 	}

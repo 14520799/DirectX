@@ -43,6 +43,56 @@ void PlayerDeathState::HandleKeyboard(std::map<int, bool> keys)
     }
 }
 
+void PlayerDeathState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
+{
+	if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot ||
+		impactor->Tag == Entity::EntityTypes::Fire) &&
+		!this->mPlayerData->player->allowImunity)
+	{
+		if (impactor->Tag == Entity::EntityTypes::Fire)
+			this->mPlayerData->player->effectFire = true;
+		this->mPlayerData->player->bloodOfEntity--;
+	}
+	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Oroku ||
+		impactor->Tag == Entity::EntityTypes::Pot || impactor->Tag == Entity::EntityTypes::FallControl)
+	{
+
+	}
+	else if (impactor->Tag == Entity::EntityTypes::Fire)
+		this->mPlayerData->player->effectFire = true;
+	else if (impactor->Tag == Entity::EntityTypes::ObjStairs)
+	{
+		switch (side)
+		{
+		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
+			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
+			this->mPlayerData->player->collisionObjectMap = true;
+			break;
+		}
+	}
+	else
+	{
+		switch (side)
+		{
+		case Entity::Left:
+			this->mPlayerData->player->AddPosition(data.RegionCollision.right - data.RegionCollision.left, 0);
+			break;
+
+		case Entity::Right:
+			this->mPlayerData->player->AddPosition(-(data.RegionCollision.right - data.RegionCollision.left), 0);
+			break;
+
+		case Entity::Top: case Entity::TopLeft: case Entity::TopRight:
+			break;
+
+		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
+			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
+			this->mPlayerData->player->SetVy(0);
+			break;
+		}
+	}
+}
+
 PlayerState::StateName PlayerDeathState::GetState()
 {
     return PlayerState::Death;

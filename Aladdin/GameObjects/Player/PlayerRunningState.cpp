@@ -12,6 +12,7 @@ PlayerRunningState::PlayerRunningState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
 	this->mPlayerData->player->SetVx(0);
+	this->mPlayerData->player->SetVy(0);
 }
 
 
@@ -53,8 +54,8 @@ void PlayerRunningState::HandleKeyboard(std::map<int, bool> keys)
 	}
 	else
 	{
-		if (this->mPlayerData->player->GetVx() < -Define::PLAYER_MAX_RUNNING_SPEED * 4.5f / 5 ||
-			this->mPlayerData->player->GetVx() > Define::PLAYER_MAX_RUNNING_SPEED * 4.5f / 5)
+		if (this->mPlayerData->player->GetVx() < -Define::PLAYER_MAX_RUNNING_SPEED ||
+			this->mPlayerData->player->GetVx() > Define::PLAYER_MAX_RUNNING_SPEED)
 			this->mPlayerData->player->SetState(new PlayerRunningStopState(this->mPlayerData));
 		else
 			this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
@@ -69,6 +70,12 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 		this->mPlayerData->player->CurrentMoveStairs = Entity::EntityCurrentMoveStairs::CurrentGround;
 		return;
 	}
+	if (impactor->Tag == Entity::EntityTypes::Fire)
+	{
+		this->mPlayerData->player->effectFire = true;
+		this->mPlayerData->player->mOriginPositionItem = D3DXVECTOR3(
+			this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y - 55, 0);
+	}
 	//lay phia va cham so voi player
 	//GameCollision::SideCollisions side = GameCollision::getSideCollision(this->mPlayerData->player, data);
 	if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot ||
@@ -77,8 +84,14 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	{
 		this->mPlayerData->player->bloodOfEntity--;
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Item && impactor->Id != Entity::EntityId::Revitalization_Default)
+	else if (impactor->Tag == Entity::EntityTypes::Item)
 	{
+		if (impactor->Id == Entity::EntityId::Revitalization_Default || impactor->Id == Entity::EntityId::Feddler_Standing)
+			return;
+		else if (impactor->Id == Entity::EntityId::Lamp)
+			this->mPlayerData->player->effectLamp = true;
+		else if (impactor->Id == Entity::EntityId::HeadGenie || impactor->Id == Entity::EntityId::Life)
+			this->mPlayerData->player->effectSpecial = true;
 		this->mPlayerData->player->allowEffect = true;
 		this->mPlayerData->player->collisionItem = true;
 		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
@@ -86,6 +99,16 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 		{
 			this->mPlayerData->player->apple = new AppleWeapon();
 			this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
+		}
+	}
+	else if (impactor->Tag == Entity::EntityTypes::ObjStairs)
+	{
+		switch (side)
+		{
+		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
+			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
+			this->mPlayerData->player->collisionObjectMap = true;
+			break;
 		}
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Oroku ||
@@ -151,7 +174,7 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	{
 		switch (side)
 		{
-		case Entity::Left:
+		case Entity::Left: case Entity::TopLeft:
 			//va cham phia ben trai player
 			if (this->mPlayerData->player->getMoveDirection() == Player::MoveToLeft)
 			{
@@ -161,7 +184,7 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 			}
 			break;
 
-		case Entity::Right:
+		case Entity::Right: case Entity::TopRight:
 			//va cham phia ben phai player
 			if (this->mPlayerData->player->getMoveDirection() == Player::MoveToRight)
 			{

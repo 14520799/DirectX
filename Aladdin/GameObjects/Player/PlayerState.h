@@ -26,6 +26,7 @@ public:
 		StandingJump,
 		RunningJump,
 		VerticalClimbingJump,
+		Somersault,
 		StandingAttack,
 		JumpingAttack,
 		SittingAttack,
@@ -34,7 +35,8 @@ public:
 		JumpingThrowApple,
 		SittingThrowApple,
 		ClimbingThrowApple,
-        Death
+        Death,
+		Revival
     };
 
     ~PlayerState();

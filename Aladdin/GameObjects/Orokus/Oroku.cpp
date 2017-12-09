@@ -45,3 +45,4 @@ void Oroku::SetPlayer(Player *player)
 	this->mPlayer = player;
 }
 
+

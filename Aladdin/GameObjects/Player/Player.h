@@ -69,7 +69,9 @@ public:
 	bool allowDelayState;
 
 	bool onKeyUpPressing; //thong bao aladdin dang nhin len tren
-	bool collisionItem;
+	bool onKeyDownPressing; //thong bao aladdin dang nhin xuong duoi
+	bool collisionItem, collisionFeddler;
+	bool collisionObjectMap;
 
 	std::vector<MapObject*> mListApplePlayer; //apple cua player dang so huu
 
@@ -103,6 +105,7 @@ protected:
 				*mAnimationStandingJump,
 				*mAnimationRunningJump,
 				*mAnimationVerticalClimbingJump,
+				*mAnimationSomersault,
 				*mAnimationStandingAttack,
 				*mAnimationSittingAttack,
 				*mAnimationJumpingAttack,
@@ -111,7 +114,8 @@ protected:
 				*mAnimationSittingThrowApple,
 				*mAnimationJumpingThrowApple,
 				*mAnimationClimbingThrowApple,
-				*mAnimationDeath;
+				*mAnimationDeath,
+				*mAnimationRevival;
 
 	std::vector<MapObject*> mListAppleFly; //apple da duoc player nem di
 	std::vector<MapObject*> mListAppleEffect; //hieu ung cua apple truoc khi bi huy

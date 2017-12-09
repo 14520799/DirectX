@@ -4,6 +4,7 @@
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 #include "../Orokus/Oroku.h"
+#include "../MapObjects/Weapons/AppleWeapon.h"
 
 PlayerStandingAttackState::PlayerStandingAttackState(PlayerData *playerData)
 {
@@ -25,11 +26,32 @@ void PlayerStandingAttackState::OnCollision(Entity *impactor, Entity::SideCollis
 {
 	//lay phia va cham so voi player
 	//GameCollision::SideCollisions side = GameCollision::getSideCollision(this->mPlayerData->player, data);
-	if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot ||
-		impactor->Tag == Entity::EntityTypes::Fire) &&
-		!this->mPlayerData->player->allowImunity)
+	if (impactor->Tag == Entity::EntityTypes::Fire)
+	{
+		this->mPlayerData->player->effectFire = true;
+		this->mPlayerData->player->mOriginPositionItem = D3DXVECTOR3(
+			this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y - 55, 0);
+	}
+	if (impactor->Tag == Entity::EntityTypes::Fire && !this->mPlayerData->player->allowImunity)
 	{
 		this->mPlayerData->player->bloodOfEntity--;
+	}
+	else if (impactor->Tag == Entity::EntityTypes::Item)
+	{
+		if (impactor->Id == Entity::EntityId::Revitalization_Default || impactor->Id == Entity::EntityId::Feddler_Standing)
+			return;
+		else if (impactor->Id == Entity::EntityId::Lamp)
+			this->mPlayerData->player->effectLamp = true;
+		else if (impactor->Id == Entity::EntityId::HeadGenie || impactor->Id == Entity::EntityId::Life)
+			this->mPlayerData->player->effectSpecial = true;
+		this->mPlayerData->player->allowEffect = true;
+		this->mPlayerData->player->collisionItem = true;
+		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
+		if (impactor->Id == Entity::EntityId::AppleItem)
+		{
+			this->mPlayerData->player->apple = new AppleWeapon();
+			this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
+		}
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Oroku && impactor->Id != Entity::EntityId::Camel)
 	{
@@ -37,7 +59,8 @@ void PlayerStandingAttackState::OnCollision(Entity *impactor, Entity::SideCollis
 			this->mPlayerData->player->collisionWithOroku = true;
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Id == Entity::EntityId::Camel ||
-		impactor->Tag == Entity::EntityTypes::Pot || impactor->Tag == Entity::EntityTypes::FallControl)
+		impactor->Tag == Entity::EntityTypes::Pot || impactor->Tag == Entity::EntityTypes::FallControl ||
+		impactor->Tag == Entity::EntityTypes::Fire)
 	{
 
 	}

@@ -2,6 +2,7 @@
 #include "PlayerDefaultState.h"
 #include "PlayerStandingState.h"
 #include "PlayerFallingState.h"
+#include "PlayerSomersaultState.h"
 #include "PlayerVerticalClimbingDefaultState.h"
 #include "PlayerHorizontalClimbingDefaultState.h"
 #include "../../GameComponents/GameCollision.h"
@@ -11,8 +12,14 @@
 PlayerStandingJumpState::PlayerStandingJumpState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
-	this->mPlayerData->player->AddPosition(0, -10);
-	this->mPlayerData->player->SetVy(Define::PLAYER_MIN_JUMP_VELOCITY);
+	this->mPlayerData->player->AddPosition(0, -5);
+	if (this->mPlayerData->player->collisionObjectMap)
+	{
+		this->mPlayerData->player->SetVy(Define::PLAYER_MIN_JUMP_VELOCITY * 1.5f);
+		this->mPlayerData->player->collisionObjectMap = false;
+	}
+	else
+		this->mPlayerData->player->SetVy(Define::PLAYER_MIN_JUMP_VELOCITY);
 	noPressed = false;
 }
 
@@ -36,24 +43,18 @@ void PlayerStandingJumpState::Update(float dt)
 		if (mPlayerData->player->getMoveDirection() == Player::MoveToLeft)
 		{
 			//player dang di chuyen sang ben trai      
-			if (mPlayerData->player->GetVx() < 0)
-			{
-				this->mPlayerData->player->AddVx(Define::PLAYER_RUN_SPEED_X);
+			this->mPlayerData->player->AddVx(Define::PLAYER_RUN_SPEED_X);
 
-				if (mPlayerData->player->GetVx() > 0)
-					this->mPlayerData->player->SetVx(0);
-			}
+			if (mPlayerData->player->GetVx() > 0)
+				this->mPlayerData->player->SetVx(0);
 		}
 		else if (mPlayerData->player->getMoveDirection() == Player::MoveToRight)
 		{
 			//player dang di chuyen sang phai   
-			if (mPlayerData->player->GetVx() > 0)
-			{
-				this->mPlayerData->player->AddVx(-Define::PLAYER_RUN_SPEED_X);
+			this->mPlayerData->player->AddVx(-Define::PLAYER_RUN_SPEED_X);
 
-				if (mPlayerData->player->GetVx() < 0)
-					this->mPlayerData->player->SetVx(0);
-			}
+			if (mPlayerData->player->GetVx() < 0)
+				this->mPlayerData->player->SetVx(0);
 		}
 	}
 }
@@ -64,14 +65,19 @@ void PlayerStandingJumpState::HandleKeyboard(std::map<int, bool> keys)
 	{
 		mPlayerData->player->SetReverse(false);
 
-		//di chuyen sang phai
-		if (this->mPlayerData->player->GetVx() < Define::PLAYER_MAX_JUMPING_SPEED)
+		if (this->mPlayerData->player->allowMoveRight)
 		{
-			this->mPlayerData->player->AddVx(Define::PLAYER_JUMP_SPEED_X);
-
-			if (this->mPlayerData->player->GetVx() >= Define::PLAYER_MAX_JUMPING_SPEED)
+			//di chuyen sang phai
+			if (this->mPlayerData->player->GetVx() < Define::PLAYER_MAX_JUMPING_SPEED)
 			{
-				this->mPlayerData->player->SetVx(Define::PLAYER_MAX_JUMPING_SPEED);
+				this->mPlayerData->player->AddVx(Define::PLAYER_JUMP_SPEED_X);
+
+				if (this->mPlayerData->player->GetVx() >= Define::PLAYER_MAX_JUMPING_SPEED)
+				{
+					this->mPlayerData->player->SetVx(Define::PLAYER_MAX_JUMPING_SPEED);
+				}
+
+				this->mPlayerData->player->allowMoveLeft = true;
 			}
 		}
 
@@ -81,14 +87,19 @@ void PlayerStandingJumpState::HandleKeyboard(std::map<int, bool> keys)
 	{
 		mPlayerData->player->SetReverse(true);
 
-		//di chuyen sang trai
-		if (this->mPlayerData->player->GetVx() > -Define::PLAYER_MAX_JUMPING_SPEED)
+		if (this->mPlayerData->player->allowMoveLeft)
 		{
-			this->mPlayerData->player->AddVx(-Define::PLAYER_JUMP_SPEED_X);
-
-			if (this->mPlayerData->player->GetVx() < -Define::PLAYER_MAX_JUMPING_SPEED)
+			//di chuyen sang trai
+			if (this->mPlayerData->player->GetVx() > -Define::PLAYER_MAX_JUMPING_SPEED)
 			{
-				this->mPlayerData->player->SetVx(-Define::PLAYER_MAX_JUMPING_SPEED);
+				this->mPlayerData->player->AddVx(-Define::PLAYER_JUMP_SPEED_X);
+
+				if (this->mPlayerData->player->GetVx() < -Define::PLAYER_MAX_JUMPING_SPEED)
+				{
+					this->mPlayerData->player->SetVx(-Define::PLAYER_MAX_JUMPING_SPEED);
+				}
+
+				this->mPlayerData->player->allowMoveRight = true;
 			}
 		}
 
@@ -116,11 +127,21 @@ void PlayerStandingJumpState::OnCollision(Entity *impactor, Entity::SideCollisio
 	}
 	else if (impactor->Tag == Entity::EntityTypes::HorizontalRope)
 	{
-		//this->mPlayerData->player->SetPosition(this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y + (this->mPlayerData->player->GetPosition().y - impactor->GetPosition().y));
-		this->mPlayerData->player->SetState(new PlayerHorizontalClimbingDefaultState(this->mPlayerData));
+		this->mPlayerData->player->AddPosition(0, data.RegionCollision.bottom - data.RegionCollision.top);
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Item && impactor->Id != Entity::EntityId::Revitalization_Default)
+	//else if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot) &&
+	//	!this->mPlayerData->player->allowImunity)
+	//{
+	//	this->mPlayerData->player->bloodOfEntity--;
+	//}
+	else if (impactor->Tag == Entity::EntityTypes::Item)
 	{
+		if (impactor->Id == Entity::EntityId::Revitalization_Default || impactor->Id == Entity::EntityId::Feddler_Standing)
+			return;
+		else if (impactor->Id == Entity::EntityId::Lamp)
+			this->mPlayerData->player->effectLamp = true;
+		else if (impactor->Id == Entity::EntityId::HeadGenie || impactor->Id == Entity::EntityId::Life)
+			this->mPlayerData->player->effectSpecial = true;
 		this->mPlayerData->player->allowEffect = true;
 		this->mPlayerData->player->collisionItem = true;
 		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
@@ -130,12 +151,15 @@ void PlayerStandingJumpState::OnCollision(Entity *impactor, Entity::SideCollisio
 			this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
 		}
 	}
-	else if (impactor->Id == Entity::EntityId::Camel)
+	else if (impactor->Id == Entity::EntityId::Camel || impactor->Tag == Entity::EntityTypes::Spring)
 	{
 		switch (side)
 		{
 		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
-			this->mPlayerData->player->SetState(new PlayerStandingJumpState(this->mPlayerData));
+			if (impactor->Tag == Entity::EntityTypes::Spring)
+				this->mPlayerData->player->SetState(new PlayerSomersaultState(this->mPlayerData));
+			else if (impactor->Id == Entity::EntityId::Camel)
+				this->mPlayerData->player->SetState(new PlayerStandingJumpState(this->mPlayerData));
 			break;
 
 		default:
@@ -156,24 +180,27 @@ void PlayerStandingJumpState::OnCollision(Entity *impactor, Entity::SideCollisio
 	{
 		switch (side)
 		{
-		case Entity::Left:
+		case Entity::Left:  case Entity::TopLeft: case Entity::BottomLeft:
 			this->mPlayerData->player->AddPosition(data.RegionCollision.right - data.RegionCollision.left, 0);
 			this->mPlayerData->player->SetVx(0);
 			break;
 
-		case Entity::Right:
+
+		case Entity::Right: case Entity::TopRight: case Entity::BottomRight:
 			this->mPlayerData->player->AddPosition(-(data.RegionCollision.right - data.RegionCollision.left), 0);
 			this->mPlayerData->player->SetVx(0);
 			break;
 
-		case Entity::TopRight: case Entity::TopLeft: case Entity::Top:
-			this->mPlayerData->player->AddPosition(0, data.RegionCollision.bottom - data.RegionCollision.top);
-			this->mPlayerData->player->SetVy(0);
+		case Entity::Top:
 			break;
 
-		case Entity::BottomRight: case Entity::BottomLeft: case Entity::Bottom:
+		case Entity::Bottom:
 			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
-			this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
+			if (noPressed)
+				this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
+			else
+				this->mPlayerData->player->SetState(new PlayerRunningState(this->mPlayerData));
+			break;
 
 		default:
 			break;

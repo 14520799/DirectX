@@ -3,6 +3,7 @@
 #include "PlayerStandingState.h"
 #include "PlayerStandingJumpState.h"
 #include "PlayerFallingState.h"
+#include "PlayerSomersaultState.h"
 #include "PlayerVerticalClimbingState.h"
 #include "PlayerHorizontalClimbingState.h"
 #include "../../GameComponents/GameCollision.h"
@@ -105,8 +106,19 @@ void PlayerJumpingThrowAppleState::OnCollision(Entity *impactor, Entity::SideCol
 		//this->mPlayerData->player->SetPosition(this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y + (this->mPlayerData->player->GetPosition().y - impactor->GetPosition().y));
 		this->mPlayerData->player->SetState(new PlayerHorizontalClimbingState(this->mPlayerData));
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Item && impactor->Id != Entity::EntityId::Revitalization_Default)
+	//else if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot) &&
+	//	!this->mPlayerData->player->allowImunity)
+	//{
+	//	this->mPlayerData->player->bloodOfEntity--;
+	//}
+	else if (impactor->Tag == Entity::EntityTypes::Item)
 	{
+		if (impactor->Id == Entity::EntityId::Revitalization_Default || impactor->Id == Entity::EntityId::Feddler_Standing)
+			return;
+		else if (impactor->Id == Entity::EntityId::Lamp)
+			this->mPlayerData->player->effectLamp = true;
+		else if (impactor->Id == Entity::EntityId::HeadGenie || impactor->Id == Entity::EntityId::Life)
+			this->mPlayerData->player->effectSpecial = true;
 		this->mPlayerData->player->allowEffect = true;
 		this->mPlayerData->player->collisionItem = true;
 		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
@@ -116,19 +128,22 @@ void PlayerJumpingThrowAppleState::OnCollision(Entity *impactor, Entity::SideCol
 			this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
 		}
 	}
-	else if (impactor->Id == Entity::EntityId::Camel)
+	else if (impactor->Id == Entity::EntityId::Camel || impactor->Tag == Entity::EntityTypes::Spring)
 	{
 		switch (side)
 		{
 		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
-			this->mPlayerData->player->SetState(new PlayerStandingJumpState(this->mPlayerData));
+			if (impactor->Tag == Entity::EntityTypes::Spring)
+				this->mPlayerData->player->SetState(new PlayerSomersaultState(this->mPlayerData));
+			else if (impactor->Id == Entity::EntityId::Camel)
+				this->mPlayerData->player->SetState(new PlayerStandingJumpState(this->mPlayerData));
 			break;
 
 		default:
 			break;
 		}
 	}
-	else if ((impactor->Tag == Entity::EntityTypes::Oroku && impactor->Id == Entity::EntityId::Camel) ||
+	else if ((impactor->Tag == Entity::EntityTypes::Oroku && impactor->Id != Entity::EntityId::Camel) ||
 		impactor->Tag == Entity::EntityTypes::Pot || impactor->Tag == Entity::EntityTypes::Sword)
 	{
 
@@ -158,7 +173,7 @@ void PlayerJumpingThrowAppleState::OnCollision(Entity *impactor, Entity::SideCol
 
 		case Entity::TopRight: case Entity::TopLeft: case Entity::Top:
 		{
-			this->mPlayerData->player->AddPosition(0, data.RegionCollision.bottom - data.RegionCollision.top);
+			//this->mPlayerData->player->AddPosition(0, data.RegionCollision.bottom - data.RegionCollision.top);
 			break;
 		}
 

@@ -13,7 +13,7 @@ SwordWeapon::~SwordWeapon()
 
 const char * SwordWeapon::FileName()
 {
-    return "Resources/Orokus/Guards/SwordWeapon.png";
+    return "Resources/MapObjects/Weapons/SwordWeapon.png";
 }
 
 int SwordWeapon::TotalFrame()
@@ -42,7 +42,8 @@ void SwordWeapon::OnCollision(Entity *impactor, Entity::CollisionReturn data, En
 	{
 		this->collisionWithPlayer = true;
 	}
-	else if (impactor->Tag != Entity::EntityTypes::Oroku && impactor->Tag != Entity::EntityTypes::Item)
+	else if (impactor->Tag != Entity::EntityTypes::Oroku && impactor->Tag != Entity::EntityTypes::Item &&
+		impactor->Tag != Entity::EntityTypes::HorizontalRope && impactor->Tag != Entity::EntityTypes::VerticalRope)
 	{
 		this->weaponCollided = true;
 	}

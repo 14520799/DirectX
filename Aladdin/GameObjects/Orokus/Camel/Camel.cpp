@@ -9,6 +9,7 @@ Camel::Camel(D3DXVECTOR3 position)
 	mAnimationDefault = new Animation("Resources/Orokus/Camel/CamelDefault.png", 1, 1, 1, 0.0f);
 
 	this->SetPosition(position);
+	this->Id = Entity::EntityId::Camel;
 
 	this->mOrokuData = new OrokuData();
 	this->mOrokuData->camel = this;
@@ -71,8 +72,8 @@ RECT Camel::GetBound()
 
 	if (mCurrentState == OrokuState::CamelDefault)
 	{
-		rect.left = this->posX - 100;
-		rect.right = rect.left + 50;
+		rect.left = this->posX - 110;
+		rect.right = rect.left + 60;
 		rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;
 		rect.bottom = this->posY + mCurrentAnimation->GetHeight() / 2;
 	}

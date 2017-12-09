@@ -17,7 +17,7 @@ RevitalizationAction::~RevitalizationAction()
 
 const char * RevitalizationAction::FileName()
 {
-	return "Resources/Items/Revitalization/RevitalizationAction.png";
+	return "Resources/MapObjects/Items/RevitalizationAction.png";
 }
 
 int RevitalizationAction::TotalFrame()
@@ -37,5 +37,5 @@ int RevitalizationAction::Column()
 
 float RevitalizationAction::SecondPerFrame()
 {
-	return 0.05f;
+	return 0.1f;
 }

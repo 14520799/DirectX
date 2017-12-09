@@ -21,6 +21,8 @@ class GameMap
 {
 public:
     GameMap(char* filePath);
+	void LoadMapItems(char* filepath);
+	void LoadMapOrokus(char* filepath);
     void SetCamera(Camera* camera);
     void Update(float dt);
     void Draw();
@@ -33,10 +35,7 @@ public:
     std::map<int, Sprite*> GetListTileSet();
 
 	//tao vat pham len map vd: tao, tien, ...
-	void createApple(std::vector<MapObject*> &entitiesOut, D3DXVECTOR3 position, int soTang);
-	void createItem(std::vector<MapObject*> &entitiesOut, D3DXVECTOR3 position, int MapObjectId);
 	void createOroku(std::vector<Oroku*> &entitiesOut, D3DXVECTOR3 position, int orokuId);
-
     bool IsBoundLeft(); //kiem tra luc nay Camera o vi bien ben trai so voi WorldMap
     bool IsBoundRight(); // kiem tra xem co o vi tri bien ben phai worldmap khong
     bool IsBoundTop(); // kiem tra xem co o vi tri bien ben trai worldmap khong
@@ -44,7 +43,7 @@ public:
     ~GameMap();
 
 	std::vector<Oroku*> GetListOroku();
-	std::vector<Oroku*> GetListOrokuSupport();
+	std::vector<Entity*> GetListPlayerSupport();
 	void RemoveMapObject(MapObject *MapObject);
 	void RemoveOroku(Oroku *oroku);
 
@@ -58,7 +57,8 @@ public:
 
     QuadTree* GetQuadTree();
 	//delaytime de revitalization thuc hien xong state action
-	float timeDelayRevitalization;
+	float timeDelayStateItem;
+	float timeDelayCreateFireEffect;
 private:
     void LoadMap(char* filePath);
 
@@ -69,13 +69,15 @@ private:
 	Player							*mPlayer;
     QuadTree                        *mQuadTree;
     std::vector<MapObject*>			mListMapObjects;
-	std::vector<MapObject*>			mListItemEffects; //luu 1 mang cac effect khi player va cham voi item
+	std::vector<MapObject*>			mListItemEffects; //luu 1 mang cac effect khi player va cham vao item
+	std::vector<MapObject*>			mListItemAttackEffects; //luu 1 mang cac attack effect cua item khi player va cham vao item
 	std::vector<Oroku*>             mListOrokus;
-	std::vector<Oroku*>				mListOrokusSupport;
+	std::vector<Entity*>			mListPlayerSupport;
 	std::vector<Entity*>			mListUpStairs;
 	std::vector<Entity*>			mListDownStairs;
 
 	MapObject *itemEffect;
+	MapObject *itemAttackEffect;
 };
 
 #endif

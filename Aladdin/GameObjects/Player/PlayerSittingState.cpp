@@ -27,6 +27,12 @@ void PlayerSittingState::HandleKeyboard(std::map<int, bool> keys)
 
 void PlayerSittingState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)
 {
+	if (impactor->Tag == Entity::EntityTypes::Fire)
+	{
+		this->mPlayerData->player->effectFire = true;
+		this->mPlayerData->player->mOriginPositionItem = D3DXVECTOR3(
+			this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y - 55, 0);
+	}
 	if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot ||
 		impactor->Tag == Entity::EntityTypes::Fire) &&
 		!this->mPlayerData->player->allowImunity)

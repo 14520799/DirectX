@@ -12,7 +12,7 @@ PotWeapon::~PotWeapon()
 
 const char * PotWeapon::FileName()
 {
-	return "Resources/Orokus/Civilians/PotWeaponFalling.png";
+	return "Resources/MapObjects/Weapons/PotWeaponFalling.png";
 }
 
 int PotWeapon::TotalFrame()

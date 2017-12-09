@@ -18,7 +18,6 @@ public:
 	{
 		None,
 		RunAttack,
-		RunAround,
 		RunComeback
 	};
 
@@ -40,14 +39,15 @@ public:
 
 	virtual void SetPlayer(Player *player);
 
-	bool mCurrentReverse, mPreCurrentReverse, settedPlayer, settingAttack;
+	bool mCurrentReverse, mPreCurrentReverse, settingAttack;
 	bool allowDrawWeapon, allowDefault;
+	bool settedPlayer; //da xet player cho oroku
 	bool collisionFire; //xy ly khi oroku cham vao lua se chuyen sang state default
-
-	Player *mPlayer;
 
 	MapObject	*weapon,
 				*weaponEffect;
+
+	Player		*mPlayer;
 protected:
 	OrokuData *mOrokuData;
 

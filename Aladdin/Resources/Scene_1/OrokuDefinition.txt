@@ -1,0 +1,8 @@
+Character				Mean
+1						ThinGuard
+2						FatGuard
+3						StrongGuard
+4						Camel
+5						CivilianWindow
+6						CivilianCircus
+7						CivilianBasket

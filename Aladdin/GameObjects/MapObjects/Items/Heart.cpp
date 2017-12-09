@@ -3,6 +3,8 @@
 Heart::Heart(D3DXVECTOR3 position)
 {
 	init(position);
+	this->Tag = Entity::EntityTypes::Item;
+	this->Id = Entity::EntityId::Heart;
 }
 
 Heart::~Heart()
@@ -12,7 +14,7 @@ Heart::~Heart()
 
 const char * Heart::FileName()
 {
-	return "Resources/Items/Heart.png";
+	return "Resources/MapObjects/Items/Heart.png";
 }
 
 int Heart::TotalFrame()

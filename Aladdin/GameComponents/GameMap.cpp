@@ -4,18 +4,29 @@
 #include "../GameObjects/MapObjects/Items/RevitalizationDefault.h"
 #include "../GameObjects/MapObjects/Items/RevitalizationAction.h"
 #include "../GameObjects/MapObjects/Items/RevitalizationActionStop.h"
+#include "../GameObjects/MapObjects/Items/FeddlerStanding.h"
+#include "../GameObjects/MapObjects/Items/FeddlerMagic.h"
+#include "../GameObjects/MapObjects/Items/FeddlerMagicStop.h"
 #include "../GameObjects/MapObjects/Items/Lamp.h"
-#include "../GameObjects/MapObjects/Items/AppleGod.h"
+#include "../GameObjects/MapObjects/Items/Ruby.h"
 #include "../GameObjects/MapObjects/Items/HeadGenie.h"
 #include "../GameObjects/MapObjects/Items/Heart.h"
 #include "../GameObjects/MapObjects/Items/Life.h"
-#include "../GameObjects/MapObjects/Items/ItemEffect.h"
+#include "../GameObjects/MapObjects/Items/ItemEffect_1.h"
+#include "../GameObjects/MapObjects/Items/ItemEffect_2.h"
+#include "../GameObjects/MapObjects/ObjectsMap/FireEffect.h"
+#include "../GameObjects/MapObjects/Items/LampEffect.h"
+#include "../GameObjects/MapObjects/Items/LampAttack.h"
+#include "../GameObjects/MapObjects/Items/OrokuEffect.h"
+#include "../GameObjects/MapObjects/ObjectsMap/Stairs.h"
+#include "../GameObjects/MapObjects/ObjectsMap/Spring.h"
 #include "../GameObjects/Orokus/Guards/ThinGuard.h"
 #include "../GameObjects/Orokus/Guards/FatGuard.h"
 #include "../GameObjects/Orokus/Guards/StrongGuard.h"
 #include "../GameObjects/Orokus/Camel/Camel.h"
 #include "../GameObjects/Orokus/Civilians/CivilianWindow.h"
 #include "../GameObjects/Orokus/Civilians/CivilianCircus.h"
+#include "../GameObjects/Orokus/Civilians/CivilianBasket.h"
 
 GameMap::GameMap(char* filePath)
 {
@@ -92,6 +103,10 @@ void GameMap::LoadMap(char* filePath)
 			{
 				entity->Tag = Entity::EntityTypes::VerticalRope;
 			}
+			else if (object->GetName() == "VerticalRopeControl")
+			{
+				entity->Tag = Entity::EntityTypes::VerticalRopeControl;
+			}
 			else if (object->GetName() == "HorizontalRope")
 			{
 				entity->Tag = Entity::EntityTypes::HorizontalRope;
@@ -155,193 +170,117 @@ void GameMap::LoadMap(char* filePath)
 		}
 	}
 #pragma endregion
-
-	//khoi tao nhung tang qua tao
-#pragma region -APPLE LAYER-
-	createApple(mListMapObjects, D3DXVECTOR3(820, 880, 0), 3);
-	createApple(mListMapObjects, D3DXVECTOR3(1400, 880, 0), 2);
-	createApple(mListMapObjects, D3DXVECTOR3(1680, 880, 0), 2);
-	//1 - Revitalization, 2 - Lamp, 3 - AppleGod, 4 - HeadGenie, 5 - Heart, 6 - Life
-	createItem(mListMapObjects, D3DXVECTOR3(2330, 877, 0), 1);
-	//createItem(mListMapObjects, D3DXVECTOR3(1250, 900, 0), 2);
-	//createItem(mListMapObjects, D3DXVECTOR3(3500, 950, 0), 3);
-	//createItem(mListMapObjects, D3DXVECTOR3(3000, 950, 0), 4);
-	//createItem(mListMapObjects, D3DXVECTOR3(2150, 800, 0), 5);
-	//createItem(mListMapObjects, D3DXVECTOR3(2600, 700, 0), 6);
-
-	for (auto child : mListMapObjects)
-	{
-		mQuadTree->insertEntity(child);
-	}
-#pragma endregion
-
-	//tao oroku
-#pragma region -OROKU-
-	//1 - ThinGuard, 2 - FatGuard, 3 - StrongGuard, 4 - Camel, 5 - CivilianWindow, 6 - CivilianCircus
-	createOroku(mListOrokus, D3DXVECTOR3(1065, 972.5f, 0), 1);
-	createOroku(mListOrokus, D3DXVECTOR3(2900, 1035, 0), 2);
-	createOroku(mListOrokus, D3DXVECTOR3(1545, 977.5f, 0), 3);
-	createOroku(mListOrokusSupport, D3DXVECTOR3(2575, 1047.5f, 0), 4);
-	createOroku(mListOrokus, D3DXVECTOR3(2848, 780, 0), 5);
-	createOroku(mListOrokus, D3DXVECTOR3(2110, 850, 0), 6);
-
-	for (auto child : mListOrokus)
-	{
-		mQuadTree->insertEntity(child);
-	}
-	for (auto child : mListOrokusSupport)
-	{
-		mQuadTree->insertEntity(child);
-	}
-#pragma endregion
 }
 
-void GameMap::createApple(std::vector<MapObject*> &entitiesOut, D3DXVECTOR3 position, int soTang)
+void GameMap::LoadMapItems(char* filepath)
 {
-	if (soTang < 1 || soTang > 3)
-	{
-		return;
-	}
+	FILE *file;
+	file = fopen(filepath, "r");
 
-	MapObject *Item = nullptr;
-
-	for (size_t i = 1; i <= soTang; i++)
+	if (file)
 	{
-		switch (i)
+		while (!feof(file))
 		{
-		case 1:
-			Item = new AppleItem(position);
-			entitiesOut.push_back(Item);
-			break;
-
-		case 2:
-			Item = new AppleItem(D3DXVECTOR3(position.x - 50, position.y + 40, 0));
-			entitiesOut.push_back(Item);
-			Item = new AppleItem(D3DXVECTOR3(position.x + 50, position.y + 40, 0));
-			entitiesOut.push_back(Item);
-			break;
-
-		case 3:
-			Item = new AppleItem(D3DXVECTOR3(position.x - 100, position.y + 80, 0));
-			entitiesOut.push_back(Item);
-			Item = new AppleItem(D3DXVECTOR3(position.x + 100, position.y + 80, 0));
-			entitiesOut.push_back(Item);
-			break;
-
-		default:
-			break;
+			char name[100];
+			char info[1000];
+			fgets(info, 100, file);
+			float x, y;
+			fscanf(file, "%s %f %f", &name, &x, &y);
+			D3DXVECTOR3 position = D3DXVECTOR3(x, y, 0);
+			MapObject *item = nullptr;
+			char chr = name[strlen(name) - 1];
+			switch (chr)
+			{
+			case 'A':
+				item = new AppleItem(position);
+				break;
+			case 'R':
+				item = new Ruby(position);
+				break;
+			case 'r':
+				item = new RevitalizationDefault(position);
+				break;
+			case 'H':
+				item = new HeadGenie(position);
+				break;
+			case 'h':
+				item = new Heart(position);
+				break;
+			case 'L':
+				item = new Lamp(position);
+				break;
+			case 'l':
+				item = new Life(position);
+				break;
+			case 'S':
+				item = new Stairs(position);
+				break;
+			case 's':
+				item = new Spring(position);
+				break;
+			case 'F':
+				item = new FeddlerStanding(position);
+				break;
+			default:
+				break;
+			}
+			item->originPos = position;
+			mListMapObjects.push_back(item);
+			mQuadTree->insertEntity(item);
 		}
 	}
-
-	for (auto child : entitiesOut)
-	{
-		child->Tag = Entity::EntityTypes::Item;
-		child->Id = Entity::EntityId::AppleItem;
-	}
+	fclose(file);
 }
 
-void GameMap::createItem(std::vector<MapObject*> &entitiesOut, D3DXVECTOR3 position, int itemId)
+void GameMap::LoadMapOrokus(char* filepath)
 {
-	MapObject *item = nullptr;
+	FILE *file;
+	file = fopen(filepath, "r");
 
-	switch (itemId)
+	if (file)
 	{
-	case 1:
-		item = new RevitalizationDefault(position);
-		item->Tag = Entity::EntityTypes::Item;
-		item->Id = Entity::EntityId::Revitalization_Default;
-		entitiesOut.push_back(item);
-		break;
-
-	case 2:
-		item = new Lamp(position);
-		item->Tag = Entity::EntityTypes::Item;
-		item->Id = Entity::EntityId::Lamp;
-		entitiesOut.push_back(item);
-		break;
-
-	case 3:
-		item = new AppleGod(position);
-		item->Tag = Entity::EntityTypes::Item;
-		item->Id = Entity::EntityId::AppleGod;
-		entitiesOut.push_back(item);
-		break;
-
-	case 4:
-		item = new HeadGenie(position);
-		item->Tag = Entity::EntityTypes::Item;
-		item->Id = Entity::EntityId::HeadGenie;
-		entitiesOut.push_back(item);
-		break;
-
-	case 5:
-		item = new Heart(position);
-		item->Tag = Entity::EntityTypes::Item;
-		item->Id = Entity::EntityId::Heart;
-		entitiesOut.push_back(item);
-		break;
-
-	case 6:
-		item = new Life(position);
-		item->Tag = Entity::EntityTypes::Item;
-		item->Id = Entity::EntityId::Life;
-		entitiesOut.push_back(item);
-		break;
-
-	default:
-		break;
+		while (!feof(file))
+		{
+			int id;
+			char info[1000];
+			fgets(info, 100, file);
+			float x, y;
+			fscanf(file, "%d %f %f", &id, &x, &y);
+			D3DXVECTOR3 position = D3DXVECTOR3(x, y, 0);
+			Oroku *oroku = nullptr;
+			switch (id)
+			{
+			case 1:
+				oroku = new ThinGuard(position);
+				break;
+			case 2:
+				oroku = new FatGuard(position);
+				break;
+			case 3:
+				oroku = new StrongGuard(position);
+				break;
+			case 4:
+				oroku = new Camel(position);
+				mListPlayerSupport.push_back(oroku);
+				break;
+			case 5:
+				oroku = new CivilianWindow(position);
+				break;
+			case 6:
+				oroku = new CivilianCircus(position);
+				break;
+			case 7:
+				oroku = new CivilianBasket(position);
+				break;
+			default:
+				break;
+			}
+			oroku->Tag = Entity::EntityTypes::Oroku;
+			oroku->bloodOfEntity = Define::GUARD_BLOOD;
+			mListOrokus.push_back(oroku);
+		}
 	}
-}
-
-void GameMap::createOroku(std::vector<Oroku*> &entitiesOut, D3DXVECTOR3 position, int orokuId)
-{
-	Oroku *oroku = nullptr;
-
-	switch (orokuId)
-	{
-	case 1:
-		oroku = new ThinGuard(position);
-		oroku->Tag = Entity::EntityTypes::Oroku;
-		oroku->Id = Entity::EntityId::Guard;
-		entitiesOut.push_back(oroku);
-		break;
-	case 2:
-		oroku = new FatGuard(position);
-		oroku->Tag = Entity::EntityTypes::Oroku;
-		oroku->Id = Entity::EntityId::Guard;
-		entitiesOut.push_back(oroku);
-		break;
-	case 3:
-		oroku = new StrongGuard(position);
-		oroku->Tag = Entity::EntityTypes::Oroku;
-		oroku->Id = Entity::EntityId::Guard;
-		entitiesOut.push_back(oroku);
-		break;
-	case 4:
-		oroku = new Camel(position);
-		oroku->Tag = Entity::EntityTypes::Oroku;
-		oroku->Id = Entity::EntityId::Camel;
-		entitiesOut.push_back(oroku);
-		break;
-	case 5:
-		oroku = new CivilianWindow(position);
-		oroku->Tag = Entity::EntityTypes::Oroku;
-		oroku->Id = Entity::EntityId::CivilianWindow;
-		entitiesOut.push_back(oroku);
-		return;
-		break;
-	case 6:
-		oroku = new CivilianCircus(position);
-		oroku->Tag = Entity::EntityTypes::Oroku;
-		oroku->Id = Entity::EntityId::CivilianCircus;
-		entitiesOut.push_back(oroku);
-		break;
-
-	default:
-		break;
-	}
-
-	oroku->bloodOfEntity = Define::GUARD_BLOOD;
+	fclose(file);
 }
 
 void GameMap::SetCamera(Camera* camera)
@@ -416,47 +355,197 @@ void GameMap::Update(float dt)
 			delete mListMapObjects[i];
 			mListMapObjects[i] = new RevitalizationAction(pos);
 			mListMapObjects[i]->Id = Entity::EntityId::Revitalization_Action;
-			mPlayer->mOriginPosition = pos + D3DXVECTOR3(0, -15, 0);
+			mPlayer->mOriginPosition = pos;
 		}
-		if (mListMapObjects[i]->Id == Entity::EntityId::Revitalization_Action)
+		else if (mListMapObjects[i]->Id == Entity::EntityId::Revitalization_Action)
 		{
-			timeDelayRevitalization += dt;
-			if (timeDelayRevitalization > 0.5f)
+			timeDelayStateItem += dt;
+			if (timeDelayStateItem > 1.0f)
 			{
 				D3DXVECTOR3 pos = mListMapObjects[i]->GetPosition();
 				delete mListMapObjects[i];
 				mListMapObjects[i] = new RevitalizationActionStop(pos);
 				mListMapObjects[i]->Id = Entity::EntityId::Revitalization_ActionStop;
+				timeDelayStateItem = 0;
+			}
+		}
+#pragma endregion
+
+#pragma region Feddler
+		if (mListMapObjects[i]->Id == Entity::EntityId::Feddler_Standing && mPlayer->collisionFeddler)
+		{
+			D3DXVECTOR3 pos = mListMapObjects[i]->GetPosition();
+			mQuadTree->removeEntity(mListMapObjects[i]);
+			delete mListMapObjects[i];
+			mListMapObjects[i] = new FeddlerMagic(pos);
+			mListMapObjects[i]->Id = Entity::EntityId::Feddler_Magic;
+		}
+		else if (mListMapObjects[i]->Id == Entity::EntityId::Feddler_Magic)
+		{
+			timeDelayStateItem += dt;
+			if (timeDelayStateItem > 1.1f)
+			{
+				D3DXVECTOR3 pos = mListMapObjects[i]->GetPosition();
+				delete mListMapObjects[i];
+				mListMapObjects[i] = new FeddlerMagicStop(pos);
+				mListMapObjects[i]->Id = Entity::EntityId::Feddler_MagicStop;
+				timeDelayStateItem = 0;
 			}
 		}
 #pragma endregion
 
 		mListMapObjects[i]->Update(dt);
+		//xu ly cau thang roi xuong
+		if (mListMapObjects[i]->Tag == Entity::EntityTypes::ObjStairs)
+		{
+			if (mListMapObjects[i]->collisionWithPlayer)
+			{
+				mListMapObjects[i]->AddVy(Define::ITEM_SPEED_Y / 2);
+				mListMapObjects[i]->Entity::Update(dt);
+				mPlayer->AddPosition(0, 1);
+				if (mListMapObjects[i]->GetPosition().y - mListMapObjects[i]->originPos.y > Define::STAIRS_FALL)
+				{
+					mListMapObjects[i]->SetPosition(mListMapObjects[i]->originPos);
+					mListMapObjects[i]->SetVy(0);
+					mListMapObjects[i]->collisionWithPlayer = false;
+				}
+			}
+		}
 
-#pragma region ItemEffect
+#pragma region CREATE ItemEffect
+		//tao ra effect cho item truoc khi bi huy
 		if (mPlayer->allowEffect)
 		{
-			itemEffect = new ItemEffect(mPlayer->mOriginPositionItem);
+			if (mPlayer->effectLamp)
+			{
+				itemEffect = new LampEffect(D3DXVECTOR3(mPlayer->mOriginPositionItem.x, mPlayer->mOriginPositionItem.y - 70, 0));
+				for (size_t i = 0; i < 4; i++)
+				{
+					itemAttackEffect = new LampAttack(mPlayer->mOriginPositionItem);
+					itemAttackEffect->originPos = itemAttackEffect->GetPosition();
+					mQuadTree->insertEntity(itemAttackEffect);
+					mListItemAttackEffects.push_back(itemAttackEffect);
+				}
+			}
+			else if (mPlayer->effectSpecial)
+				itemEffect = new ItemEffect_2(mPlayer->mOriginPositionItem);
+			else
+				itemEffect = new ItemEffect_1(mPlayer->mOriginPositionItem);
 			mListItemEffects.push_back(itemEffect);
 			mPlayer->allowEffect = false;
+			mPlayer->effectLamp = false;
+			mPlayer->effectSpecial = false;
 		}
+		if (mPlayer->allowOrokuEffect)
+		{
+			itemEffect = new OrokuEffect(mPlayer->mOriginPositionItem);
+			mListItemEffects.push_back(itemEffect);
+			mPlayer->allowOrokuEffect = false;
+		}
+		if (mPlayer->effectFire)
+		{
+			timeDelayCreateFireEffect += dt;
+			if (timeDelayCreateFireEffect > 0.2f)
+			{
+				itemEffect = new FireEffect(mPlayer->mOriginPositionItem);
+				mListItemEffects.push_back(itemEffect);
+				timeDelayCreateFireEffect = 0;
+			}
+			mPlayer->effectFire = false;
+		}
+#pragma endregion
+	}
+
+#pragma region Update Aniamation Effect
+	//chay animation cho effect roi huy
+	if (mListItemEffects.size() != 0)
+	{
 		for (size_t i = 0; i < mListItemEffects.size(); i++)
 		{
 			mListItemEffects.at(i)->Update(dt);
 			mListItemEffects.at(i)->timeDelayItemEffect += dt;
-			if (mListItemEffects.at(i)->timeDelayItemEffect > 1.0f)
+			if (mListItemEffects.at(i)->Id == Entity::EntityId::ItemEffect_2)
 			{
-				delete mListItemEffects.at(i);
-				mListItemEffects.at(i) = nullptr;
-				mListItemEffects.erase(mListItemEffects.begin() + i);
-				if (mListItemEffects.size() == 0)
+				if (mListItemEffects.at(i)->timeDelayItemEffect > 2.0f)
+				{
+					delete mListItemEffects.at(i);
+					mListItemEffects.at(i) = nullptr;
+					mListItemEffects.erase(mListItemEffects.begin() + i);
+					if (mListItemEffects.size() == 0)
+						break;
+					i--;
+				}
+			}
+			else if (mListItemEffects.at(i)->Id == Entity::EntityId::FireEffect)
+			{
+				if (mListItemEffects.at(i)->timeDelayItemEffect > 0.5f)
+				{
+					delete mListItemEffects.at(i);
+					mListItemEffects.at(i) = nullptr;
+					mListItemEffects.erase(mListItemEffects.begin() + i);
+					if (mListItemEffects.size() == 0)
+						break;
+					i--;
+				}
+			}
+			else
+			{
+				if (mListItemEffects.at(i)->timeDelayItemEffect > 0.4f)
+				{
+					delete mListItemEffects.at(i);
+					mListItemEffects.at(i) = nullptr;
+					mListItemEffects.erase(mListItemEffects.begin() + i);
+					if (mListItemEffects.size() == 0)
+						break;
+					i--;
+				}
+			}
+		}
+	}
+	//xy ly nhung effect cua item khi attack
+	if (mListItemAttackEffects.size() != 0)
+	{
+		for (size_t i = 0; i < mListItemAttackEffects.size(); i++)
+		{
+			mListItemAttackEffects.at(i)->Update(dt);
+			if (i == 0)
+			{
+				mListItemAttackEffects.at(i)->AddVx(-6);
+				mListItemAttackEffects.at(i)->AddVy(-1);
+			}
+			else if (i == 1)
+			{
+				mListItemAttackEffects.at(i)->AddVx(-6);
+				mListItemAttackEffects.at(i)->AddVy(-3);
+			}
+			else if (i == 2)
+			{
+				mListItemAttackEffects.at(i)->AddVx(6);
+				mListItemAttackEffects.at(i)->AddVy(-3);
+			}
+			else if (i == 3)
+			{
+				mListItemAttackEffects.at(i)->AddVx(6);
+				mListItemAttackEffects.at(i)->AddVy(-1);
+			}
+
+			mListItemAttackEffects.at(i)->Entity::Update(dt);
+			mListItemAttackEffects.at(i)->timeDelayItemEffect += dt;
+			if (mListItemAttackEffects.at(i)->timeDelayItemEffect > 1.0f)
+			{
+				mListItemAttackEffects.at(i)->SetPosition(mListItemAttackEffects.at(i)->originPos);
+				mQuadTree->removeEntity(mListItemAttackEffects.at(i));
+				delete mListItemAttackEffects.at(i);
+				mListItemAttackEffects.at(i) = nullptr;
+				mListItemAttackEffects.erase(mListItemAttackEffects.begin() + i);
+				if (mListItemAttackEffects.size() == 0)
 					break;
 				i--;
 			}
 		}
+	}
 #pragma endregion
 
-	}
 	for (size_t i = 0; i < mListOrokus.size(); i++)
 	{
 		/*neu oroku chua set player thi se set player
@@ -469,15 +558,6 @@ void GameMap::Update(float dt)
 			mListOrokus[i]->settedPlayer = true;
 		}
 		mListOrokus[i]->Update(dt);
-	}
-	for (size_t i = 0; i < mListOrokusSupport.size(); i++)
-	{
-		if (!mListOrokusSupport[i]->settedPlayer)
-		{
-			mListOrokusSupport[i]->SetPlayer(this->GetPlayer());
-			mListOrokusSupport[i]->settedPlayer = true;
-		}
-		mListOrokusSupport[i]->Update(dt);
 	}
 }
 
@@ -497,19 +577,22 @@ void GameMap::Draw()
 
 		if (layer->GetName() == "Tile Layer 3")
 		{
-			//draw player
-			this->GetPlayer()->Draw();
-
 #pragma region DRAW ITEM
 
 			for (size_t i = 0; i < mListMapObjects.size(); i++)
 			{
+				if (mListMapObjects[i]->Tag == Entity::EntityTypes::ObjStairs)
+				{
+					mListMapObjects[i]->Draw(D3DXVECTOR3(mListMapObjects[i]->posX, mListMapObjects[i]->posY, 0), trans);
+					continue;
+				}
 				mListMapObjects[i]->Draw(trans);
 			}
 
 #pragma endregion
 
-			//ve apple effect
+#pragma region DRAW ITEMEFFECT
+			//ve item effect
 			if (mListItemEffects.size() > 0)
 			{
 				for (size_t i = 0; i < mListItemEffects.size(); i++)
@@ -517,17 +600,32 @@ void GameMap::Draw()
 					mListItemEffects.at(i)->Draw(trans);
 				}
 			}
+			//ve item attack effect
+			if (mListItemAttackEffects.size() > 0)
+			{
+				for (size_t i = 0; i < mListItemAttackEffects.size(); i++)
+				{
+					mListItemAttackEffects.at(i)->Draw(D3DXVECTOR3(mListItemAttackEffects.at(i)->posX, mListItemAttackEffects.at(i)->posY, 0), trans);
+				}
+			}
+#pragma endregion
 
 #pragma region DRAW OROKU
 			for (size_t i = 0; i < mListOrokus.size(); i++)
 			{
 				mListOrokus[i]->Draw(trans);
 			}
-			for (size_t i = 0; i < mListOrokusSupport.size(); i++)
+#pragma endregion
+
+#pragma region DRAW PLAYERSUPPORT
+			for (size_t i = 0; i < mListPlayerSupport.size(); i++)
 			{
-				mListOrokusSupport[i]->Draw(trans);
+				mListPlayerSupport[i]->Draw(trans);
 			}
 #pragma endregion
+
+			//draw player
+			this->GetPlayer()->Draw();
 		}
 
 		for (size_t j = 0; j < mMap->GetNumTilesets(); j++)
@@ -585,7 +683,6 @@ void GameMap::Draw()
 			}
 		}
 	}
-
 }
 
 std::map<int, Sprite*> GameMap::GetListTileSet()
@@ -625,9 +722,9 @@ std::vector<Oroku*> GameMap::GetListOroku()
 	return mListOrokus;
 }
 
-std::vector<Oroku*> GameMap::GetListOrokuSupport()
+std::vector<Entity*> GameMap::GetListPlayerSupport()
 {
-	return mListOrokusSupport;
+	return mListPlayerSupport;
 }
 
 void GameMap::SetPlayer(Player* player)

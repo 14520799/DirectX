@@ -3,6 +3,8 @@
 Lamp::Lamp(D3DXVECTOR3 position)
 {
 	init(position);
+	this->Tag = Entity::EntityTypes::Item;
+	this->Id = Entity::EntityId::Lamp;
 }
 
 Lamp::Lamp()
@@ -17,7 +19,7 @@ Lamp::~Lamp()
 
 const char * Lamp::FileName()
 {
-	return "Resources/Items/Lamp/Lamp.png";
+	return "Resources/MapObjects/Items/Lamp.png";
 }
 
 int Lamp::TotalFrame()

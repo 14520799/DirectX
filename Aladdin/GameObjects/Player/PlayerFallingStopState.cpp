@@ -30,8 +30,11 @@ void PlayerFallingStopState::HandleKeyboard(std::map<int, bool> keys)
 {
 	if (keys[VK_LEFT] || keys[VK_RIGHT])
 	{
-		this->mPlayerData->player->SetState(new PlayerRunningState(this->mPlayerData));
-		return;
+		if (timeDelayState > 0.5f)
+		{
+			this->mPlayerData->player->SetState(new PlayerRunningState(this->mPlayerData));
+			return;
+		}
 	}
 }
 

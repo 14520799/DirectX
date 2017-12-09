@@ -46,14 +46,22 @@ void PlayerRunningStopState::OnCollision(Entity *impactor, Entity::SideCollision
 {
 	//lay phia va cham so voi player
 	//GameCollision::SideCollisions side = GameCollision::getSideCollision(this->mPlayerData->player, data);
+	if (impactor->Tag == Entity::EntityTypes::Fire)
+	{
+		this->mPlayerData->player->effectFire = true;
+		this->mPlayerData->player->mOriginPositionItem = D3DXVECTOR3(
+			this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y - 55, 0);
+	}
 	if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot ||
 		impactor->Tag == Entity::EntityTypes::Fire) &&
 		!this->mPlayerData->player->allowImunity)
 	{
 		this->mPlayerData->player->bloodOfEntity--;
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Item && impactor->Id != Entity::EntityId::Revitalization_Default)
+	else if (impactor->Tag == Entity::EntityTypes::Item)
 	{
+		if (impactor->Id == Entity::EntityId::Revitalization_Default)
+			return;
 		this->mPlayerData->player->allowEffect = true;
 		this->mPlayerData->player->collisionItem = true;
 		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
