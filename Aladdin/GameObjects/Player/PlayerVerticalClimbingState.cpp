@@ -59,7 +59,7 @@ void PlayerVerticalClimbingState::OnCollision(Entity *impactor, Entity::SideColl
 	{
 		if (impactor->Id == Entity::EntityId::Revitalization_Default || impactor->Id == Entity::EntityId::Feddler_Standing)
 			return;
-		this->mPlayerData->player->allowEffect = true;
+		this->mPlayerData->player->allowItemEffect = true;
 		this->mPlayerData->player->collisionItem = true;
 		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
 		if (impactor->Id == Entity::EntityId::AppleItem)
@@ -86,11 +86,11 @@ void PlayerVerticalClimbingState::OnCollision(Entity *impactor, Entity::SideColl
 			break;
 		}
 	}
-	//else if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot) &&
-	//	!this->mPlayerData->player->allowImunity)
-	//{
-	//	this->mPlayerData->player->bloodOfEntity--;
-	//}
+	else if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot) &&
+		!this->mPlayerData->player->allowImunity)
+	{
+		this->mPlayerData->player->bloodOfEntity--;
+	}
 }
 
 PlayerState::StateName PlayerVerticalClimbingState::GetState()

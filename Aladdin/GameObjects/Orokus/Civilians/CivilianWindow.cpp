@@ -24,7 +24,7 @@ CivilianWindow::CivilianWindow(D3DXVECTOR3 position)
 		settedPlayer = false;
 	}
 
-	this->weapon = new PotWeapon(D3DXVECTOR3(this->GetPosition().x + 20, this->GetPosition().y + 20, 0));
+	this->weapon = new PotWeapon(D3DXVECTOR3(this->GetPosition().x, this->GetPosition().y + 20, 0));
 	this->weapon->Tag = Entity::EntityTypes::Pot;
 
 	this->SetState(new CivilianWindowDefaultState(this->mOrokuData));
@@ -58,8 +58,10 @@ void CivilianWindow::Update(float dt)
 		weaponEffect = new PotWeaponEffect(weapon->GetPosition());
 		if(weapon->weaponCollided)
 			weaponEffect->SetPosition(weaponEffect->GetPosition().x, weaponEffect->GetPosition().y - 10);
+		else if(weapon->collisionWithPlayer)
+			weaponEffect->SetPosition(weaponEffect->GetPosition().x, weaponEffect->GetPosition().y + 30);
 		//can set lai pos cho weapon de khong va cham lien tiep nua
-		this->mOrokuData->civilianWindow->weapon->SetPosition(this->GetPosition().x, this->GetPosition().y + 20);
+		this->mOrokuData->civilianWindow->weapon->SetPosition(0, 0);
 		allowDrawWeapon = false;
 		weapon->collisionWithPlayer = false;
 		weapon->weaponCollided = false;

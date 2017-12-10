@@ -161,10 +161,21 @@ void ThinGuard::SetPlayer(Player *player)
 RECT ThinGuard::GetBound()
 {
 	RECT rect;
-	rect.left = this->posX - mCurrentAnimation->GetWidth() / 2;
-	rect.right = rect.left + mCurrentAnimation->GetWidth();
-	rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;
-	rect.bottom = rect.top + mCurrentAnimation->GetHeight();
+
+	if (mCurrentState == OrokuState::ThinGuardAttack)
+	{
+		rect.left = this->posX - mCurrentAnimation->GetWidth() / 2;
+		rect.right = rect.left + mCurrentAnimation->GetWidth();
+		rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;
+		rect.bottom = rect.top + mCurrentAnimation->GetHeight();
+	}
+	else
+	{
+		rect.left = this->posX - mCurrentAnimation->GetWidth() / 10;
+		rect.right = this->posX + mCurrentAnimation->GetWidth() / 10;
+		rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;
+		rect.bottom = rect.top + mCurrentAnimation->GetHeight();
+	}
 
 	return rect;
 }
@@ -178,8 +189,9 @@ void ThinGuard::Draw(D3DXVECTOR2 trans)
 
 void ThinGuard::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)
 {
-	if (this->allowImunity && mCurrentState != OrokuState::ThinGuardHurting)
+	if ((this->allowImunity || this->collisionAppleWeapon) && mCurrentState != OrokuState::ThinGuardHurting)
 	{
+		this->collisionAppleWeapon = false;
 		this->SetState(new ThinGuardHurtingState(this->mOrokuData));
 		return;
 	}

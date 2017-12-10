@@ -62,7 +62,7 @@ void PlayerRunningStopState::OnCollision(Entity *impactor, Entity::SideCollision
 	{
 		if (impactor->Id == Entity::EntityId::Revitalization_Default)
 			return;
-		this->mPlayerData->player->allowEffect = true;
+		this->mPlayerData->player->allowItemEffect = true;
 		this->mPlayerData->player->collisionItem = true;
 		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
 		if (impactor->Id == Entity::EntityId::AppleItem)
@@ -77,7 +77,8 @@ void PlayerRunningStopState::OnCollision(Entity *impactor, Entity::SideCollision
 
 	}
 	else if (impactor->Tag == Entity::EntityTypes::UpStairsControl || impactor->Tag == Entity::EntityTypes::DownStairsControl || 
-		impactor->Tag == Entity::EntityTypes::GroundControl || impactor->Tag == Entity::EntityTypes::FallControl)
+		impactor->Tag == Entity::EntityTypes::GroundControl || impactor->Tag == Entity::EntityTypes::FallControl ||
+		impactor->Tag == Entity::EntityTypes::OrokuControl || impactor->Tag == Entity::EntityTypes::FireControl)
 	{
 
 	}

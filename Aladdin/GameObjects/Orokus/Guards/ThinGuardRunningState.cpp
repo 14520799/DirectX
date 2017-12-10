@@ -73,7 +73,7 @@ void ThinGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisions
 			break;
 		}
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Fire)
+	else if (impactor->Tag == Entity::EntityTypes::Fire || impactor->Tag == Entity::EntityTypes::OrokuControl)
 	{
 		switch (side)
 		{

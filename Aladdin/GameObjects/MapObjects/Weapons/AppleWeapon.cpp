@@ -47,7 +47,8 @@ void AppleWeapon::OnCollision(Entity *impactor, Entity::CollisionReturn data, En
 		this->collisionWithOroku = true;
 	}
 	else if(impactor->Tag != Entity::EntityTypes::Aladdin && impactor->Tag != Entity::EntityTypes::Item &&
-		impactor->Tag != Entity::EntityTypes::FallControl)
+		impactor->Tag != Entity::EntityTypes::HorizontalRope && impactor->Tag != Entity::EntityTypes::VerticalRope &&
+		impactor->Tag != Entity::EntityTypes::FallControl && impactor->Tag != Entity::EntityTypes::OrokuControl)
 	{
 		this->weaponCollided = true;
 	}

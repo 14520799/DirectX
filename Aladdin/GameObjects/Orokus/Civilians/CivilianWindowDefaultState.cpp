@@ -6,7 +6,7 @@ CivilianWindowDefaultState::CivilianWindowDefaultState(OrokuData *orokuData)
 	this->mOrokuData = orokuData;
 	timeDelay = 0;
 	this->mOrokuData->civilianWindow->weapon->SetPosition(D3DXVECTOR3(
-		this->mOrokuData->civilianWindow->GetPosition().x + 20,
+		this->mOrokuData->civilianWindow->GetPosition().x,
 		this->mOrokuData->civilianWindow->GetPosition().y + 20,
 		0));
 	//sau khi thuc hien xong state throwpot thi pot se xuat hien va hien tai state default

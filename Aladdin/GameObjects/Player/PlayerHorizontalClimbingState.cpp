@@ -67,7 +67,7 @@ void PlayerHorizontalClimbingState::OnCollision(Entity *impactor, Entity::SideCo
 	{
 		if (impactor->Id == Entity::EntityId::Revitalization_Default)
 			return;
-		this->mPlayerData->player->allowEffect = true;
+		this->mPlayerData->player->allowItemEffect = true;
 		this->mPlayerData->player->collisionItem = true;
 		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
 		if (impactor->Id == Entity::EntityId::AppleItem)
@@ -76,11 +76,11 @@ void PlayerHorizontalClimbingState::OnCollision(Entity *impactor, Entity::SideCo
 			this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
 		}
 	}
-	//else if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot) &&
-	//	!this->mPlayerData->player->allowImunity)
-	//{
-	//	this->mPlayerData->player->bloodOfEntity--;
-	//}
+	else if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot) &&
+		!this->mPlayerData->player->allowImunity)
+	{
+		this->mPlayerData->player->bloodOfEntity--;
+	}
 	else if (impactor->Tag == Entity::EntityTypes::VerticalRopeControl)
 	{
 

@@ -16,6 +16,7 @@ StrongGuard::StrongGuard(D3DXVECTOR3 position)
 	this->mOrokuData->strongGuard = this;
 	this->vx = 0;
 	this->vy = 0;
+	this->allowRun = true;
 
 	this->SetState(new StrongGuardStandingState(this->mOrokuData));
 
@@ -83,7 +84,11 @@ void StrongGuard::Update(float dt)
 				}
 				else
 				{
-					this->SetState(new StrongGuardRunningState(this->mOrokuData));
+					if (mPreCurrentReverse != mCurrentReverse || allowRun)
+					{
+						allowRun = true;
+						this->SetState(new StrongGuardRunningState(this->mOrokuData));
+					}
 				}
 			}
 			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X &&
@@ -107,7 +112,11 @@ void StrongGuard::Update(float dt)
 				}
 				else
 				{
-					this->SetState(new StrongGuardRunningState(this->mOrokuData));
+					if (mPreCurrentReverse != mCurrentReverse || allowRun)
+					{
+						allowRun = true;
+						this->SetState(new StrongGuardRunningState(this->mOrokuData));
+					}
 				}
 			}
 #pragma endregion
@@ -210,8 +219,9 @@ void StrongGuard::Draw(D3DXVECTOR2 trans)
 
 void StrongGuard::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)
 {
-	if (this->allowImunity && mCurrentState != OrokuState::StrongGuardHurting)
+	if ((this->allowImunity || this->collisionAppleWeapon) && mCurrentState != OrokuState::StrongGuardHurting)
 	{
+		this->collisionAppleWeapon = false;
 		this->SetState(new StrongGuardHurtingState(this->mOrokuData));
 		return;
 	}

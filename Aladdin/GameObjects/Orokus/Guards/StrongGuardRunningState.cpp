@@ -93,6 +93,25 @@ void StrongGuardRunningState::OnCollision(Entity *impactor, Entity::SideCollisio
 			break;
 		}
 	}
+	else if (impactor->Tag == Entity::EntityTypes::OrokuControl)
+	{
+		switch (side)
+		{
+		case Entity::BottomLeft: case Entity::Left:
+			this->mOrokuData->strongGuard->AddPosition(10, 0);
+			break;
+
+		case Entity::BottomRight: case Entity::Right:
+			this->mOrokuData->strongGuard->AddPosition(-10, 0);
+			break;
+
+		default:
+			break;
+		}
+		this->mOrokuData->strongGuard->mPreCurrentReverse = this->mOrokuData->strongGuard->mCurrentReverse;
+		this->mOrokuData->strongGuard->allowRun = false;
+		this->mOrokuData->strongGuard->SetState(new StrongGuardStandingState(this->mOrokuData));
+	}
 	else if (impactor->Tag != Entity::EntityTypes::Oroku && impactor->Tag != Entity::EntityTypes::Sword &&
 			impactor->Tag != Entity::EntityTypes::Item && impactor->Tag != Entity::EntityTypes::FireControl)
 	{

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="68" height="10" tilewidth="112" tileheight="112" nextobjectid="135">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="68" height="10" tilewidth="112" tileheight="112" nextobjectid="146">
  <tileset firstgid="1" source="Scene_1.tsx"/>
  <layer name="Tile Layer 1" width="68" height="10">
   <data encoding="csv">
@@ -101,7 +101,7 @@
   <object id="70" name="FireControl" x="1306.5" y="1025" width="5" height="5"/>
   <object id="71" name="FireControl" x="916.5" y="1025" width="5" height="5"/>
   <object id="72" name="FireControl" x="720.5" y="1025" width="5" height="5"/>
-  <object id="74" x="4482" y="1090" width="2445.33" height="30.6666"/>
+  <object id="74" name="Ground" x="4482" y="1090" width="2445.33" height="30.6666"/>
   <object id="75" name="Stairs" x="6912" y="1050.67" width="69.3333" height="39"/>
   <object id="77" name="Stairs" x="6981.33" y="1035" width="64" height="17.3333"/>
   <object id="78" name="Stairs" x="7045.33" y="1023.33" width="64" height="17.3333"/>
@@ -113,8 +113,8 @@
   <object id="87" name="Stairs" x="6207.33" y="749" width="38.0004" height="21"/>
   <object id="88" name="Ground" x="4865.33" y="770" width="1344" height="20"/>
   <object id="90" name="Stairs" x="6294" y="707.333" width="50.0004" height="20"/>
-  <object id="91" x="6889.33" y="393.333" width="37.3333" height="134.667"/>
-  <object id="92" name="HorizontalRope" x="6929.66" y="455.335" width="658.677" height="3.99632"/>
+  <object id="91" x="6889.33" y="393.333" width="37.3333" height="85.667"/>
+  <object id="92" name="HorizontalRope" x="6926.66" y="455.335" width="661.677" height="3.99632"/>
   <object id="93" name="VerticalRopeControl" x="7486.33" y="530.5" width="30" height="6"/>
   <object id="94" name="VerticalRope" x="7499.33" y="537.5" width="4" height="321.333"/>
   <object id="95" x="7592" y="2.84217e-14" width="21.3333" height="1120"/>
@@ -145,11 +145,20 @@
   <object id="122" name="FallControl" x="6472.17" y="507.792" width="5" height="133.75"/>
   <object id="123" name="FallControl" x="6912.17" y="896.167" width="6.33337" height="153"/>
   <object id="124" x="7246" y="19" width="52" height="69"/>
-  <object id="125" x="4353" y="827" width="15" height="82"/>
   <object id="130" x="2240.5" y="912" width="126" height="16"/>
   <object id="131" x="4137.33" y="826.67" width="226.333" height="13.3333"/>
   <object id="132" name="FallControl" x="7404.5" y="818.561" width="5" height="129.878"/>
   <object id="133" x="7279.83" y="1008.67" width="312.333" height="17.3333"/>
   <object id="134" name="FallControl" x="6075.5" y="561.125" width="5" height="185.75"/>
+  <object id="135" name="OrokuControl" x="2530" y="251" width="5" height="150"/>
+  <object id="136" name="OrokuControl" x="3601.5" y="251" width="5" height="150"/>
+  <object id="137" name="OrokuControl" x="6293.5" y="556" width="5" height="150"/>
+  <object id="138" name="OrokuControl" x="6241.5" y="578" width="5" height="150"/>
+  <object id="139" name="OrokuControl" x="4889.5" y="504" width="5" height="150"/>
+  <object id="140" name="OrokuControl" x="4474.5" y="476" width="5" height="150"/>
+  <object id="141" name="OrokuControl" x="5069.5" y="280" width="5" height="150"/>
+  <object id="142" name="OrokuControl" x="3225.5" y="532" width="5" height="150"/>
+  <object id="143" name="OrokuControl" x="2796.5" y="533" width="5" height="150"/>
+  <object id="145" name="OrokuControl" x="4353.5" y="827" width="10" height="81"/>
  </objectgroup>
 </map>

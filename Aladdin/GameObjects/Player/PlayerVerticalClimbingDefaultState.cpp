@@ -40,11 +40,11 @@ void PlayerVerticalClimbingDefaultState::OnCollision(Entity *impactor, Entity::S
 {
 	if (impactor->Tag == Entity::EntityTypes::VerticalRopeControl)
 		this->mPlayerData->player->SetPosition(impactor->GetPosition().x, impactor->GetPosition().y + this->mPlayerData->player->GetHeight() / 2);
-	//else if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot) &&
-	//	!this->mPlayerData->player->allowImunity)
-	//{
-	//	this->mPlayerData->player->bloodOfEntity--;
-	//}
+	else if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot) &&
+		!this->mPlayerData->player->allowImunity)
+	{
+		this->mPlayerData->player->bloodOfEntity--;
+	}
 }
 
 PlayerState::StateName PlayerVerticalClimbingDefaultState::GetState()

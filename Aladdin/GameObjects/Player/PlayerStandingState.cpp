@@ -38,7 +38,8 @@ void PlayerStandingState::OnCollision(Entity *impactor, Entity::SideCollisions s
 		this->mPlayerData->player->bloodOfEntity--;
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Oroku ||
-		impactor->Tag == Entity::EntityTypes::Fire || impactor->Tag == Entity::EntityTypes::FallControl)
+		impactor->Tag == Entity::EntityTypes::Fire || impactor->Tag == Entity::EntityTypes::FallControl ||
+		impactor->Tag == Entity::EntityTypes::OrokuControl || impactor->Tag == Entity::EntityTypes::FireControl)
 	{
 
 	}

@@ -35,7 +35,7 @@ public:
         None, Aladdin, Static, Ground,
 		VerticalRope, VerticalRopeControl, HorizontalRope, Fire, FireControl, AppleWeapon,
 		Stairs, UpStairs, UpStairsControl, CenterStairs, DownStairs, DownStairsControl, GroundControl, FallControl,
-		Oroku, Sword, Pot, ObjStairs, Spring,
+		Oroku, OrokuControl, Sword, Pot, ObjStairs, Spring,
 		Item
     };
 
@@ -123,7 +123,7 @@ public:
 	//khi bi trung don thi se duoc 0.5s mien sat thuong
 	bool allowImunity;
 	//khi player cham vao item se co hieu ung xuat hien
-	bool allowEffect;
+	bool allowItemEffect;
 	//khi player giet oroku thi hieu ung no xuat hien
 	bool allowOrokuEffect;
 	bool effectLamp;

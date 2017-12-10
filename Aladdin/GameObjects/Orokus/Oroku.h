@@ -43,6 +43,7 @@ public:
 	bool allowDrawWeapon, allowDefault;
 	bool settedPlayer; //da xet player cho oroku
 	bool collisionFire; //xy ly khi oroku cham vao lua se chuyen sang state default
+	bool collisionAppleWeapon;
 
 	MapObject	*weapon,
 				*weaponEffect;

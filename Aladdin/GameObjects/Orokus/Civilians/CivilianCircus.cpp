@@ -151,8 +151,8 @@ RECT CivilianCircus::GetBound()
 {
 	RECT rect;
 
-	rect.left = this->posX - mCurrentAnimation->GetWidth() / 2;
-	rect.right = this->posX + mCurrentAnimation->GetWidth() / 2;
+	rect.left = this->posX - mCurrentAnimation->GetWidth() / 10;
+	rect.right = this->posX + mCurrentAnimation->GetWidth() / 10;
 	rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;
 	rect.bottom = this->posY + mCurrentAnimation->GetHeight() / 2;
 

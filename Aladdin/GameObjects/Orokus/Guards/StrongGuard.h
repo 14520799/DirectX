@@ -27,6 +27,7 @@ public:
 	OrokuState::StateName StrongGuard::getState();
 
 	bool runningFire;
+	bool allowRun;
 protected:
 	Animation *mAnimationHurting;
 

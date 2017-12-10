@@ -161,6 +161,10 @@ void GameMap::LoadMap(char* filePath)
 			{
 				entity->Tag = Entity::EntityTypes::FallControl;
 			}
+			else if (object->GetName() == "OrokuControl")
+			{
+				entity->Tag = Entity::EntityTypes::OrokuControl;
+			}
 			else
 			{
 				entity->Tag = Entity::EntityTypes::Static;
@@ -414,7 +418,7 @@ void GameMap::Update(float dt)
 
 #pragma region CREATE ItemEffect
 		//tao ra effect cho item truoc khi bi huy
-		if (mPlayer->allowEffect)
+		if (mPlayer->allowItemEffect)
 		{
 			if (mPlayer->effectLamp)
 			{
@@ -423,8 +427,8 @@ void GameMap::Update(float dt)
 				{
 					itemAttackEffect = new LampAttack(mPlayer->mOriginPositionItem);
 					itemAttackEffect->originPos = itemAttackEffect->GetPosition();
-					mQuadTree->insertEntity(itemAttackEffect);
 					mListItemAttackEffects.push_back(itemAttackEffect);
+					mListPlayerSupport.push_back(itemAttackEffect);
 				}
 			}
 			else if (mPlayer->effectSpecial)
@@ -432,7 +436,7 @@ void GameMap::Update(float dt)
 			else
 				itemEffect = new ItemEffect_1(mPlayer->mOriginPositionItem);
 			mListItemEffects.push_back(itemEffect);
-			mPlayer->allowEffect = false;
+			mPlayer->allowItemEffect = false;
 			mPlayer->effectLamp = false;
 			mPlayer->effectSpecial = false;
 		}
@@ -445,7 +449,7 @@ void GameMap::Update(float dt)
 		if (mPlayer->effectFire)
 		{
 			timeDelayCreateFireEffect += dt;
-			if (timeDelayCreateFireEffect > 0.2f)
+			if (timeDelayCreateFireEffect > 0.1f)
 			{
 				itemEffect = new FireEffect(mPlayer->mOriginPositionItem);
 				mListItemEffects.push_back(itemEffect);
@@ -534,12 +538,17 @@ void GameMap::Update(float dt)
 			if (mListItemAttackEffects.at(i)->timeDelayItemEffect > 1.0f)
 			{
 				mListItemAttackEffects.at(i)->SetPosition(mListItemAttackEffects.at(i)->originPos);
-				mQuadTree->removeEntity(mListItemAttackEffects.at(i));
+				for (size_t j = 0; j < mListPlayerSupport.size(); j++)
+				{
+					if (mListPlayerSupport.at(j)->GetPosition() == mListItemAttackEffects.at(i)->GetPosition())
+					{
+						mListPlayerSupport.erase(mListPlayerSupport.begin() + j);
+						break;
+					}
+				}
 				delete mListItemAttackEffects.at(i);
 				mListItemAttackEffects.at(i) = nullptr;
 				mListItemAttackEffects.erase(mListItemAttackEffects.begin() + i);
-				if (mListItemAttackEffects.size() == 0)
-					break;
 				i--;
 			}
 		}

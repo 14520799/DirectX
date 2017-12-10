@@ -40,7 +40,8 @@ void PlayerSittingAttackState::OnCollision(Entity *impactor, Entity::SideCollisi
 			this->mPlayerData->player->collisionWithOroku = true;
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Sword  || impactor->Id == Entity::EntityId::Camel ||
-		impactor->Tag == Entity::EntityTypes::Pot || impactor->Tag == Entity::EntityTypes::FallControl)
+		impactor->Tag == Entity::EntityTypes::Pot || impactor->Tag == Entity::EntityTypes::FallControl ||
+		impactor->Tag == Entity::EntityTypes::OrokuControl || impactor->Tag == Entity::EntityTypes::FireControl)
 	{
 
 	}

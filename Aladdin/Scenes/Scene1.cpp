@@ -119,8 +119,8 @@ void Scene1::checkCollision()
 
 	mCameraExpand.left = mCamera->GetBound().left - 100;
 	mCameraExpand.right = mCamera->GetBound().right + 100;
-	mCameraExpand.top = mCamera->GetBound().top - 100;
-	mCameraExpand.bottom = mCamera->GetBound().bottom + 100;
+	mCameraExpand.top = mCamera->GetBound().top - 200;
+	mCameraExpand.bottom = mCamera->GetBound().bottom + 300;
 
 #pragma region --PLAYER--
 	mMap->GetQuadTree()->getEntitiesCollideAble(listCollisionPlayer, mPlayer);
@@ -199,21 +199,27 @@ void Scene1::checkCollision()
 		mPlayer->OnNoCollisionWithBottom();
 #pragma endregion
 
-#pragma region --OROKU SUPPORT--
+#pragma region --PLAYER SUPPORT--
 	for (auto child : mMap->GetListPlayerSupport())
 	{
-		Entity::CollisionReturn r = GameCollision::RecteAndRect(child->GetBound(), mPlayer->GetBound());
-		if (r.IsCollided)
+		if (GameCollision::RecteAndRect(child->GetBound(), mCameraExpand).IsCollided)
 		{
-			//lay phia va cham cua Entity so voi StrongOroku
-			Entity::SideCollisions sideOroku = GameCollision::getSideCollision(child, r);
+			if (child->Id == Entity::EntityId::Camel)
+			{
+				Entity::CollisionReturn r = GameCollision::RecteAndRect(child->GetBound(), mPlayer->GetBound());
+				if (r.IsCollided)
+				{
+					//lay phia va cham cua Entity so voi StrongOroku
+					Entity::SideCollisions sideOroku = GameCollision::getSideCollision(child, r);
 
-			//lay phia va cham cua StrongOroku so voi Entity
-			Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(mPlayer, r);
+					//lay phia va cham cua StrongOroku so voi Entity
+					Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(mPlayer, r);
 
-			//goi den ham xu ly collision cua StrongOroku va Entity
-			child->OnCollision(mPlayer, r, sideOroku);
-			mPlayer->OnCollision(child, r, sideImpactor);
+					//goi den ham xu ly collision cua StrongOroku va Entity
+					child->OnCollision(mPlayer, r, sideOroku);
+					mPlayer->OnCollision(child, r, sideImpactor);
+				}
+			}
 		}
 
 		for (auto childO : mMap->GetListOroku())
@@ -239,6 +245,7 @@ void Scene1::checkCollision()
 				{
 					childO->bloodOfEntity--;
 					childO->allowImunity = true;
+					child->collisionWithOroku = false;
 					if (childO->bloodOfEntity <= 0)
 					{
 						mMap->RemoveOroku(childO);//xoa oroku khoi listoroku trong map
@@ -308,6 +315,7 @@ void Scene1::checkCollision()
 					if (childA->collisionWithOroku)
 					{
 						child->bloodOfEntity--;
+						child->collisionAppleWeapon = true;
 						if (child->bloodOfEntity <= 0)
 						{
 							mPlayer->allowOrokuEffect = true;
@@ -386,9 +394,12 @@ void Scene1::checkCollision()
 					listCollisionOrokus.at(i)->OnCollision(child, r, sideImpactor);
 				}
 			}
+		}
 
-			//vu khi cua oroku
-			if (child->weapon != nullptr)
+		//vu khi cua oroku
+		if (child->weapon != nullptr)
+		{
+			if (GameCollision::RecteAndRect(child->weapon->GetBound(), mCameraExpand).IsCollided)
 			{
 				listCollisionWeapon.clear();
 				mMap->GetQuadTree()->getEntitiesCollideAble(listCollisionWeapon, child->weapon);
@@ -412,13 +423,13 @@ void Scene1::checkCollision()
 				Entity::CollisionReturn R = GameCollision::RecteAndRect(child->weapon->GetBound(), mPlayer->GetBound());
 				if (R.IsCollided)
 				{
-					//lay phia va cham cua Entity so voi StrongOroku
+					//lay phia va cham cua Weapon so voi Player 
 					Entity::SideCollisions sideWeapon = GameCollision::getSideCollision(child->weapon, R);
 
-					//lay phia va cham cua StrongOroku so voi Entity
+					//lay phia va cham cua Player so voi Weapon
 					Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(mPlayer, R);
 
-					//goi den ham xu ly collision cua StrongOroku va Entity
+					//goi den ham xu ly collision cua Weapon va Player
 					child->weapon->OnCollision(mPlayer, R, sideWeapon);
 					mPlayer->OnCollision(child->weapon, R, sideImpactor);
 				}

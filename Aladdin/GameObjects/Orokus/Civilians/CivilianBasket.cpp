@@ -15,6 +15,7 @@ CivilianBasket::CivilianBasket(D3DXVECTOR3 position)
 	this->mOrokuData->civilianBasket = this;
 	this->vx = 0;
 	this->vy = 0;
+	this->allowRun = true;
 
 	this->SetState(new CivilianBasketStandingState(this->mOrokuData));
 
@@ -73,7 +74,11 @@ void CivilianBasket::Update(float dt)
 			}
 			this->SetReverse(true);
 			this->mSettingLeftRun = true;
-			this->SetState(new CivilianBasketRunningState(this->mOrokuData));
+			if (mPreCurrentReverse != mCurrentReverse || allowRun)
+			{
+				allowRun = true;
+				this->SetState(new CivilianBasketRunningState(this->mOrokuData));
+			}
 		}
 		else if (this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X &&
 			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MIN_X &&
@@ -90,7 +95,11 @@ void CivilianBasket::Update(float dt)
 			}
 			this->SetReverse(false);
 			this->mSettingRightRun = true;
-			this->SetState(new CivilianBasketRunningState(this->mOrokuData));
+			if (mPreCurrentReverse != mCurrentReverse || allowRun)
+			{
+				allowRun = true;
+				this->SetState(new CivilianBasketRunningState(this->mOrokuData));
+			}
 		}
 #pragma endregion
 
@@ -146,10 +155,21 @@ void CivilianBasket::SetPlayer(Player *player)
 RECT CivilianBasket::GetBound()
 {
 	RECT rect;
-	rect.left = this->posX - mCurrentAnimation->GetWidth() / 2;
-	rect.right = rect.left + mCurrentAnimation->GetWidth();
-	rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;
-	rect.bottom = rect.top + mCurrentAnimation->GetHeight();
+
+	if (mCurrentState == OrokuState::CivilianBasketAttack)
+	{
+		rect.left = this->posX - mCurrentAnimation->GetWidth() / 2;
+		rect.right = rect.left + mCurrentAnimation->GetWidth();
+		rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;
+		rect.bottom = rect.top + mCurrentAnimation->GetHeight();
+	}
+	else
+	{
+		rect.left = this->posX - mCurrentAnimation->GetWidth() / 10;
+		rect.right = this->posX + mCurrentAnimation->GetWidth() / 10;
+		rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;
+		rect.bottom = rect.top + mCurrentAnimation->GetHeight();
+	}
 
 	return rect;
 }

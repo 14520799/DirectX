@@ -25,6 +25,8 @@ public:
 	RECT GetBound();
 
 	OrokuState::StateName CivilianBasket::getState();
+
+	bool allowRun;
 protected:
 	void changeAnimation(OrokuState::StateName state);
 };

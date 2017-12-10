@@ -105,11 +105,11 @@ void PlayerVerticalClimbingJumpState::OnCollision(Entity *impactor, Entity::Side
 			this->mPlayerData->player->SetState(new PlayerVerticalClimbingDefaultState(this->mPlayerData));
 		}
 	}
-	//else if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot) &&
-	//	!this->mPlayerData->player->allowImunity)
-	//{
-	//	this->mPlayerData->player->bloodOfEntity--;
-	//}
+	else if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot) &&
+		!this->mPlayerData->player->allowImunity)
+	{
+		this->mPlayerData->player->bloodOfEntity--;
+	}
 	else if (impactor->Tag == Entity::EntityTypes::Item)
 	{
 		if (impactor->Id == Entity::EntityId::Revitalization_Default || impactor->Id == Entity::EntityId::Feddler_Standing)
@@ -118,7 +118,7 @@ void PlayerVerticalClimbingJumpState::OnCollision(Entity *impactor, Entity::Side
 			this->mPlayerData->player->effectLamp = true;
 		else if (impactor->Id == Entity::EntityId::HeadGenie || impactor->Id == Entity::EntityId::Life)
 			this->mPlayerData->player->effectSpecial = true;
-		this->mPlayerData->player->allowEffect = true;
+		this->mPlayerData->player->allowItemEffect = true;
 		this->mPlayerData->player->collisionItem = true;
 		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
 		if (impactor->Id == Entity::EntityId::AppleItem)
@@ -128,7 +128,8 @@ void PlayerVerticalClimbingJumpState::OnCollision(Entity *impactor, Entity::Side
 		}
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Oroku ||
-		impactor->Tag == Entity::EntityTypes::Pot || impactor->Tag == Entity::EntityTypes::VerticalRopeControl)
+		impactor->Tag == Entity::EntityTypes::Pot || impactor->Tag == Entity::EntityTypes::VerticalRopeControl ||
+		impactor->Tag == Entity::EntityTypes::OrokuControl)
 	{
 
 	}

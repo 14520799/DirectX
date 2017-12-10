@@ -119,7 +119,7 @@ void PlayerJumpingThrowAppleState::OnCollision(Entity *impactor, Entity::SideCol
 			this->mPlayerData->player->effectLamp = true;
 		else if (impactor->Id == Entity::EntityId::HeadGenie || impactor->Id == Entity::EntityId::Life)
 			this->mPlayerData->player->effectSpecial = true;
-		this->mPlayerData->player->allowEffect = true;
+		this->mPlayerData->player->allowItemEffect = true;
 		this->mPlayerData->player->collisionItem = true;
 		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
 		if (impactor->Id == Entity::EntityId::AppleItem)
@@ -149,7 +149,7 @@ void PlayerJumpingThrowAppleState::OnCollision(Entity *impactor, Entity::SideCol
 
 	}
 	else if (impactor->Tag == Entity::EntityTypes::DownStairsControl || impactor->Tag == Entity::EntityTypes::UpStairsControl ||
-		impactor->Tag == Entity::EntityTypes::FallControl)
+		impactor->Tag == Entity::EntityTypes::FallControl || impactor->Tag == Entity::EntityTypes::OrokuControl)
 	{
 
 	}

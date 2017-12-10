@@ -42,7 +42,8 @@ void PlayerDefaultState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	else if (impactor->Id == Entity::EntityId::Feddler_Standing)
 		this->mPlayerData->player->collisionFeddler = true;
 	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Oroku ||
-		impactor->Tag == Entity::EntityTypes::Pot || impactor->Tag == Entity::EntityTypes::FallControl)
+		impactor->Tag == Entity::EntityTypes::Pot || impactor->Tag == Entity::EntityTypes::FallControl ||
+		impactor->Tag == Entity::EntityTypes::OrokuControl || impactor->Tag == Entity::EntityTypes::FireControl)
 	{
 
 	}

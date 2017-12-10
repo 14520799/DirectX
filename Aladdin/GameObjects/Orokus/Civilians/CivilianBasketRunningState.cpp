@@ -74,6 +74,25 @@ void CivilianBasketRunningState::OnCollision(Entity *impactor, Entity::SideColli
 			break;
 		}
 	}
+	else if (impactor->Tag == Entity::EntityTypes::OrokuControl)
+	{
+		switch (side)
+		{
+		case Entity::BottomLeft: case Entity::Left:
+			this->mOrokuData->civilianBasket->AddPosition(10, 0);
+			break;
+
+		case Entity::BottomRight: case Entity::Right:
+			this->mOrokuData->civilianBasket->AddPosition(-10, 0);
+			break;
+
+		default:
+			break;
+		}
+		this->mOrokuData->civilianBasket->mPreCurrentReverse = this->mOrokuData->civilianBasket->mCurrentReverse;
+		this->mOrokuData->civilianBasket->allowRun = false;
+		this->mOrokuData->civilianBasket->SetState(new CivilianBasketStandingState(this->mOrokuData));
+	}
 	else if (impactor->Tag != Entity::EntityTypes::Oroku && impactor->Tag != Entity::EntityTypes::Sword &&
 		impactor->Tag != Entity::EntityTypes::Item)
 	{
