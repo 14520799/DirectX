@@ -35,17 +35,17 @@ public:
         None, Aladdin, Static, Ground,
 		VerticalRope, VerticalRopeControl, HorizontalRope, Fire, FireControl, AppleWeapon,
 		Stairs, UpStairs, UpStairsControl, CenterStairs, DownStairs, DownStairsControl, GroundControl, FallControl,
-		Oroku, OrokuControl, Sword, Pot, ObjStairs, Spring,
+		Oroku, OrokuControl, Sword, Pot, ObjStairs, Spring, StarWeapon, FireWeapon,
 		Item
     };
 
 	enum EntityId
 	{
-		Guard, Camel, CivilianWindow, CivilianCircus, CivilianBasket,
+		Guard, Camel, CivilianWindow, CivilianCircus, CivilianBasket, BossJafar,
 		AppleItem, Ruby, Life, Heart, HeadGenie, Lamp, LampAttack,
 		Revitalization_Default, Revitalization_Action, Revitalization_ActionStop,
 		Feddler_Standing, Feddler_Magic, Feddler_MagicStop,
-		ItemEffect_1, ItemEffect_2, FireEffect, OrokuEffect
+		ItemEffect_1, ItemEffect_2, StarEffect, FireEffect, OrokuEffect
 	};
 	
 	enum EntityCurrentMoveStairs
@@ -53,11 +53,20 @@ public:
 		CurrentNone, CurrentUpStairs, CurrentDownStairs, CurrentGround
 	};
 
+	enum DirectionFireWeapon
+	{
+		DirectionNone,
+		DirectionLeft,
+		DirectionRight
+	};
+
     EntityTypes Tag; //Tag de nhan dien loai Entity
 
 	EntityId Id; //Id de nhan dien loai oroku
 
 	EntityCurrentMoveStairs CurrentMoveStairs; //MoveStairs luu trang thai hien tai cua player khi toi noi co nhieu cau thang len xuong
+
+	DirectionFireWeapon directionFireWeapon;
 
     virtual RECT GetBound();
 
@@ -126,11 +135,13 @@ public:
 	bool allowItemEffect;
 	//khi player giet oroku thi hieu ung no xuat hien
 	bool allowOrokuEffect;
+	bool allowBossEffect;
 	bool effectLamp;
 	bool effectSpecial;
 	bool effectFire;
 
 	bool collisionWithOroku;
+	bool collisionWithBoss;
 	bool collisionWithCamel;
 	bool weaponCollided; //qua tao hoac kiem khi va cham xuong dat hay tuong thi se mat
 	bool collisionWithPlayer;

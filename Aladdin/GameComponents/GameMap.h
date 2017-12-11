@@ -35,7 +35,6 @@ public:
     std::map<int, Sprite*> GetListTileSet();
 
 	//tao vat pham len map vd: tao, tien, ...
-	void createOroku(std::vector<Oroku*> &entitiesOut, D3DXVECTOR3 position, int orokuId);
     bool IsBoundLeft(); //kiem tra luc nay Camera o vi bien ben trai so voi WorldMap
     bool IsBoundRight(); // kiem tra xem co o vi tri bien ben phai worldmap khong
     bool IsBoundTop(); // kiem tra xem co o vi tri bien ben trai worldmap khong
@@ -59,6 +58,8 @@ public:
 	//delaytime de revitalization thuc hien xong state action
 	float timeDelayStateItem;
 	float timeDelayCreateFireEffect;
+
+	Oroku *mBoss;
 private:
     void LoadMap(char* filePath);
 

@@ -87,6 +87,9 @@ void Player::Update(float dt)
 				delete mListAppleFly.at(i);
 				mListAppleFly.at(i) = nullptr;
 				mListAppleFly.erase(mListAppleFly.begin() + i);
+				if (mListAppleFly.size() == 0)
+					break;
+				i--;
 			}
 		}
 	}
@@ -105,6 +108,7 @@ void Player::Update(float dt)
 				break;
 			i--;
 		}
+
 	}
 
 	// neu list co qua tao dang duoc nem di thi set toc do cho qua tao
@@ -306,7 +310,7 @@ void Player::OnKeyPressed(int key)
 			if (mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::Sitting || mCurrentState == PlayerState::Default ||
 				mCurrentState == PlayerState::StandingAttack || mCurrentState == PlayerState::SittingAttack ||
 				mCurrentState == PlayerState::StandingThrowApple || mCurrentState == PlayerState::SittingThrowApple ||
-				mCurrentState == PlayerState::Pushing || mCurrentState == PlayerState::Death || 
+				mCurrentState == PlayerState::Pushing || mCurrentState == PlayerState::Death ||
 				mCurrentState == PlayerState::Falling || mCurrentState == PlayerState::FallingStop ||
 				mCurrentState == PlayerState::HorizontalClimbing || mCurrentState == PlayerState::HorizontalClimbingDefault)
 			{
@@ -394,7 +398,7 @@ void Player::OnKeyPressed(int key)
 				mListApplePlayer.pop_back(); //lay qua tao ra khoi listapple cua player sau khi nem ra ngoai
 			}
 			else if (mCurrentState == PlayerState::Sitting || mCurrentState == PlayerState::SittingAttack)
-			{				
+			{
 				this->SetState(new PlayerSittingThrowAppleState(this->mPlayerData));
 				if (mCurrentReverse)
 					apple->SetPosition(this->GetPosition().x, this->GetPosition().y - this->GetHeight() / 4);
@@ -406,7 +410,7 @@ void Player::OnKeyPressed(int key)
 			else if (mCurrentState == PlayerState::StandingJump || mCurrentState == PlayerState::RunningJump ||
 				mCurrentState == PlayerState::JumpingAttack || mCurrentState == PlayerState::Falling ||
 				mCurrentState == PlayerState::VerticalClimbingJump)
-			{				
+			{
 				this->SetState(new PlayerJumpingThrowAppleState(this->mPlayerData));
 				if (mCurrentReverse)
 					apple->SetPosition(this->GetPosition().x - this->GetWidth(), this->GetPosition().y - this->GetHeight() / 2 + 10);
@@ -417,7 +421,7 @@ void Player::OnKeyPressed(int key)
 			}
 			else if (mCurrentState == PlayerState::HorizontalClimbingDefault || mCurrentState == PlayerState::HorizontalClimbing ||
 				mCurrentState == PlayerState::VerticalClimbingDefault || mCurrentState == PlayerState::VerticalClimbing)
-			{				
+			{
 				this->SetState(new PlayerClimbingThrowAppleState(this->mPlayerData));
 				apple->SetPosition(this->GetPosition());
 				mListAppleFly.push_back(apple); //lay ra qua tao trong player roi dua vao listapple quan ly viec bay ra ngoai
@@ -564,7 +568,22 @@ void Player::SetState(PlayerState *newState)
 
 void Player::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions size)
 {
-	this->mPlayerData->state->OnCollision(impactor, size, data);
+	if (impactor->Tag == Entity::EntityTypes::Fire)
+	{
+		this->mPlayerData->player->effectFire = true;
+		this->mPlayerData->player->mOriginPositionItem = D3DXVECTOR3(
+			this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y - 55, 0);
+	}
+	if (impactor->Tag == Entity::EntityTypes::StarWeapon)
+	{
+		this->mPlayerData->player->collisionStarWeapon = true;
+	}
+	else if (impactor->Tag == Entity::EntityTypes::FireWeapon)
+	{
+		this->mPlayerData->player->collisionFireWeapon = true;
+	}
+	else
+		this->mPlayerData->state->OnCollision(impactor, size, data);
 }
 
 RECT Player::GetBound()

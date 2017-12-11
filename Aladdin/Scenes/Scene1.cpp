@@ -437,4 +437,135 @@ void Scene1::checkCollision()
 		}
 	}
 #pragma endregion
+
+#pragma region --BOSS--
+	if (mMap->mBoss != nullptr)
+	{
+		//oroku vs apple
+		for (auto childA : mPlayer->GetListAppleFly())
+		{
+			Entity::CollisionReturn R = GameCollision::RecteAndRect(mMap->mBoss->GetBound(), childA->GetBound());
+			if (R.IsCollided)
+			{
+				//lay phia va cham cua Entity so voi StrongOroku
+				Entity::SideCollisions sideBoss = GameCollision::getSideCollision(mMap->mBoss, R);
+
+				//lay phia va cham cua StrongOroku so voi Entity
+				Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(childA, R);
+
+				//goi den ham xu ly collision cua StrongOroku va Entity
+				mMap->mBoss->OnCollision(childA, R, sideBoss);
+				childA->OnCollision(mMap->mBoss, R, sideImpactor);
+
+				if (childA->collisionWithOroku)
+				{
+					mMap->mBoss->bloodOfEntity--;
+					if (mMap->mBoss->bloodOfEntity <= 0)
+					{
+						mPlayer->allowBossEffect = true;
+						if (mMap->mBoss->GetListWeapon().size() > 0)
+						{
+							for (size_t i = 0; i < mMap->mBoss->GetListWeapon().size(); i++)
+							{
+								delete mMap->mBoss->GetListWeapon().at(i);
+								mMap->mBoss->GetListWeapon().at(i) = nullptr;
+							}
+							mMap->mBoss->GetListWeapon().clear();
+						}
+						delete mMap->mBoss;
+						mMap->mBoss = nullptr;
+						return;
+					}
+				}
+			}
+		}
+
+		//oroku vs player
+		Entity::CollisionReturn R = GameCollision::RecteAndRect(mMap->mBoss->GetBound(), mPlayer->GetBound());
+		if (R.IsCollided)
+		{
+			//lay phia va cham cua Entity so voi StrongOroku
+			Entity::SideCollisions sideOroku = GameCollision::getSideCollision(mMap->mBoss, R);
+
+			//lay phia va cham cua StrongOroku so voi Entity
+			Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(mPlayer, R);
+
+			//goi den ham xu ly collision cua StrongOroku va Entity
+			mMap->mBoss->OnCollision(mPlayer, R, sideOroku);
+			mPlayer->OnCollision(mMap->mBoss, R, sideImpactor);
+
+			if (mMap->mBoss->collisionWithPlayer && !mPlayer->allowImunity)
+			{
+				mPlayer->bloodOfEntity--;
+				mMap->mBoss->collisionWithPlayer = false;
+			}
+			if (mPlayer->collisionWithOroku)
+			{
+				mMap->mBoss->bloodOfEntity--;
+				mMap->mBoss->allowImunity = true;
+				mPlayer->collisionWithOroku = false;
+				if (mMap->mBoss->bloodOfEntity <= 0)
+				{
+					mPlayer->allowBossEffect = true;
+					if (mMap->mBoss->GetListWeapon().size() > 0)
+					{
+						for (size_t i = 0; i < mMap->mBoss->GetListWeapon().size(); i++)
+						{
+							delete mMap->mBoss->GetListWeapon().at(i);
+							mMap->mBoss->GetListWeapon().at(i) = nullptr;
+						}
+						mMap->mBoss->GetListWeapon().clear();
+					}
+					delete mMap->mBoss;
+					mMap->mBoss = nullptr;
+					return;
+				}
+			}
+		}
+
+		//vu khi cua oroku
+		if (mMap->mBoss->GetListWeapon().size() > 0)
+		{
+			for (size_t i = 0; i < mMap->mBoss->GetListWeapon().size(); i++)
+			{
+				Entity::CollisionReturn R = GameCollision::RecteAndRect(mMap->mBoss->GetListWeapon().at(i)->GetBound(), mPlayer->GetBound());
+				if (R.IsCollided)
+				{
+					//lay phia va cham cua Weapon so voi Player 
+					Entity::SideCollisions sideWeapon = GameCollision::getSideCollision(mMap->mBoss->GetListWeapon().at(i), R);
+
+					//lay phia va cham cua Player so voi Weapon
+					Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(mPlayer, R);
+
+					//goi den ham xu ly collision cua Weapon va Player
+					mMap->mBoss->GetListWeapon().at(i)->OnCollision(mPlayer, R, sideWeapon);
+					mPlayer->OnCollision(mMap->mBoss->GetListWeapon().at(i), R, sideImpactor);
+
+					if (mPlayer->collisionStarWeapon)
+					{
+						if (mMap->mBoss->GetPosition().x - mPlayer->GetPosition().x > 5)
+						{
+							mPlayer->AddPosition(5, 0);
+						}
+						else if (mMap->mBoss->GetPosition().x - mPlayer->GetPosition().x < -5)
+						{
+							mPlayer->AddPosition(-5, 0);
+						}
+						else if (mMap->mBoss->GetPosition().x - mPlayer->GetPosition().x > 5 ||
+							mMap->mBoss->GetPosition().x - mPlayer->GetPosition().x < -5)
+						{
+
+						}
+						mPlayer->collisionStarWeapon = false;
+					}
+					else if (mPlayer->collisionFireWeapon && !mPlayer->allowImunity)
+					{
+						mPlayer->bloodOfEntity--;
+						mPlayer->collisionFireWeapon = false;
+					}
+				}
+			}
+		}
+	}
+#pragma endregion
 }

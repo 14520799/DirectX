@@ -39,6 +39,8 @@ public:
 
 	virtual void SetPlayer(Player *player);
 
+	virtual std::vector<MapObject*> GetListWeapon();
+
 	bool mCurrentReverse, mPreCurrentReverse, settingAttack;
 	bool allowDrawWeapon, allowDefault;
 	bool settedPlayer; //da xet player cho oroku
@@ -49,6 +51,9 @@ public:
 				*weaponEffect;
 
 	Player		*mPlayer;
+
+	std::vector<MapObject*>	mListWeapon;
+	std::vector<MapObject*>	mListWeaponEffect;
 protected:
 	OrokuData *mOrokuData;
 
@@ -60,6 +65,7 @@ protected:
 				*mAnimationRunning,
 				*mAnimationRunningFire,
 				*mAnimationAttack,
+				*mAnimationAttack2,
 				*mAnimationHurting,
 				*mAnimationThrowPot;
 

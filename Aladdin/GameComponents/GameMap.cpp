@@ -14,12 +14,13 @@
 #include "../GameObjects/MapObjects/Items/Life.h"
 #include "../GameObjects/MapObjects/Items/ItemEffect_1.h"
 #include "../GameObjects/MapObjects/Items/ItemEffect_2.h"
-#include "../GameObjects/MapObjects/ObjectsMap/FireEffect.h"
+#include "../GameObjects/MapObjects/Weapons/FireEffect.h"
 #include "../GameObjects/MapObjects/Items/LampEffect.h"
 #include "../GameObjects/MapObjects/Items/LampAttack.h"
 #include "../GameObjects/MapObjects/Items/OrokuEffect.h"
 #include "../GameObjects/MapObjects/ObjectsMap/Stairs.h"
 #include "../GameObjects/MapObjects/ObjectsMap/Spring.h"
+#include "../GameObjects/Orokus/BossJafar/Jafar.h"
 #include "../GameObjects/Orokus/Guards/ThinGuard.h"
 #include "../GameObjects/Orokus/Guards/FatGuard.h"
 #include "../GameObjects/Orokus/Guards/StrongGuard.h"
@@ -254,6 +255,11 @@ void GameMap::LoadMapOrokus(char* filepath)
 			Oroku *oroku = nullptr;
 			switch (id)
 			{
+			case 0:
+				mBoss = new Jafar(position);
+				mBoss->Tag = Entity::EntityTypes::Oroku;
+				mBoss->bloodOfEntity = Define::BOSS_BLOOD;
+				break;
 			case 1:
 				oroku = new ThinGuard(position);
 				break;
@@ -279,9 +285,12 @@ void GameMap::LoadMapOrokus(char* filepath)
 			default:
 				break;
 			}
-			oroku->Tag = Entity::EntityTypes::Oroku;
-			oroku->bloodOfEntity = Define::GUARD_BLOOD;
-			mListOrokus.push_back(oroku);
+			if (id != 0)
+			{
+				oroku->Tag = Entity::EntityTypes::Oroku;
+				oroku->bloodOfEntity = Define::OROKU_BLOOD;
+				mListOrokus.push_back(oroku);
+			}
 		}
 	}
 	fclose(file);
@@ -415,50 +424,83 @@ void GameMap::Update(float dt)
 				}
 			}
 		}
+	}
 
 #pragma region CREATE ItemEffect
-		//tao ra effect cho item truoc khi bi huy
-		if (mPlayer->allowItemEffect)
+	//tao ra effect cho item truoc khi bi huy
+	if (mPlayer->allowItemEffect)
+	{
+		if (mPlayer->effectLamp)
 		{
-			if (mPlayer->effectLamp)
+			itemEffect = new LampEffect(mPlayer->mOriginPositionItem + D3DXVECTOR3(0, -70, 0));
+			for (size_t i = 0; i < 4; i++)
 			{
-				itemEffect = new LampEffect(D3DXVECTOR3(mPlayer->mOriginPositionItem.x, mPlayer->mOriginPositionItem.y - 70, 0));
-				for (size_t i = 0; i < 4; i++)
-				{
-					itemAttackEffect = new LampAttack(mPlayer->mOriginPositionItem);
-					itemAttackEffect->originPos = itemAttackEffect->GetPosition();
-					mListItemAttackEffects.push_back(itemAttackEffect);
-					mListPlayerSupport.push_back(itemAttackEffect);
-				}
+				itemAttackEffect = new LampAttack(mPlayer->mOriginPositionItem);
+				itemAttackEffect->originPos = itemAttackEffect->GetPosition();
+				mListItemAttackEffects.push_back(itemAttackEffect);
+				mListPlayerSupport.push_back(itemAttackEffect);
 			}
-			else if (mPlayer->effectSpecial)
-				itemEffect = new ItemEffect_2(mPlayer->mOriginPositionItem);
-			else
-				itemEffect = new ItemEffect_1(mPlayer->mOriginPositionItem);
-			mListItemEffects.push_back(itemEffect);
-			mPlayer->allowItemEffect = false;
-			mPlayer->effectLamp = false;
-			mPlayer->effectSpecial = false;
 		}
-		if (mPlayer->allowOrokuEffect)
-		{
-			itemEffect = new OrokuEffect(mPlayer->mOriginPositionItem);
-			mListItemEffects.push_back(itemEffect);
-			mPlayer->allowOrokuEffect = false;
-		}
-		if (mPlayer->effectFire)
-		{
-			timeDelayCreateFireEffect += dt;
-			if (timeDelayCreateFireEffect > 0.1f)
-			{
-				itemEffect = new FireEffect(mPlayer->mOriginPositionItem);
-				mListItemEffects.push_back(itemEffect);
-				timeDelayCreateFireEffect = 0;
-			}
-			mPlayer->effectFire = false;
-		}
-#pragma endregion
+		else if (mPlayer->effectSpecial)
+			itemEffect = new ItemEffect_2(mPlayer->mOriginPositionItem);
+		else
+			itemEffect = new ItemEffect_1(mPlayer->mOriginPositionItem);
+		mListItemEffects.push_back(itemEffect);
+		mPlayer->allowItemEffect = false;
+		mPlayer->effectLamp = false;
+		mPlayer->effectSpecial = false;
 	}
+	if (mPlayer->allowOrokuEffect)
+	{
+		itemEffect = new OrokuEffect(mPlayer->mOriginPositionItem);
+		mListItemEffects.push_back(itemEffect);
+		mPlayer->allowOrokuEffect = false;
+	}
+	if (mPlayer->allowBossEffect)
+	{
+		itemEffect = new ItemEffect_2(mBoss->GetPosition());
+		mListItemEffects.push_back(itemEffect);
+		mPlayer->allowBossEffect = false;
+	}
+	if (mPlayer->effectFire)
+	{
+		timeDelayCreateFireEffect += dt;
+		if (timeDelayCreateFireEffect > 0.1f)
+		{
+			itemEffect = new FireEffect(mPlayer->mOriginPositionItem);
+			mListItemEffects.push_back(itemEffect);
+			timeDelayCreateFireEffect = 0;
+		}
+		mPlayer->effectFire = false;
+	}
+	if (mPlayer->collisionFireWeapon)
+	{
+		timeDelayCreateFireEffect += dt;
+		if (timeDelayCreateFireEffect > 0.2f)
+		{
+			itemEffect = new FireEffect(D3DXVECTOR3(mPlayer->GetPosition().x, 975, 0));
+			this->mBoss->mListWeaponEffect.push_back(itemEffect);
+			timeDelayCreateFireEffect = 0;
+		}
+		mPlayer->collisionFireWeapon = false;
+	}
+	//tao ra hieu ung khac cua qua tao khi cham vao boss
+	for (size_t i = 0; i < mPlayer->mListAppleFly.size(); i++)
+	{
+		if (mPlayer->mListAppleFly.at(i)->collisionWithBoss)
+		{
+			//them hieu ung apple effect vao list tai vi tri qua tao trung oroku
+			itemEffect = new ItemEffect_2(mPlayer->mListAppleFly.at(i)->GetPosition());
+			mPlayer->mListAppleEffect.push_back(itemEffect);
+			delete mPlayer->mListAppleFly.at(i);
+			mPlayer->mListAppleFly.at(i) = nullptr;
+			mPlayer->mListAppleFly.erase(mPlayer->mListAppleFly.begin() + i);
+			if (mPlayer->mListAppleFly.size() == 0)
+				break;
+			i--;
+		}
+	}
+#pragma endregion
 
 #pragma region Update Aniamation Effect
 	//chay animation cho effect roi huy
@@ -568,6 +610,16 @@ void GameMap::Update(float dt)
 		}
 		mListOrokus[i]->Update(dt);
 	}
+
+	if (mBoss != nullptr)
+	{
+		if (!mBoss->settedPlayer)
+		{
+			mBoss->SetPlayer(this->GetPlayer());
+			mBoss->settedPlayer = true;
+		}
+		mBoss->Update(dt);
+	}
 }
 
 void GameMap::Draw()
@@ -635,6 +687,9 @@ void GameMap::Draw()
 
 			//draw player
 			this->GetPlayer()->Draw();
+
+			if (mBoss != nullptr)
+				mBoss->Draw(trans);
 		}
 
 		for (size_t j = 0; j < mMap->GetNumTilesets(); j++)

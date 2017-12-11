@@ -44,7 +44,10 @@ void AppleWeapon::OnCollision(Entity *impactor, Entity::CollisionReturn data, En
 {
 	if (impactor->Tag == Entity::EntityTypes::Oroku && impactor->Id != Entity::EntityId::Camel)
 	{
-		this->collisionWithOroku = true;
+		if(impactor->Id == Entity::EntityId::BossJafar)
+			this->collisionWithBoss = true;
+		else
+			this->collisionWithOroku = true;
 	}
 	else if(impactor->Tag != Entity::EntityTypes::Aladdin && impactor->Tag != Entity::EntityTypes::Item &&
 		impactor->Tag != Entity::EntityTypes::HorizontalRope && impactor->Tag != Entity::EntityTypes::VerticalRope &&

@@ -33,11 +33,13 @@ namespace Define
 #pragma region OROKU
 	const float OROKU_MAX_RUNNING_SPEED = 100.0f;
 	const float OROKU_RUN_SPPED_X = 10.0f;
+	const float BOSS_DRAG_SPEED_X = 20.0f;
 #pragma endregion
 
 #pragma region BLOOD
 	const float ALADDIN_BLOOD = 5.0f;
-	const float GUARD_BLOOD = 2.0f;
+	const float OROKU_BLOOD = 2.0f;
+	const float BOSS_BLOOD = 20.0f;
 #pragma endregion
 
 }

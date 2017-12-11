@@ -31,8 +31,11 @@ public:
 	float timeDelayItemEffect;
 
 	bool currentReverse;
+	bool currentObjectReverse;
 
 	D3DXVECTOR3 originPos;
+
+	Animation *mAnimation;
 protected:
 	MapObject();
 
@@ -43,6 +46,4 @@ protected:
     virtual int Row() = 0; // so row cua resource hinh anh animation
     virtual int Column() = 0; // so cot cua resource hinh anh animation
     virtual float SecondPerFrame() = 0; //so giay de chuyen frame cua animation
-
-	Animation *mAnimation;
 };

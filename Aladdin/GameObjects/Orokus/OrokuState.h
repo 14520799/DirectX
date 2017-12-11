@@ -30,7 +30,10 @@ public:
 		CivilianCircusStanding,
 		CivilianBasketStanding,
 		CivilianBasketRunning,
-		CivilianBasketAttack
+		CivilianBasketAttack,
+		JafarDefault,
+		JafarWitchAttack,
+		JafarSnakeAttack
 	};
 
 	~OrokuState();

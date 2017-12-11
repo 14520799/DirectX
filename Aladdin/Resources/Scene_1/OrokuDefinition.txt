@@ -1,4 +1,5 @@
 Character				Mean
+0						BossJafar
 1						ThinGuard
 2						FatGuard
 3						StrongGuard

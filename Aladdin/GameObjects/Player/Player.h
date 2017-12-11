@@ -72,8 +72,11 @@ public:
 	bool onKeyDownPressing; //thong bao aladdin dang nhin xuong duoi
 	bool collisionItem, collisionFeddler;
 	bool collisionObjectMap;
+	bool collisionStarWeapon, collisionFireWeapon;
 
 	std::vector<MapObject*> mListApplePlayer; //apple cua player dang so huu
+	std::vector<MapObject*> mListAppleFly; //apple da duoc player nem di
+	std::vector<MapObject*> mListAppleEffect; //hieu ung cua apple truoc khi bi huy
 
 	MapObject *apple;
 	MapObject *appleEffect;
@@ -116,9 +119,6 @@ protected:
 				*mAnimationClimbingThrowApple,
 				*mAnimationDeath,
 				*mAnimationRevival;
-
-	std::vector<MapObject*> mListAppleFly; //apple da duoc player nem di
-	std::vector<MapObject*> mListAppleEffect; //hieu ung cua apple truoc khi bi huy
 
     void changeAnimation(PlayerState::StateName state);
 

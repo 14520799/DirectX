@@ -13,7 +13,7 @@ FireEffect::~FireEffect()
 
 const char * FireEffect::FileName()
 {
-	return "Resources/MapObjects/ObjectsMap/FireEffect.png";
+	return "Resources/MapObjects/Weapons/FireEffect.png";
 }
 
 int FireEffect::TotalFrame()

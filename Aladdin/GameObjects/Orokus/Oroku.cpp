@@ -45,4 +45,9 @@ void Oroku::SetPlayer(Player *player)
 	this->mPlayer = player;
 }
 
+std::vector<MapObject*> Oroku::GetListWeapon()
+{
+	return mListWeapon;
+}
+
 

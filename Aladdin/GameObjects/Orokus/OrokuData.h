@@ -7,6 +7,7 @@ class Camel;
 class CivilianWindow;
 class CivilianCircus;
 class CivilianBasket;
+class Jafar;
 
 class OrokuData
 {
@@ -22,6 +23,7 @@ public:
 	CivilianWindow	*civilianWindow;
 	CivilianCircus	*civilianCircus;
 	CivilianBasket	*civilianBasket;
+	Jafar			*jafar;
 
 protected:
 };
