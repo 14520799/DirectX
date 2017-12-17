@@ -11,11 +11,13 @@
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 #include "../MapObjects/Weapons/AppleWeapon.h"
+#include "../../GameComponents/Sound.h"
 
 PlayerFallingState::PlayerFallingState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
 	this->mPlayerData->player->SetVx(0);
+	timeAllowStop = 0;
 }
 
 
@@ -26,7 +28,7 @@ PlayerFallingState::~PlayerFallingState()
 void PlayerFallingState::Update(float dt)
 {
 	this->mPlayerData->player->AddVy(Define::PLAYER_FALL_SPEED_Y);
-
+	timeAllowStop += dt;
 	if (mPlayerData->player->GetVy() > Define::PLAYER_MAX_JUMP_VELOCITY)
 	{
 		mPlayerData->player->SetVy(Define::PLAYER_MAX_JUMP_VELOCITY);
@@ -137,9 +139,19 @@ void PlayerFallingState::OnCollision(Entity *impactor, Entity::SideCollisions si
 		{
 		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
 			if (impactor->Tag == Entity::EntityTypes::Spring)
+			{
+				Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/SpringDoing.wav", "SpringDoing");
+				Sound::getInstance()->play("SpringDoing", false, 1);
+				this->mPlayerData->player->collisionSpring = true;
+				this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
 				this->mPlayerData->player->SetState(new PlayerSomersaultState(this->mPlayerData));
+			}
 			else if (impactor->Id == Entity::EntityId::Camel)
+			{
+				Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/CamelSpit.wav", "CamelSpit");
+				Sound::getInstance()->play("CamelSpit", false, 1);
 				this->mPlayerData->player->SetState(new PlayerStandingJumpState(this->mPlayerData));
+			}
 			break;
 
 		default:
@@ -195,7 +207,8 @@ void PlayerFallingState::OnCollision(Entity *impactor, Entity::SideCollisions si
 			//this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
 			if (noPressed)
 			{
-				if (this->mPlayerData->player->GetVy() >= Define::PLAYER_MAX_JUMP_VELOCITY - 10)
+				if (this->mPlayerData->player->GetVy() == Define::PLAYER_MAX_JUMP_VELOCITY &&
+					timeAllowStop > 1)
 					this->mPlayerData->player->SetState(new PlayerFallingStopState(this->mPlayerData));
 				else
 					this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));

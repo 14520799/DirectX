@@ -12,11 +12,14 @@
 #include "../GameComponents/Camera.h"
 #include "../GameObjects/Player/Player.h"
 #include "../GameObjects/Orokus/Oroku.h"
+#include "../GameComponents/Sound.h"
+#include "../GameComponents/GameDebugDraw.h"
 
 class Scene1 : public Scene
 {
 public:
 	Scene1();
+	~Scene1();
 
     void Update(float dt);
     void LoadContent();
@@ -29,13 +32,17 @@ public:
 protected:
     void checkCollision();
     void CheckCameraAndWorldMap();
+	void DrawQuadtree(QuadTree *quadtree);
+	void DrawCollidable();
 
     GameMap *mMap;
     Camera	*mCamera;
     Player	*mPlayer;
 
     std::map<int, bool> keys;
+	std::vector<Entity*> mCollidable;
 
 	RECT mCameraExpand;
+	GameDebugDraw *mDebugDraw;
 };
 

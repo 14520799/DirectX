@@ -20,6 +20,12 @@
 #include "../GameObjects/MapObjects/Items/OrokuEffect.h"
 #include "../GameObjects/MapObjects/ObjectsMap/Stairs.h"
 #include "../GameObjects/MapObjects/ObjectsMap/Spring.h"
+#include "../GameObjects/MapObjects/ObjectsMap/Bin.h"
+#include "../GameObjects/MapObjects/ObjectsMap/SpringAction.h"
+#include "../GameObjects/MapObjects/ObjectsMap/Cloud1_Scene1.h"
+#include "../GameObjects/MapObjects/ObjectsMap/Cloud2_Scene1.h"
+#include "../GameObjects/MapObjects/ObjectsMap/Cloud1_Scene2.h"
+#include "../GameObjects/MapObjects/ObjectsMap/Cloud2_Scene2.h"
 #include "../GameObjects/Orokus/BossJafar/Jafar.h"
 #include "../GameObjects/Orokus/Guards/ThinGuard.h"
 #include "../GameObjects/Orokus/Guards/FatGuard.h"
@@ -46,12 +52,40 @@ GameMap::~GameMap()
 	}
 	mListMapObjects.clear();
 
+	for (size_t i = 0; i < mListUpStairs.size(); i++)
+	{
+		if (mListUpStairs[i])
+			delete mListUpStairs[i];
+	}
+	mListUpStairs.clear();
+
+	for (size_t i = 0; i < mListDownStairs.size(); i++)
+	{
+		if (mListDownStairs[i])
+			delete mListDownStairs[i];
+	}
+	mListDownStairs.clear();
+
+	for (size_t i = 0; i < mListClouds.size(); i++)
+	{
+		if (mListClouds[i])
+			delete mListClouds[i];
+	}
+	mListClouds.clear();
+
 	for (size_t i = 0; i < mListOrokus.size(); i++)
 	{
 		if (mListOrokus[i])
 			delete mListOrokus[i];
 	}
 	mListOrokus.clear();
+
+	for (size_t i = 0; i < mListPlayerSupport.size(); i++)
+	{
+		if (mListPlayerSupport[i])
+			delete mListPlayerSupport[i];
+	}
+	mListPlayerSupport.clear();
 
 	for (size_t i = 0; i < mListTileset.size(); i++)
 	{
@@ -165,6 +199,11 @@ void GameMap::LoadMap(char* filePath)
 			else if (object->GetName() == "OrokuControl")
 			{
 				entity->Tag = Entity::EntityTypes::OrokuControl;
+
+			}
+			else if (object->GetName() == "TranslateScene")
+			{
+				entity->Tag = Entity::EntityTypes::TranslateScene;
 			}
 			else
 			{
@@ -226,11 +265,16 @@ void GameMap::LoadMapItems(char* filepath)
 			case 'F':
 				item = new FeddlerStanding(position);
 				break;
+			case 'B':
+				item = new Bin(position);
+				break;
 			default:
 				break;
 			}
 			item->originPos = position;
 			mListMapObjects.push_back(item);
+			if (item->Tag == Entity::EntityTypes::Bin)
+				continue;
 			mQuadTree->insertEntity(item);
 		}
 	}
@@ -291,6 +335,74 @@ void GameMap::LoadMapOrokus(char* filepath)
 				oroku->bloodOfEntity = Define::OROKU_BLOOD;
 				mListOrokus.push_back(oroku);
 			}
+		}
+	}
+	fclose(file);
+}
+
+void GameMap::LoadMapCloudsScene1(char* filepath)
+{
+	FILE *file;
+	file = fopen(filepath, "r");
+
+	if (file)
+	{
+		while (!feof(file))
+		{
+			int id;
+			char info[1000];
+			fgets(info, 100, file);
+			float x, y;
+			fscanf(file, "%d %f %f", &id, &x, &y);
+			D3DXVECTOR3 position = D3DXVECTOR3(x, y, 0);
+			MapObject *cloud = nullptr;
+			switch (id)
+			{
+			case 1:
+				cloud = new Cloud1_Scene1(position);
+				break;
+			case 2:
+				cloud = new Cloud2_Scene1(position);
+				break;		
+			default:
+				break;
+			}
+			cloud->originPos = cloud->GetPosition();
+			mListClouds.push_back(cloud);
+		}
+	}
+	fclose(file);
+}
+
+void GameMap::LoadMapCloudsScene2(char* filepath)
+{
+	FILE *file;
+	file = fopen(filepath, "r");
+
+	if (file)
+	{
+		while (!feof(file))
+		{
+			int id;
+			char info[1000];
+			fgets(info, 100, file);
+			float x, y;
+			fscanf(file, "%d %f %f", &id, &x, &y);
+			D3DXVECTOR3 position = D3DXVECTOR3(x, y, 0);
+			MapObject *cloud = nullptr;
+			switch (id)
+			{
+			case 1:
+				cloud = new Cloud1_Scene2(position);
+				break;
+			case 2:
+				cloud = new Cloud2_Scene2(position);
+				break;
+			default:
+				break;
+			}
+			cloud->originPos = cloud->GetPosition();
+			mListClouds.push_back(cloud);
 		}
 	}
 	fclose(file);
@@ -358,6 +470,15 @@ bool GameMap::IsBoundBottom()
 
 void GameMap::Update(float dt)
 {
+	for (size_t i = 0; i < mListClouds.size(); i++)
+	{
+		mListClouds.at(i)->SetVx(-Define::CLOUD_SPEED_X);
+		mListClouds.at(i)->Update(dt);
+		mListClouds.at(i)->Entity::Update(dt);
+		if (mListClouds.at(i)->GetPosition().x - mListClouds.at(i)->originPos.x > 1000)
+			mListClouds.at(i)->SetPosition(mListClouds.at(i)->originPos);
+	}
+
 	for (size_t i = 0; i < mListMapObjects.size(); i++)
 	{
 #pragma region Revitalization
@@ -368,7 +489,8 @@ void GameMap::Update(float dt)
 			delete mListMapObjects[i];
 			mListMapObjects[i] = new RevitalizationAction(pos);
 			mListMapObjects[i]->Id = Entity::EntityId::Revitalization_Action;
-			mPlayer->mOriginPosition = pos;
+			mPlayer->mRevivalPosition = mPlayer->GetPosition();
+			mPlayer->collisionRevitalization = true;
 		}
 		else if (mListMapObjects[i]->Id == Entity::EntityId::Revitalization_Action)
 		{
@@ -407,7 +529,31 @@ void GameMap::Update(float dt)
 		}
 #pragma endregion
 
+#pragma region Spring
+		if (mPlayer->collisionSpring)
+		{
+			if (mListMapObjects.at(i)->GetPosition() == mPlayer->mOriginPositionItem)
+			{
+				mPlayer->collisionSpring = false;
+				delete mListMapObjects.at(i);
+				mListMapObjects.at(i) = new SpringAction(mPlayer->mOriginPositionItem);
+			}
+		}
+
+		if (mListMapObjects.at(i)->Tag == Entity::EntityTypes::SpringAction)
+		{
+			mListMapObjects.at(i)->timeDelaySpringAction += dt;
+			if (mListMapObjects.at(i)->timeDelaySpringAction > 0.2f)
+			{
+				D3DXVECTOR3 temp = mListMapObjects.at(i)->GetPosition();
+				delete mListMapObjects.at(i);
+				mListMapObjects.at(i) = new Spring(temp);
+			}
+		}
+#pragma endregion
+
 		mListMapObjects[i]->Update(dt);
+
 		//xu ly cau thang roi xuong
 		if (mListMapObjects[i]->Tag == Entity::EntityTypes::ObjStairs)
 		{
@@ -415,7 +561,7 @@ void GameMap::Update(float dt)
 			{
 				mListMapObjects[i]->AddVy(Define::ITEM_SPEED_Y / 2);
 				mListMapObjects[i]->Entity::Update(dt);
-				mPlayer->AddPosition(0, 1);
+				mPlayer->AddPosition(0, 3);
 				if (mListMapObjects[i]->GetPosition().y - mListMapObjects[i]->originPos.y > Define::STAIRS_FALL)
 				{
 					mListMapObjects[i]->SetPosition(mListMapObjects[i]->originPos);
@@ -458,49 +604,72 @@ void GameMap::Update(float dt)
 	}
 	if (mPlayer->allowBossEffect)
 	{
-		itemEffect = new ItemEffect_2(mBoss->GetPosition());
+		itemEffect = new LampEffect(mPlayer->mOriginPositionItem);
 		mListItemEffects.push_back(itemEffect);
 		mPlayer->allowBossEffect = false;
 	}
 	if (mPlayer->effectFire)
 	{
-		timeDelayCreateFireEffect += dt;
-		if (timeDelayCreateFireEffect > 0.1f)
+		timeDelayCreateFireEffectPlayer += dt;
+		if (timeDelayCreateFireEffectPlayer > 0.1f)
 		{
 			itemEffect = new FireEffect(mPlayer->mOriginPositionItem);
 			mListItemEffects.push_back(itemEffect);
-			timeDelayCreateFireEffect = 0;
+			timeDelayCreateFireEffectPlayer = 0;
 		}
 		mPlayer->effectFire = false;
 	}
 	if (mPlayer->collisionFireWeapon)
 	{
-		timeDelayCreateFireEffect += dt;
-		if (timeDelayCreateFireEffect > 0.2f)
+		timeDelayCreateFireEffectPlayer += dt;
+		if (timeDelayCreateFireEffectPlayer > 0.5f)
 		{
-			itemEffect = new FireEffect(D3DXVECTOR3(mPlayer->GetPosition().x, 975, 0));
+			itemEffect = new FireEffect(D3DXVECTOR3(mPlayer->GetPosition().x, mBoss->GetPosition().y + mBoss->GetHeight() / 2 - 55, 0));
 			this->mBoss->mListWeaponEffect.push_back(itemEffect);
-			timeDelayCreateFireEffect = 0;
+			timeDelayCreateFireEffectPlayer = 0;
 		}
 		mPlayer->collisionFireWeapon = false;
 	}
-	//tao ra hieu ung khac cua qua tao khi cham vao boss
-	for (size_t i = 0; i < mPlayer->mListAppleFly.size(); i++)
-	{
-		if (mPlayer->mListAppleFly.at(i)->collisionWithBoss)
-		{
-			//them hieu ung apple effect vao list tai vi tri qua tao trung oroku
-			itemEffect = new ItemEffect_2(mPlayer->mListAppleFly.at(i)->GetPosition());
-			mPlayer->mListAppleEffect.push_back(itemEffect);
-			delete mPlayer->mListAppleFly.at(i);
-			mPlayer->mListAppleFly.at(i) = nullptr;
-			mPlayer->mListAppleFly.erase(mPlayer->mListAppleFly.begin() + i);
-			if (mPlayer->mListAppleFly.size() == 0)
-				break;
-			i--;
-		}
-	}
 #pragma endregion
+
+	for (size_t i = 0; i < mListOrokus.size(); i++)
+	{
+		/*neu oroku chua set player thi se set player
+		set player duoc dat o update vi khi khoi tao thi map duoc khoi tao truoc roi moi toi player
+		nen chung ta k the set player cho oroku luc khoi tao vi luc do player == NULL
+		va chung ta can set player cho oroku truoc khi oroku goi update*/
+		if (!mListOrokus[i]->settedPlayer)
+		{
+			mListOrokus[i]->SetPlayer(this->GetPlayer());
+			mListOrokus[i]->settedPlayer = true;
+		}
+		//tao hieu ung lua dot cho strongguard
+		if (mListOrokus[i]->Id == Entity::EntityId::Guard)
+		{
+			if (mListOrokus[i]->effectFire)
+			{
+				timeDelayCreateFireEffectGuard += dt;
+				if (timeDelayCreateFireEffectGuard > 0.4f)
+				{
+					itemEffect = new FireEffect(mListOrokus[i]->mOriginPositionItem);
+					mListItemEffects.push_back(itemEffect);
+					timeDelayCreateFireEffectGuard = 0;
+				}
+				mPlayer->effectFire = false;
+			}
+		}
+		mListOrokus[i]->Update(dt);
+	}
+
+	if (mBoss != nullptr)
+	{
+		if (!mBoss->settedPlayer)
+		{
+			mBoss->SetPlayer(this->GetPlayer());
+			mBoss->settedPlayer = true;
+		}
+		mBoss->Update(dt);
+	}
 
 #pragma region Update Aniamation Effect
 	//chay animation cho effect roi huy
@@ -512,7 +681,7 @@ void GameMap::Update(float dt)
 			mListItemEffects.at(i)->timeDelayItemEffect += dt;
 			if (mListItemEffects.at(i)->Id == Entity::EntityId::ItemEffect_2)
 			{
-				if (mListItemEffects.at(i)->timeDelayItemEffect > 2.0f)
+				if (mListItemEffects.at(i)->timeDelayItemEffect > 0.5f)
 				{
 					delete mListItemEffects.at(i);
 					mListItemEffects.at(i) = nullptr;
@@ -556,23 +725,23 @@ void GameMap::Update(float dt)
 			mListItemAttackEffects.at(i)->Update(dt);
 			if (i == 0)
 			{
-				mListItemAttackEffects.at(i)->AddVx(-6);
-				mListItemAttackEffects.at(i)->AddVy(-1);
+				mListItemAttackEffects.at(i)->AddVx(-4);
+				mListItemAttackEffects.at(i)->AddVy(-2);
 			}
 			else if (i == 1)
 			{
-				mListItemAttackEffects.at(i)->AddVx(-6);
-				mListItemAttackEffects.at(i)->AddVy(-3);
+				mListItemAttackEffects.at(i)->AddVx(-4);
+				mListItemAttackEffects.at(i)->AddVy(-8);
 			}
 			else if (i == 2)
 			{
-				mListItemAttackEffects.at(i)->AddVx(6);
-				mListItemAttackEffects.at(i)->AddVy(-3);
+				mListItemAttackEffects.at(i)->AddVx(4);
+				mListItemAttackEffects.at(i)->AddVy(-8);
 			}
 			else if (i == 3)
 			{
-				mListItemAttackEffects.at(i)->AddVx(6);
-				mListItemAttackEffects.at(i)->AddVy(-1);
+				mListItemAttackEffects.at(i)->AddVx(4);
+				mListItemAttackEffects.at(i)->AddVy(-2);
 			}
 
 			mListItemAttackEffects.at(i)->Entity::Update(dt);
@@ -596,30 +765,6 @@ void GameMap::Update(float dt)
 		}
 	}
 #pragma endregion
-
-	for (size_t i = 0; i < mListOrokus.size(); i++)
-	{
-		/*neu oroku chua set player thi se set player
-		set player duoc dat o update vi khi khoi tao thi map duoc khoi tao truoc roi moi toi player
-		nen chung ta k the set player cho oroku luc khoi tao vi luc do player == NULL
-		va chung ta can set player cho oroku truoc khi oroku goi update*/
-		if (!mListOrokus[i]->settedPlayer)
-		{
-			mListOrokus[i]->SetPlayer(this->GetPlayer());
-			mListOrokus[i]->settedPlayer = true;
-		}
-		mListOrokus[i]->Update(dt);
-	}
-
-	if (mBoss != nullptr)
-	{
-		if (!mBoss->settedPlayer)
-		{
-			mBoss->SetPlayer(this->GetPlayer());
-			mBoss->settedPlayer = true;
-		}
-		mBoss->Update(dt);
-	}
 }
 
 void GameMap::Draw()
@@ -636,7 +781,14 @@ void GameMap::Draw()
 			continue;
 		}
 
-		if (layer->GetName() == "Tile Layer 3")
+		if (layer->GetName() == "Tile Layer 2")
+		{
+			for (size_t i = 0; i < mListClouds.size(); i++)
+			{
+				mListClouds.at(i)->Draw(D3DXVECTOR3(mListClouds.at(i)->posX, mListClouds.at(i)->posY, 0), trans);
+			}
+		}
+		else if (layer->GetName() == "Tile Layer 3")
 		{
 #pragma region DRAW ITEM
 
@@ -685,11 +837,11 @@ void GameMap::Draw()
 			}
 #pragma endregion
 
-			//draw player
-			this->GetPlayer()->Draw();
-
 			if (mBoss != nullptr)
 				mBoss->Draw(trans);
+
+			//draw player
+			this->GetPlayer()->Draw();
 		}
 
 		for (size_t j = 0; j < mMap->GetNumTilesets(); j++)
@@ -747,6 +899,26 @@ void GameMap::Draw()
 			}
 		}
 	}
+
+#pragma region PLAYER INFO
+	D3DXVECTOR2 transBloodInfo = D3DXVECTOR2(GameGlobal::GetWidth() / 2 - mCamera->GetPosition().x + mCamera->GetBound().left + mPlayer->BloodInfoPos.x,
+		GameGlobal::GetHeight() / 2 - mCamera->GetPosition().y + mCamera->GetBound().top + mPlayer->BloodInfoPos.y);
+	mPlayer->BloodInfo->Draw(mPlayer->BloodInfoPos, transBloodInfo);
+
+	//mPlayer->Score->Draw(D3DXVECTOR3(300, 20, 0));
+
+	D3DXVECTOR2 transAppleInfo = D3DXVECTOR2(GameGlobal::GetWidth() / 2 - mCamera->GetPosition().x + mCamera->GetBound().left + mPlayer->AppleInfoPos.x,
+		GameGlobal::GetHeight() / 2 - mCamera->GetPosition().y + mCamera->GetBound().top + mPlayer->AppleInfoPos.y);
+	mPlayer->AppleInfo->Draw(mPlayer->AppleInfoPos, transAppleInfo);
+
+	D3DXVECTOR2 transRubyInfo = D3DXVECTOR2(GameGlobal::GetWidth() / 2 - mCamera->GetPosition().x + mCamera->GetBound().left + mPlayer->RubyInfoPos.x,
+		GameGlobal::GetHeight() / 2 - mCamera->GetPosition().y + mCamera->GetBound().top + mPlayer->RubyInfoPos.y);
+	mPlayer->RubyInfo->Draw(mPlayer->RubyInfoPos, transRubyInfo);
+
+	D3DXVECTOR2 transLifeInfo = D3DXVECTOR2(GameGlobal::GetWidth() / 2 - mCamera->GetPosition().x + mCamera->GetBound().left + mPlayer->LifeInfoPos.x,
+		GameGlobal::GetHeight() / 2 - mCamera->GetPosition().y + mCamera->GetBound().top + mPlayer->LifeInfoPos.y);
+	mPlayer->LifeInfo->Draw(mPlayer->LifeInfoPos, transLifeInfo);
+#pragma endregion
 }
 
 std::map<int, Sprite*> GameMap::GetListTileSet()

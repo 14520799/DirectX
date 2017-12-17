@@ -2,16 +2,18 @@
 #include "PlayerDefaultState.h"
 #include "PlayerStandingState.h"
 #include "PlayerFallingState.h"
+#include "PlayerStandingJumpState.h"
 #include "PlayerHorizontalClimbingDefaultState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 #include "../../GameObjects/MapObjects/Weapons/AppleWeapon.h"
+#include "../../GameComponents/Sound.h"
 
 PlayerSomersaultState::PlayerSomersaultState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
-	this->mPlayerData->player->AddPosition(0, -5);
-	this->mPlayerData->player->SetVy(Define::PLAYER_MIN_JUMP_VELOCITY * 2);
+	this->mPlayerData->player->AddPosition(0, -50);
+	this->mPlayerData->player->SetVy(Define::PLAYER_MIN_JUMP_VELOCITY * 1.2f);
 	noPressed = false;
 }
 
@@ -124,14 +126,39 @@ void PlayerSomersaultState::OnCollision(Entity *impactor, Entity::SideCollisions
 		this->mPlayerData->player->SetPosition(this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y + this->mPlayerData->player->GetHeight() / 2);
 		this->mPlayerData->player->SetState(new PlayerHorizontalClimbingDefaultState(this->mPlayerData));
 	}
+	else if (impactor->Id == Entity::EntityId::Camel || impactor->Tag == Entity::EntityTypes::Spring)
+	{
+		switch (side)
+		{
+		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
+			if (impactor->Tag == Entity::EntityTypes::Spring)
+			{
+				Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/SpringDoing.wav", "SpringDoing");
+				Sound::getInstance()->play("SpringDoing", false, 1);
+				this->mPlayerData->player->collisionSpring = true;
+				this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
+				this->mPlayerData->player->SetState(new PlayerSomersaultState(this->mPlayerData));
+			}
+			else if (impactor->Id == Entity::EntityId::Camel)
+			{
+				Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/CamelSpit.wav", "CamelSpit");
+				Sound::getInstance()->play("CamelSpit", false, 1);
+				this->mPlayerData->player->SetState(new PlayerStandingJumpState(this->mPlayerData));
+			}
+			break;
+
+		default:
+			break;
+		}
+	}
 	else if ((impactor->Tag == Entity::EntityTypes::Oroku && impactor->Id != Entity::EntityId::Camel) ||
-		impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot || 
-		impactor->Tag == Entity::EntityTypes::Spring)
+		impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot)
 	{
 
 	}
 	else if (impactor->Tag == Entity::EntityTypes::DownStairsControl || impactor->Tag == Entity::EntityTypes::UpStairsControl ||
-		impactor->Tag == Entity::EntityTypes::FallControl || impactor->Tag == Entity::EntityTypes::OrokuControl)
+		impactor->Tag == Entity::EntityTypes::FallControl || impactor->Tag == Entity::EntityTypes::OrokuControl ||
+		impactor->Tag != Entity::EntityTypes::SpringAction)
 	{
 
 	}
@@ -154,7 +181,7 @@ void PlayerSomersaultState::OnCollision(Entity *impactor, Entity::SideCollisions
 			this->mPlayerData->player->SetVy(0);*/
 			break;
 
-		case Entity::BottomRight: case Entity::BottomLeft: case Entity::Bottom:
+		case Entity::Bottom:
 			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
 			if (noPressed)
 				this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));

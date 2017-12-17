@@ -72,7 +72,8 @@ void PlayerRunningStopState::OnCollision(Entity *impactor, Entity::SideCollision
 		}
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Oroku ||
-		impactor->Tag == Entity::EntityTypes::Pot || impactor->Tag == Entity::EntityTypes::Fire)
+		impactor->Tag == Entity::EntityTypes::Pot || impactor->Tag == Entity::EntityTypes::Fire ||
+		impactor->Tag == Entity::EntityTypes::Spring)
 	{
 
 	}

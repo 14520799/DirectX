@@ -35,6 +35,7 @@ Jafar::~Jafar()
 
 void Jafar::Update(float dt)
 {
+	//xu ly chuyen state switch -> snake
 	if (this->bloodOfEntity == Define::BOSS_BLOOD / 2 && mCurrentState != OrokuState::JafarSnakeAttack)
 	{
 		for (size_t i = 0; i < mListWeapon.size(); i++)
@@ -50,7 +51,7 @@ void Jafar::Update(float dt)
 			continue;
 		}
 		mListWeapon.clear();
-		TransfigureEffect = new LampEffect(this->GetPosition() + D3DXVECTOR3(0, -140, 0));
+		TransfigureEffect = new LampEffect(D3DXVECTOR3(this->GetPosition().x, this->GetPosition().y + this->GetHeight() / 2 - 90, 0));
 		this->SetState(new JafarSnakeAttackState(this->mOrokuData));
 	}
 
@@ -84,7 +85,7 @@ void Jafar::Update(float dt)
 			{
 				if (mListWeapon.at(i)->collisionWithPlayer)
 				{
-					weaponEffect = new StarWeaponEffect(mPlayer->GetPosition());
+					weaponEffect = new StarWeaponEffect(mListWeapon.at(i)->GetPosition());
 					mListWeaponEffect.push_back(weaponEffect);
 					delete mListWeapon.at(i);
 					mListWeapon.at(i) = nullptr;
@@ -99,29 +100,29 @@ void Jafar::Update(float dt)
 				if (mListWeapon.at(i)->GetPosition().x - mPlayer->GetPosition().x < 0 &&
 					mListWeapon.at(i)->GetPosition().y - mPlayer->GetPosition().y < 0)
 				{
-					mListWeapon.at(i)->AddVx(Define::ITEM_SPEED_X);
-					mListWeapon.at(i)->AddVy(Define::ITEM_SPEED_Y);
+					mListWeapon.at(i)->AddVx(Define::ITEM_SPEED_X * 2);
+					mListWeapon.at(i)->AddVy(Define::ITEM_SPEED_Y * 2);
 				}
 				//weapon dang o phia tren ben phai
 				else if (mListWeapon.at(i)->GetPosition().x - mPlayer->GetPosition().x >= 0 &&
 					mListWeapon.at(i)->GetPosition().y - mPlayer->GetPosition().y < 0)
 				{
-					mListWeapon.at(i)->AddVx(-Define::ITEM_SPEED_X);
-					mListWeapon.at(i)->AddVy(Define::ITEM_SPEED_Y);
+					mListWeapon.at(i)->AddVx(-Define::ITEM_SPEED_X * 2);
+					mListWeapon.at(i)->AddVy(Define::ITEM_SPEED_Y * 2);
 				}
 				//weapon dang o phia duoi ben trai
 				else if (mListWeapon.at(i)->GetPosition().x - mPlayer->GetPosition().x < 0 &&
 					mListWeapon.at(i)->GetPosition().y - mPlayer->GetPosition().y >= 0)
 				{
-					mListWeapon.at(i)->AddVx(Define::ITEM_SPEED_X);
-					mListWeapon.at(i)->AddVy(-Define::ITEM_SPEED_Y);
+					mListWeapon.at(i)->AddVx(Define::ITEM_SPEED_X * 2);
+					mListWeapon.at(i)->AddVy(-Define::ITEM_SPEED_Y * 2);
 				}
 				//weapon dang o phia duoi ben phai
 				else if (mListWeapon.at(i)->GetPosition().x - mPlayer->GetPosition().x >= 0 &&
 					mListWeapon.at(i)->GetPosition().y - mPlayer->GetPosition().y >= 0)
 				{
-					mListWeapon.at(i)->AddVx(-Define::ITEM_SPEED_X);
-					mListWeapon.at(i)->AddVy(-Define::ITEM_SPEED_Y);
+					mListWeapon.at(i)->AddVx(-Define::ITEM_SPEED_X * 2);
+					mListWeapon.at(i)->AddVy(-Define::ITEM_SPEED_Y * 2);
 				}
 				mListWeapon.at(i)->Update(dt);
 				mListWeapon.at(i)->Entity::Update(dt);
@@ -135,9 +136,9 @@ void Jafar::Update(float dt)
 		{
 			for (size_t i = 0; i < mListWeapon.size(); i++)
 			{
-				//xoa ngon lua cua snake khi bay ra duoc 400 pixel
-				if (mListWeapon.at(i)->GetPosition().x - this->GetPosition().x > 600 ||
-					mListWeapon.at(i)->GetPosition().x - this->GetPosition().x < -600)
+				//xoa ngon lua cua snake khi bay ra duoc 600 pixel
+				if (mListWeapon.at(i)->GetPosition().x - this->GetPosition().x > 1000 ||
+					mListWeapon.at(i)->GetPosition().x - this->GetPosition().x < -1000)
 				{
 					delete mListWeapon.at(i);
 					mListWeapon.at(i) = nullptr;
@@ -164,9 +165,27 @@ void Jafar::Update(float dt)
 					}
 				}
 				if (mListWeapon.at(i)->directionFireWeapon == Entity::DirectionFireWeapon::DirectionLeft)
+				{
 					mListWeapon.at(i)->AddVx(-Define::ITEM_SPEED_X / 4);
+					if(mListWeapon.at(i)->GetVy() < 300 && !mListWeapon.at(i)->fireWeaponFlyStraight)
+						mListWeapon.at(i)->AddVy(Define::ITEM_SPEED_Y);
+					else
+					{
+						mListWeapon.at(i)->fireWeaponFlyStraight = true;
+						mListWeapon.at(i)->SetVy(0);
+					}
+				}
 				else if (mListWeapon.at(i)->directionFireWeapon == Entity::DirectionFireWeapon::DirectionRight)
+				{
 					mListWeapon.at(i)->AddVx(Define::ITEM_SPEED_X / 4);
+					if (mListWeapon.at(i)->GetVy() < 300 && !mListWeapon.at(i)->fireWeaponFlyStraight)
+						mListWeapon.at(i)->AddVy(Define::ITEM_SPEED_Y);
+					else
+					{
+						mListWeapon.at(i)->fireWeaponFlyStraight = true;
+						mListWeapon.at(i)->SetVy(0);
+					}
+				}
 				mListWeapon.at(i)->Update(dt);
 				mListWeapon.at(i)->Entity::Update(dt);
 			}

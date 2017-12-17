@@ -5,6 +5,7 @@
 #include "../../MapObjects/Weapons/PotWeaponEffect.h"
 #include "../../Player/Player.h"
 #include "../../../GameDefines/GameDefine.h"
+#include "../../../GameComponents/Sound.h"
 
 CivilianWindow::CivilianWindow(D3DXVECTOR3 position)
 {
@@ -55,6 +56,8 @@ void CivilianWindow::Update(float dt)
 	//neu pot va cham voi player thi se bien mat
 	if (weapon->collisionWithPlayer || weapon->weaponCollided)
 	{
+		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/ClayPot.wav", "ClayPot");
+		Sound::getInstance()->play("ClayPot", false, 1);
 		weaponEffect = new PotWeaponEffect(weapon->GetPosition());
 		if(weapon->weaponCollided)
 			weaponEffect->SetPosition(weaponEffect->GetPosition().x, weaponEffect->GetPosition().y - 10);
@@ -75,6 +78,17 @@ void CivilianWindow::Update(float dt)
 		{
 			delete weaponEffect;
 			weaponEffect = nullptr;
+		}
+	}
+
+	if (allowImunity)
+	{
+		timeImunity += dt;
+
+		if (timeImunity > 1.0f)
+		{
+			allowImunity = false;
+			timeImunity = 0;
 		}
 	}
 

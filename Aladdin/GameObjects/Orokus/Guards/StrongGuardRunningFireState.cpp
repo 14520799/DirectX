@@ -7,6 +7,7 @@ StrongGuardRunningFireState::StrongGuardRunningFireState(OrokuData *orokuData)
 {
 	this->mOrokuData = orokuData;
 	this->mOrokuData->strongGuard->runningFire = true;
+	this->mOrokuData->strongGuard->effectFire = true;
 	this->mOrokuData->strongGuard->SetVx(this->mOrokuData->strongGuard->GetVx());
 	this->mOrokuData->strongGuard->SetVy(0);
 }
@@ -17,6 +18,9 @@ StrongGuardRunningFireState::~StrongGuardRunningFireState()
 
 void StrongGuardRunningFireState::Update(float dt)
 {
+	if (this->mOrokuData->strongGuard->effectFire)
+		this->mOrokuData->strongGuard->mOriginPositionItem = this->mOrokuData->strongGuard->GetPosition();
+
 	if (this->mOrokuData->strongGuard->Mode == Oroku::RunMode::RunComeback)
 	{
 		//oroku quay lai cho cu

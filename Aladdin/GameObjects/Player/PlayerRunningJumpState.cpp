@@ -9,11 +9,12 @@
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 #include "../MapObjects/Weapons/AppleWeapon.h"
+#include "../../GameComponents/Sound.h"
 
 PlayerRunningJumpState::PlayerRunningJumpState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
-	this->mPlayerData->player->AddPosition(0, -5);
+	this->mPlayerData->player->AddPosition(0, -10);
 	if (this->mPlayerData->player->collisionObjectMap)
 	{
 		this->mPlayerData->player->SetVy(Define::PLAYER_MIN_JUMP_VELOCITY * 1.5f);
@@ -155,9 +156,19 @@ void PlayerRunningJumpState::OnCollision(Entity *impactor, Entity::SideCollision
 		{
 		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
 			if (impactor->Tag == Entity::EntityTypes::Spring)
+			{
+				Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/SpringDoing.wav", "SpringDoing");
+				Sound::getInstance()->play("SpringDoing", false, 1);
+				this->mPlayerData->player->collisionSpring = true;
+				this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
 				this->mPlayerData->player->SetState(new PlayerSomersaultState(this->mPlayerData));
+			}
 			else if (impactor->Id == Entity::EntityId::Camel)
+			{
+				Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/CamelSpit.wav", "CamelSpit");
+				Sound::getInstance()->play("CamelSpit", false, 1);
 				this->mPlayerData->player->SetState(new PlayerStandingJumpState(this->mPlayerData));
+			}
 			break;
 
 		default:
@@ -186,7 +197,7 @@ void PlayerRunningJumpState::OnCollision(Entity *impactor, Entity::SideCollision
 	}
 	else if (impactor->Tag == Entity::EntityTypes::DownStairsControl || impactor->Tag == Entity::EntityTypes::UpStairsControl ||
 		impactor->Tag == Entity::EntityTypes::FallControl || impactor->Tag == Entity::EntityTypes::OrokuControl ||
-		impactor->Tag == Entity::EntityTypes::FireControl)
+		impactor->Tag == Entity::EntityTypes::FireControl || impactor->Tag == Entity::EntityTypes::VerticalRopeControl)
 	{
 
 	}
@@ -194,13 +205,13 @@ void PlayerRunningJumpState::OnCollision(Entity *impactor, Entity::SideCollision
 	{
 		switch (side)
 		{
-		case Entity::Left:  case Entity::TopLeft: case Entity::BottomLeft:
+		case Entity::Left:  case Entity::TopLeft:
 			this->mPlayerData->player->AddPosition(data.RegionCollision.right - data.RegionCollision.left, 0);
 			this->mPlayerData->player->allowMoveLeft = false;
 			this->mPlayerData->player->SetVx(0);
 			break;
 
-		case Entity::Right: case Entity::TopRight: case Entity::BottomRight:
+		case Entity::Right: case Entity::TopRight:
 			this->mPlayerData->player->AddPosition(-(data.RegionCollision.right - data.RegionCollision.left), 0);
 			this->mPlayerData->player->allowMoveRight = false;
 			this->mPlayerData->player->SetVx(0);
@@ -212,8 +223,8 @@ void PlayerRunningJumpState::OnCollision(Entity *impactor, Entity::SideCollision
 			this->mPlayerData->player->SetState(new PlayerFallingState(this->mPlayerData));
 			break;
 
-		case Entity::Bottom:
-			//this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
+		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
+			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
 			if (noPressed)
 				this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
 			else

@@ -57,15 +57,15 @@ void ThinGuard::Update(float dt)
 	}
 
 	//xet khoach cach voi player theo truc y -150 -> 150
-	if (this->GetPosition().y - this->mPlayer->GetPosition().y > -Define::DANGEROUS_AREA_MAX_Y &&
+	if (this->GetPosition().y - this->mPlayer->GetPosition().y > -Define::DANGEROUS_AREA_MAX_Y / 8 &&
 		this->GetPosition().y - this->mPlayer->GetPosition().y < Define::DANGEROUS_AREA_MAX_Y)
 	{
 		if (!allowDefault)
 		{
 #pragma region OROKU RUN TO ATTACK PLAYER
-			// khi co khoang cach voi player 0 < player < 200 thi oroku se chay toi tan cong player
+			// khi co khoang cach voi player 0 < player < 250 thi oroku se chay toi tan cong player
 			if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
-				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 2 && !settingAttack)
+				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 1.2f && !settingAttack)
 			{
 				Mode = RunMode::RunAttack;
 
@@ -84,7 +84,7 @@ void ThinGuard::Update(float dt)
 					this->SetState(new ThinGuardRunningState(this->mOrokuData));
 				}
 			}
-			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X * 2 &&
+			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X * 1.2f &&
 				(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN_X && !settingAttack)
 			{
 				Mode = RunMode::RunAttack;
@@ -107,9 +107,9 @@ void ThinGuard::Update(float dt)
 #pragma endregion
 
 #pragma region OROKU DEFAULT
-			// khi co khoang cach voi player -600 --> 600 thi oroku se di xung quanh
-			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X * 3 &&
-				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 3) && !settingAttack &&
+			// khi co khoang cach voi player -500 --> 500 thi oroku se dung lai
+			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X * 2.0 &&
+				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 2.0) && !settingAttack &&
 				Mode != Oroku::RunMode::RunComeback)
 			{
 				this->SetState(new ThinGuardDefaultState(this->mOrokuData));
@@ -118,8 +118,8 @@ void ThinGuard::Update(float dt)
 
 #pragma region OROKU RUN COMEBACK
 			// khi co khoang cach voi player -600 --> 600 thi oroku se quay ve cho cu
-			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < (-Define::DANGEROUS_AREA_MAX_X * 3) ||
-				this->GetPosition().x - this->mPlayer->GetPosition().x >(Define::DANGEROUS_AREA_MAX_X * 3)) &&
+			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < -Define::DANGEROUS_AREA_MAX_X * 2 ||
+				this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MAX_X * 2) &&
 				Mode == Oroku::RunMode::RunAttack)
 			{
 				Mode = Oroku::RunMode::RunComeback;
@@ -171,8 +171,8 @@ RECT ThinGuard::GetBound()
 	}
 	else
 	{
-		rect.left = this->posX - mCurrentAnimation->GetWidth() / 10;
-		rect.right = this->posX + mCurrentAnimation->GetWidth() / 10;
+		rect.left = this->posX - mCurrentAnimation->GetWidth() / 4;
+		rect.right = this->posX + mCurrentAnimation->GetWidth() / 4;
 		rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;
 		rect.bottom = rect.top + mCurrentAnimation->GetHeight();
 	}

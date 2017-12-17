@@ -4,6 +4,7 @@
 ThinGuardHurtingState::ThinGuardHurtingState(OrokuData *orokuData)
 {
 	this->mOrokuData = orokuData;
+	timeDelay = 0;
 	this->mOrokuData->thinGuard->allowDefault = true;
 	this->mOrokuData->thinGuard->settingAttack = false;
 	this->mOrokuData->thinGuard->mSettingRightRun = false;

@@ -29,9 +29,12 @@ public:
 
 	float timeDelayWeaponEffect;
 	float timeDelayItemEffect;
+	float timeDelaySpringAction;
 
 	bool currentReverse;
 	bool currentObjectReverse;
+	//xu ly cach bay cua fireWeapon cho boss
+	bool fireWeaponFlyStraight;
 
 	D3DXVECTOR3 originPos;
 

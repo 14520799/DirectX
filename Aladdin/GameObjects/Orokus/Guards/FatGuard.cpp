@@ -7,6 +7,7 @@
 #include "../../Player/Player.h"
 #include "../../../GameDefines/GameDefine.h"
 #include "../../MapObjects/Weapons/SwordWeapon.h"
+#include "../../MapObjects/Weapons/SwordWeaponEffect.h"
 
 FatGuard::FatGuard(D3DXVECTOR3 position)
 {
@@ -58,9 +59,22 @@ void FatGuard::Update(float dt)
 	//neu sword va cham voi player thi se bien mat
 	if (weapon->collisionWithPlayer || weapon->weaponCollided)
 	{
+		weaponEffect = new SwordWeaponEffect(weapon->GetPosition());
 		allowDrawWeapon = false;
+		weapon->SetPosition(0, 0);
 		weapon->collisionWithPlayer = false;
 		weapon->weaponCollided = false;
+	}
+
+	if (weaponEffect != nullptr)
+	{
+		weaponEffect->timeDelayWeaponEffect += dt;
+		weaponEffect->Update(dt);
+		if (weaponEffect->timeDelayWeaponEffect > 0.4f)
+		{
+			delete weaponEffect;
+			weaponEffect = nullptr;
+		}
 	}
 
 	if (allowImunity)
@@ -75,7 +89,7 @@ void FatGuard::Update(float dt)
 	}
 
 	//xet khoach cach voi player theo truc y -150 -> 150
-	if (this->GetPosition().y - this->mPlayer->GetPosition().y > -Define::DANGEROUS_AREA_MAX_Y &&
+	if (this->GetPosition().y - this->mPlayer->GetPosition().y > -Define::DANGEROUS_AREA_MAX_Y / 8 &&
 		this->GetPosition().y - this->mPlayer->GetPosition().y < Define::DANGEROUS_AREA_MAX_Y)
 	{
 		//delay 1 khoang time de thuc hien statedefault
@@ -93,7 +107,14 @@ void FatGuard::Update(float dt)
 				if (this->weapon->mSettingLeftItem)
 				{
 					this->weapon->AddVx(-Define::ITEM_SPEED_X);
-					this->weapon->AddVy(Define::ITEM_SPEED_Y);
+					//xu ly Vy
+					if (this->mOrokuData->fatGuard->weapon->GetVy() <= Define::ITEM_MIN_VELOCITY || this->mOrokuData->fatGuard->weapon->DirectionDown)
+					{
+						this->mOrokuData->fatGuard->weapon->AddVy(Define::ITEM_SPEED_Y);
+						this->mOrokuData->fatGuard->weapon->DirectionDown = true;
+					}
+					else if (this->mOrokuData->fatGuard->weapon->GetVy() > Define::ITEM_MIN_VELOCITY)
+						this->mOrokuData->fatGuard->weapon->AddVy(-Define::ITEM_SPEED_Y);
 					this->timeDelayDefaultState += dt;
 					if (this->timeDelayDefaultState > 0.8f)
 					{
@@ -105,8 +126,13 @@ void FatGuard::Update(float dt)
 				else if (this->weapon->mSettingRightItem)
 				{
 					this->weapon->AddVx(Define::ITEM_SPEED_X);
-					this->weapon->AddVy(Define::ITEM_SPEED_Y);
-					this->timeDelayDefaultState += dt;
+					if (this->mOrokuData->fatGuard->weapon->GetVy() <= Define::ITEM_MIN_VELOCITY || this->mOrokuData->fatGuard->weapon->DirectionDown)
+					{
+						this->mOrokuData->fatGuard->weapon->AddVy(Define::ITEM_SPEED_Y);
+						this->mOrokuData->fatGuard->weapon->DirectionDown = true;
+					}
+					else if (this->mOrokuData->fatGuard->weapon->GetVy() > Define::ITEM_MIN_VELOCITY)
+						this->mOrokuData->fatGuard->weapon->AddVy(-Define::ITEM_SPEED_Y);					this->timeDelayDefaultState += dt;
 					if (this->timeDelayDefaultState > 0.8f)
 					{
 						this->timeDelayDefaultState = 0;
@@ -136,7 +162,13 @@ void FatGuard::Update(float dt)
 				if (this->weapon->mSettingLeftItem)
 				{
 					this->weapon->AddVx(-Define::ITEM_SPEED_X);
-					this->weapon->AddVy(Define::ITEM_SPEED_Y);
+					if (this->mOrokuData->fatGuard->weapon->GetVy() <= Define::ITEM_MIN_VELOCITY || this->mOrokuData->fatGuard->weapon->DirectionDown)
+					{
+						this->mOrokuData->fatGuard->weapon->AddVy(Define::ITEM_SPEED_Y);
+						this->mOrokuData->fatGuard->weapon->DirectionDown = true;
+					}
+					else if (this->mOrokuData->fatGuard->weapon->GetVy() > Define::ITEM_MIN_VELOCITY)
+						this->mOrokuData->fatGuard->weapon->AddVy(-Define::ITEM_SPEED_Y);
 					this->timeDelayDefaultState += dt;
 					if (this->timeDelayDefaultState > 0.8f)
 					{
@@ -148,7 +180,13 @@ void FatGuard::Update(float dt)
 				else if (this->weapon->mSettingRightItem)
 				{
 					this->weapon->AddVx(Define::ITEM_SPEED_X);
-					this->weapon->AddVy(Define::ITEM_SPEED_Y);
+					if (this->mOrokuData->fatGuard->weapon->GetVy() <= Define::ITEM_MIN_VELOCITY || this->mOrokuData->fatGuard->weapon->DirectionDown)
+					{
+						this->mOrokuData->fatGuard->weapon->AddVy(Define::ITEM_SPEED_Y);
+						this->mOrokuData->fatGuard->weapon->DirectionDown = true;
+					}
+					else if (this->mOrokuData->fatGuard->weapon->GetVy() > Define::ITEM_MIN_VELOCITY)
+						this->mOrokuData->fatGuard->weapon->AddVy(-Define::ITEM_SPEED_Y);
 					this->timeDelayDefaultState += dt;
 					if (this->timeDelayDefaultState > 0.8f)
 					{
@@ -174,16 +212,22 @@ void FatGuard::Update(float dt)
 
 #pragma region OROKU DEFAULT
 			else if (((this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
-				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 1.5f)
+				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 1.2f)
 				||
-				(this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X * 1.5f &&
+				(this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X * 1.2f &&
 					this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MIN_X))
 				&& Mode != Oroku::RunMode::RunAttack)
 			{
 				if (this->weapon->mSettingLeftItem)
 				{
 					this->weapon->AddVx(-Define::ITEM_SPEED_X);
-					this->weapon->AddVy(Define::ITEM_SPEED_Y);
+					if (this->mOrokuData->fatGuard->weapon->GetVy() <= Define::ITEM_MIN_VELOCITY || this->mOrokuData->fatGuard->weapon->DirectionDown)
+					{
+						this->mOrokuData->fatGuard->weapon->AddVy(Define::ITEM_SPEED_Y);
+						this->mOrokuData->fatGuard->weapon->DirectionDown = true;
+					}
+					else if (this->mOrokuData->fatGuard->weapon->GetVy() > Define::ITEM_MIN_VELOCITY)
+						this->mOrokuData->fatGuard->weapon->AddVy(-Define::ITEM_SPEED_Y);					
 					this->timeDelayDefaultState += dt;
 					if (this->timeDelayDefaultState > 0.8f)
 					{
@@ -195,7 +239,13 @@ void FatGuard::Update(float dt)
 				else if (this->weapon->mSettingRightItem)
 				{
 					this->weapon->AddVx(Define::ITEM_SPEED_X);
-					this->weapon->AddVy(Define::ITEM_SPEED_Y);
+					if (this->mOrokuData->fatGuard->weapon->GetVy() <= Define::ITEM_MIN_VELOCITY || this->mOrokuData->fatGuard->weapon->DirectionDown)
+					{
+						this->mOrokuData->fatGuard->weapon->AddVy(Define::ITEM_SPEED_Y);
+						this->mOrokuData->fatGuard->weapon->DirectionDown = true;
+					}
+					else if (this->mOrokuData->fatGuard->weapon->GetVy() > Define::ITEM_MIN_VELOCITY)
+						this->mOrokuData->fatGuard->weapon->AddVy(-Define::ITEM_SPEED_Y);					
 					this->timeDelayDefaultState += dt;
 					if (this->timeDelayDefaultState > 0.8f)
 					{
@@ -210,7 +260,7 @@ void FatGuard::Update(float dt)
 #pragma region OROKU RUN TO ATTACK PLAYER
 			// khi co khoang cach voi player -30 < player < 200 thi oroku se chay toi tan cong player
 			else if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
-				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 2)
+				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 1.4f)
 			{
 				Mode = RunMode::RunAttack;
 
@@ -230,7 +280,7 @@ void FatGuard::Update(float dt)
 					this->SetState(new FatGuardRunningState(this->mOrokuData));
 				}
 			}
-			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X * 2 &&
+			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X * 1.4f &&
 				(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN_X)
 			{
 				Mode = RunMode::RunAttack;
@@ -254,7 +304,7 @@ void FatGuard::Update(float dt)
 #pragma endregion
 
 #pragma region OROKU RUN COMEBACK
-			// khi co khoang cach voi player -600 --> 600 thi oroku se quay ve cho cu
+			// khi co khoang cach voi player < -500 hoac > 500 thi oroku se quay ve cho cu
 			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < -Define::DANGEROUS_AREA_MAX_X * 2 ||
 				this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MAX_X * 2) &&
 				Mode == Oroku::RunMode::RunAttack)
@@ -294,8 +344,8 @@ RECT FatGuard::GetBound()
 {
 	RECT rect;
 
-	rect.left = this->posX - mCurrentAnimation->GetWidth() / 10;
-	rect.right = this->posX + mCurrentAnimation->GetWidth() / 10;
+	rect.left = this->posX - mCurrentAnimation->GetWidth() / 4;
+	rect.right = this->posX + mCurrentAnimation->GetWidth() / 4;
 	rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;
 	rect.bottom = rect.top + mCurrentAnimation->GetHeight();
 
@@ -316,6 +366,8 @@ void FatGuard::Draw(D3DXVECTOR2 trans)
 	{
 		weapon->Draw(D3DXVECTOR3(weapon->posX, weapon->posY, 0), trans);
 	}
+	if (weaponEffect != nullptr)
+		weaponEffect->Draw(D3DXVECTOR3(weaponEffect->posX, weaponEffect->posY, 0), trans);
 }
 
 void FatGuard::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)

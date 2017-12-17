@@ -9,6 +9,7 @@
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 #include "../MapObjects/Weapons/AppleWeapon.h"
+#include "../../GameComponents/Sound.h"
 
 PlayerJumpingThrowAppleState::PlayerJumpingThrowAppleState(PlayerData *playerData)
 {
@@ -134,9 +135,19 @@ void PlayerJumpingThrowAppleState::OnCollision(Entity *impactor, Entity::SideCol
 		{
 		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
 			if (impactor->Tag == Entity::EntityTypes::Spring)
+			{
+				Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/SpringDoing.wav", "SpringDoing");
+				Sound::getInstance()->play("SpringDoing", false, 1);
+				this->mPlayerData->player->collisionSpring = true;
+				this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
 				this->mPlayerData->player->SetState(new PlayerSomersaultState(this->mPlayerData));
+			}
 			else if (impactor->Id == Entity::EntityId::Camel)
+			{
+				Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/CamelSpit.wav", "CamelSpit");
+				Sound::getInstance()->play("CamelSpit", false, 1);
 				this->mPlayerData->player->SetState(new PlayerStandingJumpState(this->mPlayerData));
+			}
 			break;
 
 		default:

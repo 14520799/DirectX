@@ -23,6 +23,8 @@ public:
     GameMap(char* filePath);
 	void LoadMapItems(char* filepath);
 	void LoadMapOrokus(char* filepath);
+	void LoadMapCloudsScene1(char* filepath);
+	void LoadMapCloudsScene2(char* filepath);
     void SetCamera(Camera* camera);
     void Update(float dt);
     void Draw();
@@ -57,7 +59,8 @@ public:
     QuadTree* GetQuadTree();
 	//delaytime de revitalization thuc hien xong state action
 	float timeDelayStateItem;
-	float timeDelayCreateFireEffect;
+	float timeDelayCreateFireEffectPlayer;
+	float timeDelayCreateFireEffectGuard;
 
 	Oroku *mBoss;
 private:
@@ -72,13 +75,14 @@ private:
     std::vector<MapObject*>			mListMapObjects;
 	std::vector<MapObject*>			mListItemEffects; //luu 1 mang cac effect khi player va cham vao item
 	std::vector<MapObject*>			mListItemAttackEffects; //luu 1 mang cac attack effect cua item khi player va cham vao item
+	std::vector<MapObject*>			mListClouds;
 	std::vector<Oroku*>             mListOrokus;
 	std::vector<Entity*>			mListPlayerSupport;
 	std::vector<Entity*>			mListUpStairs;
 	std::vector<Entity*>			mListDownStairs;
 
-	MapObject *itemEffect;
-	MapObject *itemAttackEffect;
+	MapObject	*itemEffect;
+	MapObject	*itemAttackEffect;
 };
 
 #endif

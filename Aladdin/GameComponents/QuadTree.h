@@ -27,6 +27,7 @@ public:
 
     RECT Bound;
 
+	QuadTree **GetNodes();
 protected:
     QuadTree **Nodes;
     std::vector<Entity*> mListEntity; //danh sach cac phan tu co trong vung va cham (Bound)

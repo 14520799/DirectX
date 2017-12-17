@@ -94,8 +94,11 @@ void PlayerVerticalClimbingJumpState::OnCollision(Entity *impactor, Entity::Side
 {
 	if (impactor->Tag == Entity::EntityTypes::HorizontalRope)
 	{
-		this->mPlayerData->player->SetPosition(this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y + this->mPlayerData->player->GetHeight() / 2);
-		this->mPlayerData->player->SetState(new PlayerHorizontalClimbingDefaultState(this->mPlayerData));
+		if (this->mPlayerData->player->GetVy() >= 0)
+		{
+			this->mPlayerData->player->SetPosition(this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y + impactor->GetHeight() + this->mPlayerData->player->GetHeight() / 2);
+			this->mPlayerData->player->SetState(new PlayerHorizontalClimbingDefaultState(this->mPlayerData));
+		}
 	}
 	else if (impactor->Tag == Entity::EntityTypes::VerticalRope)
 	{

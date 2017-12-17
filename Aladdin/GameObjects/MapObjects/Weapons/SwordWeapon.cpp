@@ -1,4 +1,5 @@
 #include "SwordWeapon.h"
+#include "../../../GameComponents/Sound.h"
 
 SwordWeapon::SwordWeapon(D3DXVECTOR3 position)
 {
@@ -42,9 +43,8 @@ void SwordWeapon::OnCollision(Entity *impactor, Entity::CollisionReturn data, En
 	{
 		this->collisionWithPlayer = true;
 	}
-	else if (impactor->Tag != Entity::EntityTypes::Oroku && impactor->Tag != Entity::EntityTypes::Item &&
-		impactor->Tag != Entity::EntityTypes::HorizontalRope && impactor->Tag != Entity::EntityTypes::VerticalRope &&
-		impactor->Tag != Entity::EntityTypes::OrokuControl && impactor->Tag != Entity::EntityTypes::VerticalRopeControl)
+	else if (impactor->Tag != Entity::EntityTypes::Oroku && impactor->Tag != Entity::EntityTypes::VerticalRopeControl &&
+		impactor->Tag != Entity::EntityTypes::HorizontalRope && impactor->Tag != Entity::EntityTypes::VerticalRope)
 	{
 		this->weaponCollided = true;
 	}

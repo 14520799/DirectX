@@ -2,10 +2,13 @@
 #include "PlayerRunningState.h"
 #include "PlayerDefaultState.h"
 #include "PlayerDeathState.h"
+#include "../../GameComponents/Sound.h"
 
 PlayerPushingState::PlayerPushingState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
+	Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/AladdinPush.wav", "AladdinPush");
+	Sound::getInstance()->play("AladdinPush", false, 1);
 	this->mPlayerData->player->SetVx(0);
 	this->mPlayerData->player->SetVy(0);
 }

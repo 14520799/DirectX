@@ -35,8 +35,8 @@ public:
         None, Aladdin, Static, Ground,
 		VerticalRope, VerticalRopeControl, HorizontalRope, Fire, FireControl, AppleWeapon,
 		Stairs, UpStairs, UpStairsControl, CenterStairs, DownStairs, DownStairsControl, GroundControl, FallControl,
-		Oroku, OrokuControl, Sword, Pot, ObjStairs, Spring, StarWeapon, FireWeapon,
-		Item
+		Oroku, OrokuControl, Sword, Pot, ObjStairs, Spring, SpringAction, StarWeapon, FireWeapon, Bin,
+		Item, TranslateScene
     };
 
 	enum EntityId
@@ -115,8 +115,8 @@ public:
 	//vi tri tam position x va y
 	float posX, posY;
 	//mau cua entity
-	float bloodOfEntity;
-	float preBloodOfEntity;
+	int bloodOfEntity;
+	int preBloodOfEntity;
 	//huong nem qua tao da duoc nem ra se khong doi huong
 	bool mSettingRightItem;
 	bool mSettingLeftItem;
@@ -126,6 +126,8 @@ public:
 	//huong tan cong cua oroku
 	bool mSettingRightAttack;
 	bool mSettingLeftAttack;
+	//xu ly cach nem tao
+	bool DirectionDown;
 	//xu ly di xuong cau thang
 	bool collisionStairs;
 	bool allowFalling;
@@ -135,9 +137,10 @@ public:
 	bool allowItemEffect;
 	//khi player giet oroku thi hieu ung no xuat hien
 	bool allowOrokuEffect;
+	//khi player giet boss thi hieu ung no xuat hien
 	bool allowBossEffect;
-	bool effectLamp;
-	bool effectSpecial;
+	bool effectLamp; //khi cham vao cay den thi se tao ra hieu ung cho no
+	bool effectSpecial; //khi an duoc nhung item nhu life hay headgenie thi se tao ra hieu ung khac binh thuong
 	bool effectFire;
 
 	bool collisionWithOroku;
@@ -147,7 +150,8 @@ public:
 	bool collisionWithPlayer;
 
 	D3DXVECTOR3 mOriginPosition;
-	D3DXVECTOR3 mOriginPositionItem;
+	D3DXVECTOR3 mRevivalPosition;
+	D3DXVECTOR3 mOriginPositionItem; //vi tri cua effect khi oroku do bi giet
 protected:
 
     //duoc goi khi set position cua Entity, dung cho ke thua

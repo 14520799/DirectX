@@ -35,7 +35,7 @@ void PlayerStandingThrowAppleState::OnCollision(Entity *impactor, Entity::SideCo
 	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Oroku ||
 		impactor->Tag == Entity::EntityTypes::Fire || impactor->Tag == Entity::EntityTypes::FallControl ||
 		impactor->Tag == Entity::EntityTypes::Item || impactor->Tag == Entity::EntityTypes::OrokuControl ||
-		impactor->Tag == Entity::EntityTypes::FireControl)
+		impactor->Tag == Entity::EntityTypes::FireControl || impactor->Tag == Entity::EntityTypes::Spring)
 	{
 
 	}

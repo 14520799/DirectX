@@ -1,4 +1,5 @@
 #include "AppleWeapon.h"
+#include "../../../GameComponents/Sound.h"
 
 AppleWeapon::AppleWeapon(D3DXVECTOR3 position)
 {
@@ -47,12 +48,17 @@ void AppleWeapon::OnCollision(Entity *impactor, Entity::CollisionReturn data, En
 		if(impactor->Id == Entity::EntityId::BossJafar)
 			this->collisionWithBoss = true;
 		else
+		{
+			Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/AppleSplat.wav", "AppleSplat");
+			Sound::getInstance()->play("AppleSplat", false, 1);
 			this->collisionWithOroku = true;
+		}
 	}
-	else if(impactor->Tag != Entity::EntityTypes::Aladdin && impactor->Tag != Entity::EntityTypes::Item &&
-		impactor->Tag != Entity::EntityTypes::HorizontalRope && impactor->Tag != Entity::EntityTypes::VerticalRope &&
-		impactor->Tag != Entity::EntityTypes::FallControl && impactor->Tag != Entity::EntityTypes::OrokuControl)
+	else if(impactor->Tag != Entity::EntityTypes::Aladdin && impactor->Tag != Entity::EntityTypes::DownStairsControl &&
+		impactor->Tag != Entity::EntityTypes::HorizontalRope && impactor->Tag != Entity::EntityTypes::VerticalRope)
 	{
+		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/AppleSplat.wav", "AppleSplat");
+		Sound::getInstance()->play("AppleSplat", false, 1);
 		this->weaponCollided = true;
 	}
 }

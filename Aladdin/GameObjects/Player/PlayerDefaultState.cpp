@@ -43,7 +43,8 @@ void PlayerDefaultState::OnCollision(Entity *impactor, Entity::SideCollisions si
 		this->mPlayerData->player->collisionFeddler = true;
 	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Oroku ||
 		impactor->Tag == Entity::EntityTypes::Pot || impactor->Tag == Entity::EntityTypes::FallControl ||
-		impactor->Tag == Entity::EntityTypes::OrokuControl || impactor->Tag == Entity::EntityTypes::FireControl)
+		impactor->Tag == Entity::EntityTypes::OrokuControl || impactor->Tag == Entity::EntityTypes::FireControl ||
+		impactor->Tag == Entity::EntityTypes::Spring)
 	{
 
 	}
@@ -63,7 +64,7 @@ void PlayerDefaultState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	{
 		switch (side)
 		{
-		case Entity::Left:
+		case Entity::Left: case Entity::BottomLeft: case Entity::BottomRight:
 			this->mPlayerData->player->AddPosition(data.RegionCollision.right - data.RegionCollision.left, 0);
 			break;
 
@@ -74,7 +75,7 @@ void PlayerDefaultState::OnCollision(Entity *impactor, Entity::SideCollisions si
 		case Entity::Top: case Entity::TopLeft: case Entity::TopRight:
 			break;
 
-		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
+		case Entity::Bottom:
 			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
 			this->mPlayerData->player->SetVy(0);
 			break;

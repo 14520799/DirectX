@@ -3,10 +3,13 @@
 #include "FatGuardDefaultState.h"
 #include "../../../GameDefines/GameDefine.h"
 #include "../Oroku.h"
+#include "../../../GameComponents/Sound.h"
 
 FatGuardAttackState::FatGuardAttackState(OrokuData *orokuData)
 {
 	this->mOrokuData = orokuData;
+	Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/HighSword.wav", "HighSword");
+	Sound::getInstance()->play("HighSword", false, 1);
 	//set lai huong chay tan cong cua fatguard
 	this->mOrokuData->fatGuard->mSettingLeftRun = false;
 	this->mOrokuData->fatGuard->mSettingRightRun = false;
@@ -49,7 +52,13 @@ void FatGuardAttackState::Update(float dt)
 			}
 			this->mOrokuData->fatGuard->weapon->mSettingRightItem = true;
 			this->mOrokuData->fatGuard->weapon->AddVx(Define::ITEM_SPEED_X);
-			this->mOrokuData->fatGuard->weapon->AddVy(Define::ITEM_SPEED_Y);
+			if (this->mOrokuData->fatGuard->weapon->GetVy() <= Define::ITEM_MIN_VELOCITY || this->mOrokuData->fatGuard->weapon->DirectionDown)
+			{
+				this->mOrokuData->fatGuard->weapon->AddVy(Define::ITEM_SPEED_Y);
+				this->mOrokuData->fatGuard->weapon->DirectionDown = true;
+			}
+			else if (this->mOrokuData->fatGuard->weapon->GetVy() > Define::ITEM_MIN_VELOCITY)
+				this->mOrokuData->fatGuard->weapon->AddVy(-Define::ITEM_SPEED_Y);
 		}
 		else if (!this->mOrokuData->fatGuard->mCurrentReverse)
 		{
@@ -61,7 +70,13 @@ void FatGuardAttackState::Update(float dt)
 			}
 			this->mOrokuData->fatGuard->weapon->mSettingLeftItem = true;
 			this->mOrokuData->fatGuard->weapon->AddVx(-Define::ITEM_SPEED_X);
-			this->mOrokuData->fatGuard->weapon->AddVy(Define::ITEM_SPEED_Y);
+			if (this->mOrokuData->fatGuard->weapon->GetVy() <= Define::ITEM_MIN_VELOCITY || this->mOrokuData->fatGuard->weapon->DirectionDown)
+			{
+				this->mOrokuData->fatGuard->weapon->AddVy(Define::ITEM_SPEED_Y);
+				this->mOrokuData->fatGuard->weapon->DirectionDown = true;
+			}
+			else if (this->mOrokuData->fatGuard->weapon->GetVy() > Define::ITEM_MIN_VELOCITY)
+				this->mOrokuData->fatGuard->weapon->AddVy(-Define::ITEM_SPEED_Y);
 		}
 	}
 }

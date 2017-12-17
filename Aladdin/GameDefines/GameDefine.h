@@ -13,7 +13,7 @@ namespace Define
 	const float PLAYER_RUN_SPEED_X = 30.0f; //toc do chay player
 	const float PLAYER_JUMP_SPEED_X= 40.0f; //toc do bay player khi nhay
 	const float PLAYER_FALL_SPEED_Y = 20.0f; //toc do roi player
-	const float PLAYER_CLIM_SPPED = 5.0f; //toc do leo player
+	const float PLAYER_CLIM_SPPED = 10.0f; //toc do leo player
 #pragma endregion
 
 #pragma region ITEM
@@ -22,12 +22,13 @@ namespace Define
 	const float ITEM_MIN_VELOCITY = -50.0f;
 	const float ITEM_SPEED_X = 20.0f;
 	const float ITEM_SPEED_Y = 10.0f;
+	const float CLOUD_SPEED_X = 50.0f;
 #pragma endregion
 
 	const float DANGEROUS_AREA_MIN_X = 0.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
 	const float DANGEROUS_AREA_POT_MAX_X = 100.0f; //vung nguy hiem khi player buoc vao co the se gap oroku nem binh
 	const float DANGEROUS_AREA_POT_MIN_Y = -250.0f; //vung nguy hiem khi player buoc vao co the se gap oroku nem binh
-	const float DANGEROUS_AREA_MAX_X = 200.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
+	const float DANGEROUS_AREA_MAX_X = 250.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
 	const float DANGEROUS_AREA_MAX_Y = 150.0f; //vung nguy hiem khi player buoc vao co the se gap oroku
 
 #pragma region OROKU
@@ -37,7 +38,7 @@ namespace Define
 #pragma endregion
 
 #pragma region BLOOD
-	const float ALADDIN_BLOOD = 5.0f;
+	const float ALADDIN_BLOOD = 10.0f;
 	const float OROKU_BLOOD = 2.0f;
 	const float BOSS_BLOOD = 20.0f;
 #pragma endregion

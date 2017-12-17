@@ -1,6 +1,7 @@
 #include "CivilianCircus.h"
 #include "CivilianCircusStandingState.h"
 #include "../../MapObjects/Weapons/SwordWeapon.h"
+#include "../../MapObjects/Weapons/SwordWeaponEffect.h"
 #include "../../Player/Player.h"
 #include "../../../GameDefines/GameDefine.h"
 
@@ -50,12 +51,24 @@ void CivilianCircus::Update(float dt)
 	//neu pot va cham voi player thi se bien mat
 	if (weapon->collisionWithPlayer || weapon->weaponCollided)
 	{
+		weaponEffect = new SwordWeaponEffect(weapon->GetPosition());
 		weapon->SetPosition(weapon->originPos);
 		weapon->SetVx(0);
 		weapon->SetVy(0);
 		allowDrawWeapon = false;
 		weapon->collisionWithPlayer = false;
 		weapon->weaponCollided = false;
+	}
+
+	if (weaponEffect != nullptr)
+	{
+		weaponEffect->timeDelayWeaponEffect += dt;
+		weaponEffect->Update(dt);
+		if (weaponEffect->timeDelayWeaponEffect > 0.4f)
+		{
+			delete weaponEffect;
+			weaponEffect = nullptr;
+		}
 	}
 
 	if (allowImunity)
@@ -70,11 +83,41 @@ void CivilianCircus::Update(float dt)
 	}
 
 	//oroku cach player PosY tu -150 --> 150
-	if (this->GetPosition().y - this->mPlayer->GetPosition().y > -Define::DANGEROUS_AREA_MAX_Y * 1.5f &&
-		this->GetPosition().y - this->mPlayer->GetPosition().y < Define::DANGEROUS_AREA_MAX_Y * 1.5f)
+	if (this->GetPosition().y - this->mPlayer->GetPosition().y > -Define::DANGEROUS_AREA_MAX_Y * 3.0f &&
+		this->GetPosition().y - this->mPlayer->GetPosition().y < Define::DANGEROUS_AREA_MAX_Y * 3.0f)
 	{
+		//oroku cach player PosX tu 250 --> 500 hoac PosY tu 50 --> 250
+		if ((this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
+			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 2) ||
+			(this->GetPosition().y - this->mPlayer->GetPosition().y > Define::DANGEROUS_AREA_MAX_Y / 3 &&
+			this->GetPosition().y - this->mPlayer->GetPosition().y < Define::DANGEROUS_AREA_MAX_Y &&
+			this->GetPosition().x - this->mPlayer->GetPosition().x > 0))
+		{
+			if (weapon->GetPosition() == weapon->originPos)
+			{
+				this->weapon->Mode = MapObject::WeaponMode::Fantastic;
+				this->weapon->currentReverse = false;
+				allowDrawWeapon = true;
+				this->weapon->SetVy(Define::CIVILIAN_SWORD_MIN_VELOCITY);
+			}
+		}
+		//oroku cach player PosX tu 250 --> 500 hoac PosY tu 50 --> 250
+		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X * 2 &&
+				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MIN_X) ||
+				(this->GetPosition().y - this->mPlayer->GetPosition().y > Define::DANGEROUS_AREA_MAX_Y / 3 &&
+				this->GetPosition().y - this->mPlayer->GetPosition().y < Define::DANGEROUS_AREA_MAX_Y &&
+				this->GetPosition().x - this->mPlayer->GetPosition().x <= 0))
+		{
+			if (weapon->GetPosition() == weapon->originPos)
+			{
+				this->weapon->Mode = MapObject::WeaponMode::Fantastic;
+				this->weapon->currentReverse = true;
+				allowDrawWeapon = true;
+				this->weapon->SetVy(Define::CIVILIAN_SWORD_MIN_VELOCITY);
+			}
+		}
 		//oroku cach player PosX tu 0 --> 200
-		if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
+		else if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
 			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X)
 		{
 			if (weapon->GetPosition() == weapon->originPos)
@@ -85,38 +128,14 @@ void CivilianCircus::Update(float dt)
 			}
 		}
 		//oroku cach player PosX tu -200 --> 0
-		else if (this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X &&
-				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MIN_X)
+		else if ((this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X &&
+			this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MIN_X))
 		{
 			if (weapon->GetPosition() == weapon->originPos)
 			{
 				this->weapon->Mode = MapObject::WeaponMode::Nomal;
 				this->weapon->currentReverse = true;
 				allowDrawWeapon = true;
-			}
-		}
-		//oroku cach player PosX tu 200 --> 400
-		else if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
-				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 2)
-		{
-			if (weapon->GetPosition() == weapon->originPos)
-			{
-				this->weapon->Mode = MapObject::WeaponMode::Fantastic;
-				this->weapon->currentReverse = false;
-				allowDrawWeapon = true;
-				this->weapon->SetVy(Define::CIVILIAN_SWORD_MIN_VELOCITY);
-			}
-		}
-		//oroku cach player PosX tu -400 --> -200
-		else if (this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X * 2 &&
-				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MIN_X)
-		{
-			if (weapon->GetPosition() == weapon->originPos)
-			{
-				this->weapon->Mode = MapObject::WeaponMode::Fantastic;
-				this->weapon->currentReverse = true;
-				allowDrawWeapon = true;
-				this->weapon->SetVy(Define::CIVILIAN_SWORD_MIN_VELOCITY);
 			}
 		}
 	}
@@ -168,6 +187,8 @@ void CivilianCircus::Draw(D3DXVECTOR2 trans)
 	{
 		weapon->Draw(D3DXVECTOR3(weapon->posX, weapon->posY, 0), trans);
 	}
+	if(weaponEffect != nullptr)
+		weaponEffect->Draw(D3DXVECTOR3(weaponEffect->posX, weaponEffect->posY, 0), trans);
 }
 
 void CivilianCircus::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)

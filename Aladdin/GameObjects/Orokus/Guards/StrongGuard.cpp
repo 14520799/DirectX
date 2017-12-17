@@ -56,7 +56,7 @@ void StrongGuard::Update(float dt)
 	}
 
 	//xet khoach cach voi player theo truc y -150 -> 150
-	if (this->GetPosition().y - this->mPlayer->GetPosition().y > -Define::DANGEROUS_AREA_MAX_Y &&
+	if (this->GetPosition().y - this->mPlayer->GetPosition().y > -Define::DANGEROUS_AREA_MAX_Y / 5 &&
 		this->GetPosition().y - this->mPlayer->GetPosition().y < Define::DANGEROUS_AREA_MAX_Y)
 	{
 		if (!allowDefault)
@@ -64,7 +64,7 @@ void StrongGuard::Update(float dt)
 #pragma region OROKU RUN TO ATTACK PLAYER
 			// khi co khoang cach voi player 0 < player < 300 thi oroku se chay toi tan cong player
 			if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
-				this->GetPosition().x - this->mPlayer->GetPosition().x <= Define::DANGEROUS_AREA_MAX_X && !settingAttack)
+				this->GetPosition().x - this->mPlayer->GetPosition().x <= Define::DANGEROUS_AREA_MAX_X * 1.5f && !settingAttack)
 			{
 				Mode = RunMode::RunAttack;
 
@@ -91,7 +91,7 @@ void StrongGuard::Update(float dt)
 					}
 				}
 			}
-			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X &&
+			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x) > -Define::DANGEROUS_AREA_MAX_X * 1.5f &&
 				(this->GetPosition().x - this->mPlayer->GetPosition().x) < Define::DANGEROUS_AREA_MIN_X && !settingAttack)
 			{
 				Mode = RunMode::RunAttack;
@@ -123,14 +123,14 @@ void StrongGuard::Update(float dt)
 
 #pragma region OROKU AROUSE
 			else if (this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MIN_X &&
-				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 3 && !settingAttack)
+				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 2 && !settingAttack)
 			{
 				if (mCurrentState == OrokuState::StrongGuardStanding || runningFire)
 					return;
 				this->SetReverse(false);
 				this->SetState(new StrongGuardStandingState(this->mOrokuData));
 			}
-			else if (this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X * 3 &&
+			else if (this->GetPosition().x - this->mPlayer->GetPosition().x > -Define::DANGEROUS_AREA_MAX_X * 2 &&
 				this->GetPosition().x - this->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MIN_X && !settingAttack)
 			{
 				if (mCurrentState == OrokuState::StrongGuardStanding || runningFire)
@@ -141,9 +141,9 @@ void StrongGuard::Update(float dt)
 #pragma endregion
 
 #pragma region OROKU RUN COMEBACK
-			// khi co khoang cach voi player -600 --> 600 thi oroku se quay ve cho cu
-			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < -Define::DANGEROUS_AREA_MAX_X * 3 ||
-				this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MAX_X * 3) &&
+			// khi co khoang cach voi player > -600 hoac > 600 thi oroku se quay ve cho cu
+			else if ((this->GetPosition().x - this->mPlayer->GetPosition().x < -Define::DANGEROUS_AREA_MAX_X * 2 ||
+				this->GetPosition().x - this->mPlayer->GetPosition().x > Define::DANGEROUS_AREA_MAX_X * 2) &&
 				Mode == Oroku::RunMode::RunAttack)
 			{
 				Mode = Oroku::RunMode::RunComeback;
@@ -201,8 +201,8 @@ RECT StrongGuard::GetBound()
 	}
 	else
 	{
-		rect.left = this->posX - mCurrentAnimation->GetWidth() / 10;
-		rect.right = this->posX + mCurrentAnimation->GetWidth() / 10;
+		rect.left = this->posX - mCurrentAnimation->GetWidth() / 8;
+		rect.right = this->posX + mCurrentAnimation->GetWidth() / 8;
 		rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;
 		rect.bottom = rect.top + mCurrentAnimation->GetHeight();
 	}
@@ -221,7 +221,7 @@ void StrongGuard::OnCollision(Entity *impactor, Entity::CollisionReturn data, En
 {
 	if ((this->allowImunity || this->collisionAppleWeapon) && mCurrentState != OrokuState::StrongGuardHurting)
 	{
-		this->collisionAppleWeapon = false;
+			this->collisionAppleWeapon = false;
 		this->SetState(new StrongGuardHurtingState(this->mOrokuData));
 		return;
 	}

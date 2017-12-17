@@ -3,6 +3,7 @@
 #include "JafarSnakeAttackState.h"
 #include "../../MapObjects/Weapons/StarWeapon.h"
 #include "../../../GameDefines/GameDefine.h"
+#include "../../../GameComponents/Sound.h"
 
 JafarWitchAttackState::JafarWitchAttackState(OrokuData *orokuData)
 {
@@ -27,6 +28,8 @@ void JafarWitchAttackState::Update(float dt)
 			timeCreateWeapon += dt;
 			if (timeCreateWeapon > 0.1f)
 			{
+				Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/JafarTractor.wav", "JafarTractor");
+				Sound::getInstance()->play("JafarTractor", false, 1);
 				this->mOrokuData->jafar->weapon = new StarWeapon(this->mOrokuData->jafar->GetPosition() + D3DXVECTOR3(-70, -40, 0));
 				this->mOrokuData->jafar->mListWeapon.push_back(this->mOrokuData->jafar->weapon);
 				timeCreateWeapon = 0;
@@ -38,8 +41,10 @@ void JafarWitchAttackState::Update(float dt)
 			this->mOrokuData->jafar->GetPosition().x - this->mOrokuData->jafar->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MIN_X)
 		{
 			timeCreateWeapon += dt;
-			if (timeCreateWeapon > 0.2f)
+			if (timeCreateWeapon > 0.1f)
 			{
+				Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/JafarTractor.wav", "JafarTractor");
+				Sound::getInstance()->play("JafarTractor", false, 1);
 				this->mOrokuData->jafar->weapon = new StarWeapon(this->mOrokuData->jafar->GetPosition() + D3DXVECTOR3(70, -40, 0));
 				this->mOrokuData->jafar->mListWeapon.push_back(this->mOrokuData->jafar->weapon);
 				timeCreateWeapon = 0;

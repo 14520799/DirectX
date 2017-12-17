@@ -4,6 +4,7 @@
 #include "PlayerDefaultState.h"
 #include "PlayerFallingState.h"
 #include "PlayerPushingState.h"
+#include "PlayerVerticalClimbingDefaultState.h"
 #include "../MapObjects/Weapons/AppleWeapon.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
@@ -84,6 +85,11 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	{
 		this->mPlayerData->player->bloodOfEntity--;
 	}
+	else if (impactor->Tag == Entity::EntityTypes::VerticalRope)
+	{
+		this->mPlayerData->player->SetPosition(impactor->GetPosition().x, this->mPlayerData->player->GetPosition().y);
+		this->mPlayerData->player->SetState(new PlayerVerticalClimbingDefaultState(this->mPlayerData));
+	}
 	else if (impactor->Tag == Entity::EntityTypes::Item)
 	{
 		if (impactor->Id == Entity::EntityId::Revitalization_Default || impactor->Id == Entity::EntityId::Feddler_Standing)
@@ -113,7 +119,8 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Oroku ||
 		impactor->Tag == Entity::EntityTypes::Fire || impactor->Tag == Entity::EntityTypes::FallControl ||
-		impactor->Tag == Entity::EntityTypes::OrokuControl || impactor->Tag == Entity::EntityTypes::FireControl)
+		impactor->Tag == Entity::EntityTypes::OrokuControl || impactor->Tag == Entity::EntityTypes::FireControl ||
+		impactor->Tag == Entity::EntityTypes::Spring)
 	{
 
 	}

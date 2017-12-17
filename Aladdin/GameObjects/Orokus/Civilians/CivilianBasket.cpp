@@ -54,7 +54,7 @@ void CivilianBasket::Update(float dt)
 		}
 	}
 	//xet khoach cach voi player theo truc y -150 -> 150
-	if (this->GetPosition().y - this->mPlayer->GetPosition().y > -Define::DANGEROUS_AREA_MAX_Y &&
+	if (this->GetPosition().y - this->mPlayer->GetPosition().y > -Define::DANGEROUS_AREA_MAX_Y / 8 &&
 		this->GetPosition().y - this->mPlayer->GetPosition().y < Define::DANGEROUS_AREA_MAX_Y)
 	{
 #pragma region OROKU RUN TO ATTACK PLAYER
@@ -165,8 +165,8 @@ RECT CivilianBasket::GetBound()
 	}
 	else
 	{
-		rect.left = this->posX - mCurrentAnimation->GetWidth() / 10;
-		rect.right = this->posX + mCurrentAnimation->GetWidth() / 10;
+		rect.left = this->posX - mCurrentAnimation->GetWidth() / 4;
+		rect.right = this->posX + mCurrentAnimation->GetWidth() / 4;
 		rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;
 		rect.bottom = rect.top + mCurrentAnimation->GetHeight();
 	}

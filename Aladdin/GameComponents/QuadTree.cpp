@@ -155,6 +155,11 @@ void QuadTree::split()
 	Nodes[3] = new QuadTree(mLevel + 1, bound);
 }
 
+QuadTree ** QuadTree::GetNodes()
+{
+	return Nodes;
+}
+
 int QuadTree::getTotalEntities()
 {
 	int total = mListEntity.size();

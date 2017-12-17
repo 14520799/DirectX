@@ -5,10 +5,13 @@
 #include "PlayerFallingState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
+#include "../../GameComponents/Sound.h"
 
 PlayerFallingStopState::PlayerFallingStopState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
+	Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/BodyCrunch.wav", "BodyCrunch");
+	Sound::getInstance()->play("BodyCrunch", false, 1);
 	this->mPlayerData->player->SetVx(0);
 	this->mPlayerData->player->SetVy(0);
 	timeDelayState = 0;
@@ -49,7 +52,7 @@ void PlayerFallingStopState::OnCollision(Entity *impactor, Entity::SideCollision
 		this->mPlayerData->player->bloodOfEntity--;
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Oroku ||
-		impactor->Tag == Entity::EntityTypes::Fire)
+		impactor->Tag == Entity::EntityTypes::Fire || impactor->Tag == Entity::EntityTypes::Spring)
 	{
 
 	}

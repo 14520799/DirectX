@@ -1,20 +1,15 @@
 #include "FatGuardHurtingState.h"
 #include "FatGuardAttackState.h"
 #include "FatGuardDefaultState.h"
+#include "../../../GameDefines/GameDefine.h"
 
 FatGuardHurtingState::FatGuardHurtingState(OrokuData *orokuData)
 {
 	this->mOrokuData = orokuData;
 	timeDelay = 0;
-	this->mOrokuData->fatGuard->allowDefault = true;
-	//set lai huong tan cong cua fatguard thanh false
-	this->mOrokuData->fatGuard->mSettingLeftAttack = false;
-	this->mOrokuData->fatGuard->mSettingRightAttack = false;
-	//set lai huong bay cua cay kiem thanh false
-	this->mOrokuData->fatGuard->weapon->mSettingLeftItem = false;
-	this->mOrokuData->fatGuard->weapon->mSettingRightItem = false;
 	this->mOrokuData->fatGuard->SetVx(0);
 	this->mOrokuData->fatGuard->SetVy(0);
+	this->mOrokuData->fatGuard->allowDefault = true;
 }
 
 FatGuardHurtingState::~FatGuardHurtingState()
@@ -23,13 +18,39 @@ FatGuardHurtingState::~FatGuardHurtingState()
 
 void FatGuardHurtingState::Update(float dt)
 {
+	if (this->mOrokuData->fatGuard->weapon->mSettingLeftItem)
+	{
+		this->mOrokuData->fatGuard->weapon->AddVx(-Define::ITEM_SPEED_X);
+		if (this->mOrokuData->fatGuard->weapon->GetVy() <= Define::ITEM_MIN_VELOCITY || this->mOrokuData->fatGuard->weapon->DirectionDown)
+		{
+			this->mOrokuData->fatGuard->weapon->AddVy(Define::ITEM_SPEED_Y);
+			this->mOrokuData->fatGuard->weapon->DirectionDown = true;
+		}
+		else if (this->mOrokuData->fatGuard->weapon->GetVy() > Define::ITEM_MIN_VELOCITY)
+			this->mOrokuData->fatGuard->weapon->AddVy(-Define::ITEM_SPEED_Y);
+	}
+	else if (this->mOrokuData->fatGuard->weapon->mSettingRightItem)
+	{
+		this->mOrokuData->fatGuard->weapon->AddVx(Define::ITEM_SPEED_X);
+		if (this->mOrokuData->fatGuard->weapon->GetVy() <= Define::ITEM_MIN_VELOCITY || this->mOrokuData->fatGuard->weapon->DirectionDown)
+		{
+			this->mOrokuData->fatGuard->weapon->AddVy(Define::ITEM_SPEED_Y);
+			this->mOrokuData->fatGuard->weapon->DirectionDown = true;
+		}
+		else if (this->mOrokuData->fatGuard->weapon->GetVy() > Define::ITEM_MIN_VELOCITY)
+			this->mOrokuData->fatGuard->weapon->AddVy(-Define::ITEM_SPEED_Y);
+	}
+
 	timeDelay += dt;
 
-	if (timeDelay > 1.0f)
+	if (timeDelay > 0.7f)
 	{
 		this->mOrokuData->fatGuard->allowDefault = false;
 		this->mOrokuData->fatGuard->SetState(new FatGuardDefaultState(this->mOrokuData));
+		return;
 	}
+
+
 }
 
 void FatGuardHurtingState::OnCollision(Entity *impactor, Entity::SideCollisions side, Entity::CollisionReturn data)

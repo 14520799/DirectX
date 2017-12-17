@@ -3,7 +3,7 @@
 
 Scene::Scene()
 {
-    mBackColor = 0x4866ff;
+    mBackColor = D3DCOLOR_XRGB(0, 0, 0);
 
     LoadContent();
 }

@@ -7,6 +7,7 @@
 #include "../../GameComponents/Camera.h"
 #include "../../GameComponents/GameMap.h"
 #include "../../GameObjects/MapObjects/MapObject.h"
+#include "../../GameComponents/Text.h"
 #include "PlayerData.h"
 #include "PlayerState.h"
 #include "PlayerRunningState.h"
@@ -70,13 +71,18 @@ public:
 
 	bool onKeyUpPressing; //thong bao aladdin dang nhin len tren
 	bool onKeyDownPressing; //thong bao aladdin dang nhin xuong duoi
-	bool collisionItem, collisionFeddler;
+	bool collisionItem, collisionSpring, collisionRevitalization, collisionFeddler;
 	bool collisionObjectMap;
 	bool collisionStarWeapon, collisionFireWeapon;
+	bool allowTranslateScene;
 
 	std::vector<MapObject*> mListApplePlayer; //apple cua player dang so huu
 	std::vector<MapObject*> mListAppleFly; //apple da duoc player nem di
 	std::vector<MapObject*> mListAppleEffect; //hieu ung cua apple truoc khi bi huy
+
+	int mScorePlayer;
+	int mRubyPlayer; //ruby cua player dang so huu
+	int mLifePlayer; //life cua player dang so huu
 
 	MapObject *apple;
 	MapObject *appleEffect;
@@ -84,6 +90,20 @@ public:
 	PlayerState::StateName mCurrentState, mPreCurrentState;
 
 	GameMap *mMap;
+
+	Animation	*BloodInfo,
+				*AppleInfo,
+				*RubyInfo,
+				*LifeInfo;
+	D3DXVECTOR3 BloodInfoPos,
+				AppleInfoPos,
+				RubyInfoPos,
+				LifeInfoPos;
+
+	Text	*Score,
+			*Apple,
+			*Ruby,
+			*Life;
 protected:
     Camera      *mCamera;
 

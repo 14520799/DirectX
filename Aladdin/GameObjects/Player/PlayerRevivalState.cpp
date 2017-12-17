@@ -18,7 +18,7 @@ void PlayerRevivalState::Update(float dt)
 {
 	timeDelayState += dt;
 	if (timeDelayState > 1.5f)
-		this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
+		this->mPlayerData->player->InitPlayer();
 }
 
 PlayerState::StateName PlayerRevivalState::GetState()

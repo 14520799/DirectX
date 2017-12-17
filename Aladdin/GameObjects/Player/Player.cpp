@@ -29,6 +29,8 @@
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 #include "../../GameObjects/MapObjects/Weapons/AppleWeaponEffect.h"
+#include "../../GameObjects/MapObjects/Weapons/AppleWeaponEffectBoss.h"
+#include "../../GameComponents/Sound.h"
 
 Player::Player()
 {
@@ -37,7 +39,22 @@ Player::Player()
 	mAnimationFalling = new Animation("Resources/Aladdin/Falling/Falling.png", 1, 1, 1, 0.0f);
 	mAnimationSitting = new Animation("Resources/Aladdin/Sitting/Sitting.png", 1, 1, 1, 0.0f);
 	mAnimationVerticalClimbingDefault = new Animation("Resources/Aladdin/Climbing/VerticalClimbing/VerticalClimbingDefault.png", 1, 1, 1, 0.0f);
-	mAnimationDeath = new Animation("Resources/Aladdin/Death/Death.png", 13, 1, 13, 0.1f);
+
+	AppleInfo = new Animation("Resources/AladdinInfo/AppleInfo.png", 1, 1, 1, 0.0f);
+	AppleInfoPos = D3DXVECTOR3(GameGlobal::GetWidth() / 2 - 30, GameGlobal::GetHeight() / 2 - 30, 0);
+	RubyInfo = new Animation("Resources/AladdinInfo/RubyInfo.png", 1, 1, 1, 0.0f);
+	RubyInfoPos = D3DXVECTOR3(GameGlobal::GetWidth() / 2 - 80, GameGlobal::GetHeight() / 2 - 30, 0);
+	LifeInfo = new Animation("Resources/AladdinInfo/LifeInfo.png", 1, 1, 1, 0.0f);
+	LifeInfoPos = D3DXVECTOR3(40, GameGlobal::GetHeight() / 2 - 30, 0);
+
+	mLifePlayer = 3;
+	mScorePlayer = 0;
+	mRubyPlayer = 0;
+
+	Score = new Text(L"0", 100, 100, false, D3DCOLOR_XRGB(202, 229, 232));
+	Apple = new Text(L"0", 20, 20, false, D3DCOLOR_XRGB(202, 229, 232));
+	Ruby = new Text(L"0", 20, 20, false, D3DCOLOR_XRGB(202, 229, 232));
+	Life = new Text(L"0", 20, 20, false, D3DCOLOR_XRGB(202, 229, 232));
 
 	this->Tag = Entity::EntityTypes::Aladdin;
 	this->CurrentMoveStairs = Entity::EntityCurrentMoveStairs::CurrentGround;
@@ -54,15 +71,72 @@ Player::~Player()
 
 void Player::Update(float dt)
 {
-	//xu ly player bi mat mau va chuyen sang state bi thuong
-	if (this->preBloodOfEntity > this->bloodOfEntity)
+	if (this->mCurrentState == PlayerState::Revival || this->mCurrentState == PlayerState::Death)
 	{
-		//this->SetState(new PlayerDeathState(this->mPlayerData));
+		mCurrentAnimation->Update(dt);
+		if (this->mPlayerData->state)
+		{
+			this->mPlayerData->state->Update(dt);
+			return;
+		}
+	}
+
+	//xu ly player bi mat mau va chuyen sang state bi thuong
+	if (this->preBloodOfEntity != this->bloodOfEntity)
+	{
+		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/AladdinHurt.wav", "AladdinHurt");
+		Sound::getInstance()->play("AladdinHurt", false, 1);
 		this->preBloodOfEntity = this->bloodOfEntity;
 		allowImunity = true;
+		switch (bloodOfEntity)
+		{
+		case 9:
+			delete BloodInfo;
+			BloodInfo = new Animation("Resources/AladdinInfo/BloodInfo_9.png", 4, 1, 4, 0.1f);
+			break;
+		case 8:
+			delete BloodInfo;
+			BloodInfo = new Animation("Resources/AladdinInfo/BloodInfo_8.png", 4, 1, 4, 0.1f);
+			break;
+		case 7:
+			delete BloodInfo;
+			BloodInfo = new Animation("Resources/AladdinInfo/BloodInfo_7.png", 4, 1, 4, 0.1f);
+			break;
+		case 6:
+			delete BloodInfo;
+			BloodInfo = new Animation("Resources/AladdinInfo/BloodInfo_6.png", 4, 1, 4, 0.1f);
+			break;
+		case 5:
+			delete BloodInfo;
+			BloodInfo = new Animation("Resources/AladdinInfo/BloodInfo_5.png", 4, 1, 4, 0.1f);
+			break;
+		case 4:
+			delete BloodInfo;
+			BloodInfo = new Animation("Resources/AladdinInfo/BloodInfo_4.png", 4, 1, 4, 0.1f);
+			break;
+		case 3:
+			delete BloodInfo;
+			BloodInfo = new Animation("Resources/AladdinInfo/BloodInfo_3.png", 4, 1, 4, 0.1f);
+			break;
+		case 2:
+			delete BloodInfo;
+			BloodInfo = new Animation("Resources/AladdinInfo/BloodInfo_2.png", 4, 1, 4, 0.1f);
+			break;
+		case 1:
+			delete BloodInfo;
+			BloodInfo = new Animation("Resources/AladdinInfo/BloodInfo_1.png", 4, 1, 4, 0.1f);
+			break;
+		case 0:
+			delete BloodInfo;
+			BloodInfo = new Animation("Resources/AladdinInfo/BloodInfo_0.png", 4, 1, 4, 0.1f);
+			break;
+		default:
+			break;
+		}
 	}
 
 	//animation cua player chay
+	BloodInfo->Update(dt);
 	mCurrentAnimation->Update(dt);
 
 	//them toc do cho player tuy vao state
@@ -91,6 +165,18 @@ void Player::Update(float dt)
 					break;
 				i--;
 			}
+			else if (mListAppleFly.at(i)->collisionWithBoss)
+			{
+				//them hieu ung apple effect vao list tai vi tri qua tao trung oroku
+				appleEffect = new AppleWeaponEffectBoss(mListAppleFly.at(i)->GetPosition());
+				mListAppleEffect.push_back(appleEffect);
+				delete mListAppleFly.at(i);
+				mListAppleFly.at(i) = nullptr;
+				mListAppleFly.erase(mListAppleFly.begin() + i);
+				if (mListAppleFly.size() == 0)
+					break;
+				i--;
+			}
 		}
 	}
 
@@ -99,7 +185,7 @@ void Player::Update(float dt)
 	{
 		mListAppleEffect.at(i)->Update(dt);
 		mListAppleEffect.at(i)->timeDelayWeaponEffect += dt;
-		if (mListAppleEffect.at(i)->timeDelayWeaponEffect > 0.25f)
+		if (mListAppleEffect.at(i)->timeDelayWeaponEffect > 0.5f)
 		{
 			delete mListAppleEffect.at(i);
 			mListAppleEffect.at(i) = nullptr;
@@ -223,7 +309,7 @@ void Player::Update(float dt)
 	{
 		timeImunity += dt;
 
-		if (timeImunity > 3.0f)
+		if (timeImunity > 2.0f)
 		{
 			allowImunity = false;
 			timeImunity = 0;
@@ -231,19 +317,32 @@ void Player::Update(float dt)
 	}
 
 	//hoi sinh player
-	if (bloodOfEntity <= 0 && timeImunity > 1.0f)
+	if (bloodOfEntity < 0 && mLifePlayer > 0)
 	{
-		this->InitPlayer();
-		this->SetState(new PlayerRevivalState(this->mPlayerData));
+		mLifePlayer--;
+		this->SetState(new PlayerDeathState(this->mPlayerData));
 	}
+
+	//ve text
+	Score->SetString(mScorePlayer);
+	Ruby->SetString(mRubyPlayer);
+	Life->SetString(mLifePlayer);
+	Apple->SetString(mListApplePlayer.size());
+
 }
 
 void Player::InitPlayer()
 {
-	this->SetPosition(this->mOriginPosition);
+	if(collisionRevitalization)
+		this->SetPosition(this->mRevivalPosition);
+	else
+		this->SetPosition(this->mOriginPosition);
 
 	this->bloodOfEntity = Define::ALADDIN_BLOOD;
 	this->preBloodOfEntity = this->bloodOfEntity;
+	delete BloodInfo;
+	BloodInfo = new Animation("Resources/AladdinInfo/BloodInfo_10.png", 4, 1, 4, 0.1f);
+	BloodInfoPos = D3DXVECTOR3(90, 20, 0);
 	this->vx = 0;
 	this->vy = 0;
 	this->SetState(new PlayerDefaultState(this->mPlayerData));
@@ -262,13 +361,25 @@ void Player::SetAppleFlyLeft(std::vector<MapObject*> &listAppleFly, MapObject *i
 	if (item->mSettingRightItem)
 	{
 		item->AddVx(Define::ITEM_SPEED_X);
-		item->AddVy(Define::ITEM_SPEED_Y);
+		if (item->GetVy() <= Define::ITEM_MIN_VELOCITY || item->DirectionDown)
+		{
+			item->AddVy(Define::ITEM_SPEED_Y);
+			item->DirectionDown = true;
+		}
+		else if(item->GetVy() > Define::ITEM_MIN_VELOCITY)
+			item->AddVy(-Define::ITEM_SPEED_Y);
 		item->Entity::Update(dt);
 		return;
 	}
 	item->mSettingLeftItem = true;
 	item->AddVx(-Define::ITEM_SPEED_X);
-	item->AddVy(Define::ITEM_SPEED_Y);
+	if (item->GetVy() <= Define::ITEM_MIN_VELOCITY || item->DirectionDown)
+	{
+		item->AddVy(Define::ITEM_SPEED_Y);
+		item->DirectionDown = true;
+	}
+	else if (item->GetVy() > Define::ITEM_MIN_VELOCITY)
+		item->AddVy(-Define::ITEM_SPEED_Y);
 	item->Entity::Update(dt);
 }
 
@@ -278,13 +389,25 @@ void Player::SetAppleFlyRight(std::vector<MapObject*> &listAppleFly, MapObject *
 	if (item->mSettingLeftItem)
 	{
 		item->AddVx(-Define::ITEM_SPEED_X);
-		item->AddVy(Define::ITEM_SPEED_Y);
+		if (item->GetVy() <= Define::ITEM_MIN_VELOCITY || item->DirectionDown)
+		{
+			item->AddVy(Define::ITEM_SPEED_Y);
+			item->DirectionDown = true;
+		}
+		else if (item->GetVy() > Define::ITEM_MIN_VELOCITY)
+			item->AddVy(-Define::ITEM_SPEED_Y);
 		item->Entity::Update(dt);
 		return;
 	}
 	item->mSettingRightItem = true;
 	item->AddVx(Define::ITEM_SPEED_X);
-	item->AddVy(Define::ITEM_SPEED_Y);
+	if (item->GetVy() <= Define::ITEM_MIN_VELOCITY || item->DirectionDown)
+	{
+		item->AddVy(Define::ITEM_SPEED_Y);
+		item->DirectionDown = true;
+	}
+	else if (item->GetVy() > Define::ITEM_MIN_VELOCITY)
+		item->AddVy(-Define::ITEM_SPEED_Y);
 	item->Entity::Update(dt);
 }
 
@@ -310,7 +433,7 @@ void Player::OnKeyPressed(int key)
 			if (mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::Sitting || mCurrentState == PlayerState::Default ||
 				mCurrentState == PlayerState::StandingAttack || mCurrentState == PlayerState::SittingAttack ||
 				mCurrentState == PlayerState::StandingThrowApple || mCurrentState == PlayerState::SittingThrowApple ||
-				mCurrentState == PlayerState::Pushing || mCurrentState == PlayerState::Death ||
+				mCurrentState == PlayerState::Pushing ||
 				mCurrentState == PlayerState::Falling || mCurrentState == PlayerState::FallingStop ||
 				mCurrentState == PlayerState::HorizontalClimbing || mCurrentState == PlayerState::HorizontalClimbingDefault)
 			{
@@ -331,7 +454,7 @@ void Player::OnKeyPressed(int key)
 	{
 		if (mCurrentState == PlayerState::Running || mCurrentState == PlayerState::RunningStop || mCurrentState == PlayerState::Default ||
 			mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::StandingAttack || mCurrentState == PlayerState::StandingThrowApple ||
-			mCurrentState == PlayerState::Pushing || mCurrentState == PlayerState::Death)
+			mCurrentState == PlayerState::Pushing)
 		{
 			this->SetState(new PlayerSittingState(this->mPlayerData));
 		}
@@ -356,9 +479,10 @@ void Player::OnKeyPressed(int key)
 	}
 	else if (key == 0x41) //tan cong bang phim A
 	{
+		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/LowSword.wav", "LowSword");
+		Sound::getInstance()->play("LowSword", false, 1);
 		if (mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::Running || mCurrentState == PlayerState::RunningStop ||
-			mCurrentState == PlayerState::Default || mCurrentState == PlayerState::StandingThrowApple || mCurrentState == PlayerState::Death ||
-			mCurrentState == PlayerState::Pushing)
+			mCurrentState == PlayerState::Default || mCurrentState == PlayerState::StandingThrowApple || mCurrentState == PlayerState::Pushing)
 		{
 			this->SetState(new PlayerStandingAttackState(this->mPlayerData));
 		}
@@ -385,7 +509,7 @@ void Player::OnKeyPressed(int key)
 		{
 			apple = mListApplePlayer.at(mListApplePlayer.size() - 1);
 
-			if (mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::StandingAttack || mCurrentState == PlayerState::Death ||
+			if (mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::StandingAttack ||
 				mCurrentState == PlayerState::Default || mCurrentState == PlayerState::Running || mCurrentState == PlayerState::RunningStop)
 			{
 				//set vi tri bay cua qua tao
@@ -428,7 +552,7 @@ void Player::OnKeyPressed(int key)
 				mListApplePlayer.pop_back(); //lay qua tao ra khoi listapple cua player sau khi nem ra ngoai
 			}
 
-			apple->SetVy(Define::ITEM_MIN_VELOCITY);
+			apple->SetVy(0);
 			apple->Tag = Entity::EntityTypes::AppleWeapon;
 		}
 	}
@@ -515,6 +639,7 @@ void Player::Draw(D3DXVECTOR3 position, RECT sourceRect, D3DXVECTOR2 scale, D3DX
 				mListAppleEffect.at(i)->Draw(D3DXVECTOR3(mListAppleEffect.at(i)->posX, mListAppleEffect.at(i)->posY, 0), sourceRect, scale, trans, angle, rotationCenter, colorKey);
 			}
 		}
+
 	}
 	else
 	{
@@ -534,9 +659,12 @@ void Player::Draw(D3DXVECTOR3 position, RECT sourceRect, D3DXVECTOR2 scale, D3DX
 				mListAppleEffect.at(i)->Draw(D3DXVECTOR3(mListAppleEffect.at(i)->posX, mListAppleEffect.at(i)->posY, 0));
 			}
 		}
+
+		BloodInfo->Draw(BloodInfoPos);
+		AppleInfo->Draw(AppleInfoPos);
+		RubyInfo->Draw(RubyInfoPos);
+		LifeInfo->Draw(LifeInfoPos);
 	}
-
-
 }
 
 void Player::SetState(PlayerState *newState)
@@ -557,10 +685,8 @@ void Player::SetState(PlayerState *newState)
 	mPreCurrentState = mCurrentState;
 	mCurrentState = newState->GetState();
 
-	if (mCurrentState == PlayerState::Revival)
-		this->posY -= 110;
-	else if (mPreCurrentAnimation != nullptr && mPreCurrentState != PlayerState::HorizontalClimbingDefault)
-		this->posY += (mPreCurrentAnimation->GetHeight() - mCurrentAnimation->GetHeight()) / 2.0f;
+	if (mPreCurrentAnimation != nullptr && mPreCurrentState != PlayerState::HorizontalClimbingDefault)
+		this->posY += (mPreCurrentAnimation->GetHeight() - mCurrentAnimation->GetHeight()) / 2;
 
 	if (mCurrentState == PlayerState::Default)
 		allowDelayState = true;
@@ -568,12 +694,68 @@ void Player::SetState(PlayerState *newState)
 
 void Player::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions size)
 {
+	if (impactor->Tag == Entity::EntityTypes::TranslateScene)
+		this->allowTranslateScene = true;
+
+#pragma region TANG SCORE
+	if (impactor->Id == Entity::EntityId::AppleItem)
+	{
+		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/AppleCollect.wav", "AppleCollect");
+		Sound::getInstance()->play("AppleCollect", false, 1);
+		mScorePlayer += 15;
+	}
+	else if (impactor->Id == Entity::EntityId::Ruby)
+	{
+		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/AppleCollect.wav", "AppleCollect");
+		Sound::getInstance()->play("AppleCollect", false, 1);
+		mScorePlayer += 25;
+		mRubyPlayer++;
+	}
+	else if (impactor->Id == Entity::EntityId::HeadGenie)
+	{
+		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/Wow!.wav", "Wow!");
+		Sound::getInstance()->play("Wow!", false, 1);
+		mScorePlayer += 200;
+	}
+	else if (impactor->Id == Entity::EntityId::Heart)
+	{
+		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/Yeah.wav", "Yeah");
+		Sound::getInstance()->play("Yeah", false, 1);
+		mScorePlayer += 200;
+		bloodOfEntity++;
+	}
+	else if (impactor->Id == Entity::EntityId::Life)
+	{
+		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/GemCollect.wav", "GemCollect");
+		Sound::getInstance()->play("GemCollect", false, 1);
+		mScorePlayer += 100;
+		mLifePlayer++;
+	}
+	else if (impactor->Id == Entity::EntityId::Lamp)
+	{
+		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/CloudPoof.wav", "CloudPoof");
+		Sound::getInstance()->play("CloudPoof", false, 1);
+		mScorePlayer += 50;
+	}
+	else if (impactor->Id == Entity::EntityId::Revitalization_Default)
+		mScorePlayer += 125;
+	else if (impactor->Id == Entity::EntityId::Feddler_Standing)
+	{
+		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/PeddlerShop.wav", "PeddlerShop");
+		Sound::getInstance()->play("PeddlerShop", false, 1);
+		mScorePlayer += 500;
+	}
+#pragma endregion
+
 	if (impactor->Tag == Entity::EntityTypes::Fire)
 	{
+		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/FireFromCoal.wav", "FireFromCoal");
+		Sound::getInstance()->play("FireFromCoal", false, 1);
 		this->mPlayerData->player->effectFire = true;
 		this->mPlayerData->player->mOriginPositionItem = D3DXVECTOR3(
 			this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y - 55, 0);
 	}
+
 	if (impactor->Tag == Entity::EntityTypes::StarWeapon)
 	{
 		this->mPlayerData->player->collisionStarWeapon = true;
@@ -593,29 +775,29 @@ RECT Player::GetBound()
 	if (mCurrentState == PlayerState::StandingAttack || mCurrentState == PlayerState::ClimbingAttack ||
 		mCurrentState == PlayerState::JumpingAttack || mCurrentState == PlayerState::SittingAttack)
 	{
-		rect.left = this->posX - mCurrentAnimation->GetWidth() / 10;
+		rect.left = this->posX - mCurrentAnimation->GetWidth() / 4;
 		rect.right = this->posX + mCurrentAnimation->GetWidth() / 2;
 		rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;
 		rect.bottom = this->posY + mCurrentAnimation->GetHeight() / 2;
 	}
 	else if (mCurrentState == PlayerState::Sitting || mCurrentState == PlayerState::SittingThrowApple)
 	{
-		rect.left = this->posX - mCurrentAnimation->GetWidth() / 2;
+		rect.left = this->posX - mCurrentAnimation->GetWidth() / 4;
 		rect.right = this->posX + mCurrentAnimation->GetWidth() / 10;
 		rect.top = this->posY + mCurrentAnimation->GetHeight() / 4;
 		rect.bottom = this->posY + mCurrentAnimation->GetHeight() / 2;
 	}
 	else if (mCurrentState == PlayerState::RunningJump || mCurrentState == PlayerState::StandingJump || mCurrentState == PlayerState::JumpingThrowApple)
 	{
-		rect.left = this->posX - mCurrentAnimation->GetWidth() / 10;
-		rect.right = this->posX + mCurrentAnimation->GetWidth() / 10;
+		rect.left = this->posX - mCurrentAnimation->GetWidth() / 4;
+		rect.right = this->posX + mCurrentAnimation->GetWidth() / 4;
 		rect.top = this->posY - mCurrentAnimation->GetHeight() / 4;
 		rect.bottom = this->posY + mCurrentAnimation->GetHeight() / 2;
 	}
 	else
 	{
-		rect.left = this->posX - mCurrentAnimation->GetWidth() / 10;
-		rect.right = this->posX + mCurrentAnimation->GetWidth() / 10;
+		rect.left = this->posX - mCurrentAnimation->GetWidth() / 4;
+		rect.right = this->posX + mCurrentAnimation->GetWidth() / 4;
 		rect.top = this->posY - mCurrentAnimation->GetHeight() / 2;;
 		rect.bottom = this->posY + mCurrentAnimation->GetHeight() / 2;
 	}
@@ -656,7 +838,7 @@ void Player::changeAnimation(PlayerState::StateName state)
 
 	case PlayerState::Somersault:
 		delete mAnimationSomersault;
-		mAnimationSomersault = new Animation("Resources/Aladdin/Jumping/Somersault.png", 8, 1, 8, 0.25f);
+		mAnimationSomersault = new Animation("Resources/Aladdin/Jumping/Somersault.png", 8, 1, 8, 0.1f);
 		mCurrentAnimation = mAnimationSomersault;
 		break;
 
@@ -779,6 +961,8 @@ void Player::changeAnimation(PlayerState::StateName state)
 		break;
 
 	case PlayerState::Death:
+		delete mAnimationDeath;
+		mAnimationDeath = new Animation("Resources/Aladdin/Death/Death.png", 15, 1, 15, 0.2f);
 		mCurrentAnimation = mAnimationDeath;
 		break;
 

@@ -33,5 +33,5 @@ int ItemEffect_2::Column()
 
 float ItemEffect_2::SecondPerFrame()
 {
-	return 0.2f;
+	return 0.05f;
 }

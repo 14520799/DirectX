@@ -33,5 +33,5 @@ int AppleWeaponEffect::Column()
 
 float AppleWeaponEffect::SecondPerFrame()
 {
-	return 0.04f;
+	return 0.1f;
 }

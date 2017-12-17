@@ -1,4 +1,6 @@
 #include "StrongGuardStandingState.h"
+#include "../../../GameComponents/Sound.h"
+#include "../../../GameComponents/Sound.h"
 
 StrongGuardStandingState::StrongGuardStandingState(OrokuData *orokuData)
 {
@@ -20,8 +22,10 @@ void StrongGuardStandingState::Update(float dt)
 {
 	timeDelay += dt;
 
-	if (timeDelay > 0.8f)
+	if (timeDelay > 0.6f)
 	{
+		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/GuardBeckon.wav", "GuardBeckon");
+		Sound::getInstance()->play("GuardBeckon", false, 1);
 		this->mOrokuData->strongGuard->allowDefault = false;
 	}
 }

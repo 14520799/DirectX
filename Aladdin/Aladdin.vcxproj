@@ -89,12 +89,15 @@
     <ClCompile Include="GameComponents\Camera.cpp" />
     <ClCompile Include="GameComponents\Game.cpp" />
     <ClCompile Include="GameComponents\GameCollision.cpp" />
+    <ClCompile Include="GameComponents\GameDebugDraw.cpp" />
     <ClCompile Include="GameComponents\GameGlobal.cpp" />
     <ClCompile Include="GameComponents\GameMap.cpp" />
     <ClCompile Include="GameComponents\GameTime.cpp" />
     <ClCompile Include="GameComponents\QuadTree.cpp" />
     <ClCompile Include="GameComponents\Scene.cpp" />
+    <ClCompile Include="GameComponents\Sound.cpp" />
     <ClCompile Include="GameComponents\Sprite.cpp" />
+    <ClCompile Include="GameComponents\Text.cpp" />
     <ClCompile Include="GameControllers\SceneManager.cpp" />
     <ClCompile Include="GameObjects\Entity.cpp" />
     <ClCompile Include="GameObjects\MapObjects\Items\FeddlerMagic.cpp" />
@@ -115,10 +118,17 @@
     <ClCompile Include="GameObjects\MapObjects\Items\RevitalizationAction.cpp" />
     <ClCompile Include="GameObjects\MapObjects\Items\RevitalizationActionStop.cpp" />
     <ClCompile Include="GameObjects\MapObjects\Items\RevitalizationDefault.cpp" />
+    <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Bin.cpp" />
+    <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Cloud1_Scene1.cpp" />
+    <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Cloud1_Scene2.cpp" />
+    <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Cloud2_Scene1.cpp" />
+    <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Cloud2_Scene2.cpp" />
     <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Spring.cpp" />
+    <ClCompile Include="GameObjects\MapObjects\ObjectsMap\SpringAction.cpp" />
     <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Stairs.cpp" />
     <ClCompile Include="GameObjects\MapObjects\Weapons\AppleWeaponEffect.cpp" />
     <ClCompile Include="GameObjects\MapObjects\Weapons\AppleWeapon.cpp" />
+    <ClCompile Include="GameObjects\MapObjects\Weapons\AppleWeaponEffectBoss.cpp" />
     <ClCompile Include="GameObjects\MapObjects\Weapons\FireEffect.cpp" />
     <ClCompile Include="GameObjects\MapObjects\Weapons\FireWeapon.cpp" />
     <ClCompile Include="GameObjects\MapObjects\Weapons\PotWeapon.cpp" />
@@ -126,6 +136,7 @@
     <ClCompile Include="GameObjects\MapObjects\Weapons\StarWeapon.cpp" />
     <ClCompile Include="GameObjects\MapObjects\Weapons\StarWeaponEffect.cpp" />
     <ClCompile Include="GameObjects\MapObjects\Weapons\SwordWeapon.cpp" />
+    <ClCompile Include="GameObjects\MapObjects\Weapons\SwordWeaponEffect.cpp" />
     <ClCompile Include="GameObjects\Orokus\BossJafar\Jafar.cpp" />
     <ClCompile Include="GameObjects\Orokus\BossJafar\JafarDefaultState.cpp" />
     <ClCompile Include="GameObjects\Orokus\BossJafar\JafarSnakeAttackState.cpp" />
@@ -215,18 +226,22 @@
     <ClCompile Include="MapReader\TmxTileset.cpp" />
     <ClCompile Include="MapReader\TmxUtil.cpp" />
     <ClCompile Include="Scenes\Scene1.cpp" />
+    <ClCompile Include="Scenes\Scene2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameComponents\Animation.h" />
     <ClInclude Include="GameComponents\Camera.h" />
     <ClInclude Include="GameComponents\Game.h" />
     <ClInclude Include="GameComponents\GameCollision.h" />
+    <ClInclude Include="GameComponents\GameDebugDraw.h" />
     <ClInclude Include="GameComponents\GameGlobal.h" />
     <ClInclude Include="GameComponents\GameMap.h" />
     <ClInclude Include="GameComponents\GameTime.h" />
     <ClInclude Include="GameComponents\QuadTree.h" />
     <ClInclude Include="GameComponents\Scene.h" />
+    <ClInclude Include="GameComponents\Sound.h" />
     <ClInclude Include="GameComponents\Sprite.h" />
+    <ClInclude Include="GameComponents\Text.h" />
     <ClInclude Include="GameControllers\SceneManager.h" />
     <ClInclude Include="GameDefines\GameDefine.h" />
     <ClInclude Include="GameObjects\Entity.h" />
@@ -248,10 +263,17 @@
     <ClInclude Include="GameObjects\MapObjects\Items\RevitalizationAction.h" />
     <ClInclude Include="GameObjects\MapObjects\Items\RevitalizationActionStop.h" />
     <ClInclude Include="GameObjects\MapObjects\Items\RevitalizationDefault.h" />
+    <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Bin.h" />
+    <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Cloud1_Scene1.h" />
+    <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Cloud1_Scene2.h" />
+    <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Cloud2_Scene1.h" />
+    <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Cloud2_Scene2.h" />
     <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Spring.h" />
+    <ClInclude Include="GameObjects\MapObjects\ObjectsMap\SpringAction.h" />
     <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Stairs.h" />
     <ClInclude Include="GameObjects\MapObjects\Weapons\AppleWeaponEffect.h" />
     <ClInclude Include="GameObjects\MapObjects\Weapons\AppleWeapon.h" />
+    <ClInclude Include="GameObjects\MapObjects\Weapons\AppleWeaponEffectBoss.h" />
     <ClInclude Include="GameObjects\MapObjects\Weapons\FireEffect.h" />
     <ClInclude Include="GameObjects\MapObjects\Weapons\FireWeapon.h" />
     <ClInclude Include="GameObjects\MapObjects\Weapons\PotWeapon.h" />
@@ -259,6 +281,7 @@
     <ClInclude Include="GameObjects\MapObjects\Weapons\StarWeapon.h" />
     <ClInclude Include="GameObjects\MapObjects\Weapons\StarWeaponEffect.h" />
     <ClInclude Include="GameObjects\MapObjects\Weapons\SwordWeapon.h" />
+    <ClInclude Include="GameObjects\MapObjects\Weapons\SwordWeaponEffect.h" />
     <ClInclude Include="GameObjects\Orokus\BossJafar\Jafar.h" />
     <ClInclude Include="GameObjects\Orokus\BossJafar\JafarDefaultState.h" />
     <ClInclude Include="GameObjects\Orokus\BossJafar\JafarSnakeAttackState.h" />
@@ -350,6 +373,7 @@
     <ClInclude Include="MapReader\zconf.h" />
     <ClInclude Include="MapReader\zlib.h" />
     <ClInclude Include="Scenes\Scene1.h" />
+    <ClInclude Include="Scenes\Scene2.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MapReader\Tmx.h.in" />

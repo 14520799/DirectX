@@ -22,13 +22,16 @@ void CivilianWindowDefaultState::Update(float dt)
 {
 	timeDelay += dt;
 
-	if (timeDelay > 0.5f)
+	if (timeDelay > 0.8f)
 	{
 		this->mOrokuData->civilianWindow->allowDefault = false;
 	}
 
 	if (this->mOrokuData->civilianWindow->allowDrawWeapon)
-		this->mOrokuData->civilianWindow->weapon->AddVy(Define::ITEM_SPEED_Y * 5);
+	{
+		this->mOrokuData->civilianWindow->weapon->AddVx(Define::ITEM_SPEED_X / 5);
+		this->mOrokuData->civilianWindow->weapon->AddVy(Define::ITEM_SPEED_Y * 2);
+	}
 }
 
 OrokuState::StateName CivilianWindowDefaultState::GetState()

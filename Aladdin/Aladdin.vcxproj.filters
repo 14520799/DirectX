@@ -457,6 +457,42 @@
     <ClCompile Include="GameObjects\MapObjects\Weapons\StarWeaponEffect.cpp">
       <Filter>Framework\GameObjects\MapObjects\Weapons</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\Weapons\AppleWeaponEffectBoss.cpp">
+      <Filter>Framework\GameObjects\MapObjects\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="GameComponents\Sound.cpp">
+      <Filter>Framework\GameComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="GameComponents\Text.cpp">
+      <Filter>Framework\GameComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="GameComponents\GameDebugDraw.cpp">
+      <Filter>Framework\GameComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\ObjectsMap\SpringAction.cpp">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\Weapons\SwordWeaponEffect.cpp">
+      <Filter>Framework\GameObjects\MapObjects\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Cloud1_Scene1.cpp">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Cloud2_Scene1.cpp">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\Scene2.cpp">
+      <Filter>Framework\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Cloud2_Scene2.cpp">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Cloud1_Scene2.cpp">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Bin.cpp">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameComponents\Game.h">
@@ -857,6 +893,42 @@
     </ClInclude>
     <ClInclude Include="GameObjects\MapObjects\Weapons\StarWeaponEffect.h">
       <Filter>Framework\GameObjects\MapObjects\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\Weapons\AppleWeaponEffectBoss.h">
+      <Filter>Framework\GameObjects\MapObjects\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="GameComponents\Sound.h">
+      <Filter>Framework\GameComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="GameComponents\Text.h">
+      <Filter>Framework\GameComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="GameComponents\GameDebugDraw.h">
+      <Filter>Framework\GameComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\ObjectsMap\SpringAction.h">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\Weapons\SwordWeaponEffect.h">
+      <Filter>Framework\GameObjects\MapObjects\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Cloud1_Scene1.h">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Cloud2_Scene1.h">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Scene2.h">
+      <Filter>Framework\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Cloud2_Scene2.h">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Cloud1_Scene2.h">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Bin.h">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

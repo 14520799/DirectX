@@ -32,7 +32,7 @@ int PotWeapon::Column()
 
 float PotWeapon::SecondPerFrame()
 {
-	return 0.01f;
+	return 0.02f;
 }
 
 void PotWeapon::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)

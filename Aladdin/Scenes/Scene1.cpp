@@ -1,4 +1,7 @@
 #include "Scene1.h"
+#include "Scene2.h"
+#include "../GameObjects/MapObjects/Weapons/AppleWeapon.h"
+#include "../GameControllers/SceneManager.h"
 #include "../GameDefines/GameDefine.h"
 
 Scene1::Scene1()
@@ -6,12 +9,23 @@ Scene1::Scene1()
 	LoadContent();
 }
 
+Scene1::~Scene1()
+{
+	delete mMap;
+}
+
 void Scene1::LoadContent()
 {
 	//set mau backcolor cho scene o day la mau xanh
-	mBackColor = 0x54acd2;
+	mBackColor = D3DCOLOR_XRGB(0, 0, 0);
+
+	//Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/man1.wav", "man1");
+	//Sound::getInstance()->play("man1", true, 0);
+
+	//mDebugDraw = new GameDebugDraw();
 
 	mMap = new GameMap("Resources/Scene_1/Scene_1.tmx");
+	mMap->LoadMapCloudsScene1("Resources/Scene_1/CloudsPosition.txt");
 	mMap->LoadMapItems("Resources/Scene_1/ItemsPosition.txt");
 	mMap->LoadMapOrokus("Resources/Scene_1/OrokusPosition.txt");
 
@@ -28,24 +42,52 @@ void Scene1::LoadContent()
 	mPlayer->SetMap(mMap);
 
 	mMap->SetPlayer(mPlayer);
+
+	for (size_t i = 0; i < 10; i++)
+	{
+		MapObject *apple = new AppleWeapon();
+		mPlayer->mListApplePlayer.push_back(apple);
+	}
 }
 
 void Scene1::Update(float dt)
 {
-	checkCollision();
+	if (mPlayer->allowTranslateScene)
+	{
+		SceneManager::GetInstance()->ReplaceScene(new Scene2(mPlayer, mCamera));
+		return;
+	}
 
-	mMap->Update(dt);
+	if (mPlayer->mCurrentState == PlayerState::Revival || mPlayer->mCurrentState == PlayerState::Death)
+	{
+		mPlayer->Update(dt);
+	}
+	else
+	{
+		checkCollision();
 
-	mPlayer->HandleKeyboard(keys);
+		mMap->Update(dt);
 
-	mPlayer->Update(dt);
+		mPlayer->HandleKeyboard(keys);
 
-	CheckCameraAndWorldMap();
+		mPlayer->Update(dt);
+
+		CheckCameraAndWorldMap();
+	}
 }
 
 void Scene1::Draw()
 {
-	mMap->Draw();
+	if (mPlayer->mCurrentState == PlayerState::Revival || mPlayer->mCurrentState == PlayerState::Death)
+		mPlayer->Draw(D3DXVECTOR3(GameGlobal::GetWidth() / 2, GameGlobal::GetHeight() / 2, 0));
+	else
+	{
+		mMap->Draw();
+
+		//DrawQuadtree(mMap->GetQuadTree());
+
+		//DrawCollidable();
+	}
 }
 
 void Scene1::OnKeyDown(int keyCode)
@@ -106,6 +148,8 @@ void Scene1::CheckCameraAndWorldMap()
 
 void Scene1::checkCollision()
 {
+	//mCollidable.clear();
+
 	/*su dung de kiem tra xem khi nao mario khong dung tren 1 object hoac
 	dung qua sat mep trai hoac phai cua object do thi se chuyen state la falling*/
 	int widthBottomPlayer = 0;
@@ -119,8 +163,8 @@ void Scene1::checkCollision()
 
 	mCameraExpand.left = mCamera->GetBound().left - 100;
 	mCameraExpand.right = mCamera->GetBound().right + 100;
-	mCameraExpand.top = mCamera->GetBound().top - 200;
-	mCameraExpand.bottom = mCamera->GetBound().bottom + 300;
+	mCameraExpand.top = mCamera->GetBound().top - 50;
+	mCameraExpand.bottom = mCamera->GetBound().bottom;
 
 #pragma region --PLAYER--
 	mMap->GetQuadTree()->getEntitiesCollideAble(listCollisionPlayer, mPlayer);
@@ -133,6 +177,8 @@ void Scene1::checkCollision()
 		if (listCollisionPlayer.at(i)->Tag == Entity::EntityTypes::Item &&
 			!GameCollision::RecteAndRect(listCollisionPlayer.at(i)->GetBound(), mCameraExpand).IsCollided)
 			continue;
+
+		//mCollidable.push_back(listCollisionPlayer.at(i));
 
 		Entity::CollisionReturn r = GameCollision::RecteAndRect(mPlayer->GetBound(), listCollisionPlayer.at(i)->GetBound());
 
@@ -209,10 +255,8 @@ void Scene1::checkCollision()
 				Entity::CollisionReturn r = GameCollision::RecteAndRect(child->GetBound(), mPlayer->GetBound());
 				if (r.IsCollided)
 				{
-					//lay phia va cham cua Entity so voi StrongOroku
 					Entity::SideCollisions sideOroku = GameCollision::getSideCollision(child, r);
 
-					//lay phia va cham cua StrongOroku so voi Entity
 					Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(mPlayer, r);
 
 					//goi den ham xu ly collision cua StrongOroku va Entity
@@ -248,6 +292,8 @@ void Scene1::checkCollision()
 					child->collisionWithOroku = false;
 					if (childO->bloodOfEntity <= 0)
 					{
+						mPlayer->allowOrokuEffect = true;
+						mPlayer->mOriginPositionItem = childO->GetPosition();
 						mMap->RemoveOroku(childO);//xoa oroku khoi listoroku trong map
 						if (childO->weapon != nullptr)
 						{
@@ -272,7 +318,9 @@ void Scene1::checkCollision()
 		mMap->GetQuadTree()->getEntitiesCollideAble(listCollisionApple, child);
 		for (size_t i = 0; i < listCollisionApple.size(); i++)
 		{
-			if (listCollisionApple.at(i)->Id == Entity::EntityId::LampAttack)
+			if (listCollisionApple.at(i)->Tag == Entity::EntityTypes::Item ||
+				listCollisionApple.at(i)->Tag == Entity::EntityTypes::FallControl ||
+				listCollisionApple.at(i)->Tag == Entity::EntityTypes::OrokuControl)
 				continue;
 
 			Entity::CollisionReturn r = GameCollision::RecteAndRect(child->GetBound(), listCollisionApple.at(i)->GetBound());
@@ -294,28 +342,69 @@ void Scene1::checkCollision()
 		if (child->Id == Entity::EntityId::Camel)
 			continue;
 
-		if (GameCollision::RecteAndRect(child->GetBound(), mCameraExpand).IsCollided)
+		if (child->Id == Entity::EntityId::CivilianCircus || child->Id == Entity::EntityId::CivilianWindow)
 		{
-			//oroku vs apple
-			for (auto childA : mPlayer->GetListAppleFly())
+			if (GameCollision::RecteAndRect(child->GetBound(), mCameraExpand).IsCollided)
 			{
-				Entity::CollisionReturn R = GameCollision::RecteAndRect(child->GetBound(), childA->GetBound());
+				//oroku vs apple
+				for (auto childA : mPlayer->GetListAppleFly())
+				{
+					Entity::CollisionReturn R = GameCollision::RecteAndRect(child->GetBound(), childA->GetBound());
+					if (R.IsCollided)
+					{
+						//lay phia va cham cua Entity so voi StrongOroku
+						Entity::SideCollisions sideOroku = GameCollision::getSideCollision(child, R);
+
+						//lay phia va cham cua StrongOroku so voi Entity
+						Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(childA, R);
+
+						//goi den ham xu ly collision cua StrongOroku va Entity
+						child->OnCollision(childA, R, sideOroku);
+						childA->OnCollision(child, R, sideImpactor);
+
+						if (childA->collisionWithOroku)
+						{
+							child->bloodOfEntity--;
+							child->collisionAppleWeapon = true;
+							if (child->bloodOfEntity <= 0)
+							{
+								mPlayer->allowOrokuEffect = true;
+								mPlayer->mOriginPositionItem = child->GetPosition();
+								mMap->RemoveOroku(child);//xoa oroku khoi listoroku trong map
+								if (child->weapon != nullptr)
+								{
+									delete child->weapon;
+									child->weapon = nullptr;
+								}
+								delete child;
+								child = nullptr;
+								return;
+							}
+							Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/Guard'sPants.wav", "Guard'sPants");
+							Sound::getInstance()->play("Guard'sPants", false, 1);
+						}
+					}
+				}
+
+				//oroku vs player
+				Entity::CollisionReturn R = GameCollision::RecteAndRect(child->GetBound(), mPlayer->GetBound());
 				if (R.IsCollided)
 				{
-					//lay phia va cham cua Entity so voi StrongOroku
+					//lay phia va cham cua Entity so voi Oroku
 					Entity::SideCollisions sideOroku = GameCollision::getSideCollision(child, R);
 
-					//lay phia va cham cua StrongOroku so voi Entity
-					Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(childA, R);
+					//lay phia va cham cua Oroku so voi Entity
+					Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(mPlayer, R);
 
-					//goi den ham xu ly collision cua StrongOroku va Entity
-					child->OnCollision(childA, R, sideOroku);
-					childA->OnCollision(child, R, sideImpactor);
+					//goi den ham xu ly collision cua Oroku va Entity
+					child->OnCollision(mPlayer, R, sideOroku);
+					mPlayer->OnCollision(child, R, sideImpactor);
 
-					if (childA->collisionWithOroku)
+					if (mPlayer->collisionWithOroku)
 					{
 						child->bloodOfEntity--;
-						child->collisionAppleWeapon = true;
+						child->allowImunity = true;
+						mPlayer->collisionWithOroku = false;
 						if (child->bloodOfEntity <= 0)
 						{
 							mPlayer->allowOrokuEffect = true;
@@ -328,95 +417,233 @@ void Scene1::checkCollision()
 							}
 							delete child;
 							child = nullptr;
-							return;
+							break;
 						}
+						Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/Guard'sPants.wav", "Guard'sPants");
+						Sound::getInstance()->play("Guard'sPants", false, 1);
 					}
 				}
 			}
-
-			//oroku vs player
-			Entity::CollisionReturn R = GameCollision::RecteAndRect(child->GetBound(), mPlayer->GetBound());
-			if (R.IsCollided)
+			
+			//vu khi cua oroku
+			if (child->Id == Entity::EntityId::CivilianCircus)
 			{
-				//lay phia va cham cua Entity so voi StrongOroku
-				Entity::SideCollisions sideOroku = GameCollision::getSideCollision(child, R);
-
-				//lay phia va cham cua StrongOroku so voi Entity
-				Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(mPlayer, R);
-
-				//goi den ham xu ly collision cua StrongOroku va Entity
-				child->OnCollision(mPlayer, R, sideOroku);
-				mPlayer->OnCollision(child, R, sideImpactor);
-
-				if (child->collisionWithPlayer)
+				if (child->weapon != nullptr)
 				{
-					mPlayer->bloodOfEntity--;
-					child->collisionWithPlayer = false;
-				}
-				if (mPlayer->collisionWithOroku)
-				{
-					child->bloodOfEntity--;
-					child->allowImunity = true;
-					mPlayer->collisionWithOroku = false;
-					if (child->bloodOfEntity <= 0)
+					listCollisionWeapon.clear();
+					mMap->GetQuadTree()->getEntitiesCollideAble(listCollisionWeapon, child->weapon);
+					for (size_t i = 0; i < listCollisionWeapon.size(); i++)
 					{
-						mPlayer->allowOrokuEffect = true;
-						mPlayer->mOriginPositionItem = child->GetPosition();
-						mMap->RemoveOroku(child);//xoa oroku khoi listoroku trong map
-						if (child->weapon != nullptr)
+						if (listCollisionWeapon.at(i)->Id == Entity::EntityId::Camel ||
+							listCollisionWeapon.at(i)->Tag == Entity::EntityTypes::Item ||
+							listCollisionWeapon.at(i)->Tag == Entity::EntityTypes::FallControl ||
+							listCollisionWeapon.at(i)->Tag == Entity::EntityTypes::OrokuControl)
+							continue;
+
+						Entity::CollisionReturn r = GameCollision::RecteAndRect(child->weapon->GetBound(), listCollisionWeapon.at(i)->GetBound());
+						if (r.IsCollided)
 						{
-							delete child->weapon;
-							child->weapon = nullptr;
+							Entity::SideCollisions sideOroku = GameCollision::getSideCollision(child->weapon, r);
+							Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(listCollisionWeapon.at(i), r);
+
+							//goi den ham xu ly collision cua Oroku va Entity				
+							child->weapon->OnCollision(listCollisionWeapon.at(i), r, sideOroku);
+							listCollisionWeapon.at(i)->OnCollision(child->weapon, r, sideImpactor);
 						}
-						delete child;
-						child = nullptr;
-						break;
+					}
+
+					Entity::CollisionReturn R = GameCollision::RecteAndRect(child->weapon->GetBound(), mPlayer->GetBound());
+					if (R.IsCollided)
+					{
+						//lay phia va cham cua Weapon so voi Player 
+						Entity::SideCollisions sideWeapon = GameCollision::getSideCollision(child->weapon, R);
+
+						//lay phia va cham cua Player so voi Weapon
+						Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(mPlayer, R);
+
+						//goi den ham xu ly collision cua Weapon va Player
+						child->weapon->OnCollision(mPlayer, R, sideWeapon);
+						mPlayer->OnCollision(child->weapon, R, sideImpactor);
 					}
 				}
 			}
-
-			//oroku voi object
-			listCollisionOrokus.clear();
-			mMap->GetQuadTree()->getEntitiesCollideAble(listCollisionOrokus, child);
-			for (size_t i = 0; i < listCollisionOrokus.size(); i++)
+			else if (child->Id == Entity::EntityId::CivilianWindow)
 			{
-				if (listCollisionOrokus.at(i)->Id == Entity::EntityId::Camel)
-					continue;
-
-				Entity::CollisionReturn r = GameCollision::RecteAndRect(child->GetBound(), listCollisionOrokus.at(i)->GetBound());
-				if (r.IsCollided)
+				if (child->weapon != nullptr)
 				{
-					Entity::SideCollisions sideOroku = GameCollision::getSideCollision(child, r);
-					Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(listCollisionOrokus.at(i), r);
+					if (GameCollision::RecteAndRect(child->weapon->GetBound(), mCameraExpand).IsCollided)
+					{
+						listCollisionWeapon.clear();
+						mMap->GetQuadTree()->getEntitiesCollideAble(listCollisionWeapon, child->weapon);
+						for (size_t i = 0; i < listCollisionWeapon.size(); i++)
+						{
+							if (listCollisionWeapon.at(i)->Tag != Entity::EntityTypes::Ground)
+								continue;
 
-					//goi den ham xu ly collision cua Oroku va Entity				
-					child->OnCollision(listCollisionOrokus.at(i), r, sideOroku);
-					listCollisionOrokus.at(i)->OnCollision(child, r, sideImpactor);
+							Entity::CollisionReturn r = GameCollision::RecteAndRect(child->weapon->GetBound(), listCollisionWeapon.at(i)->GetBound());
+							if (r.IsCollided)
+							{
+								Entity::SideCollisions sideOroku = GameCollision::getSideCollision(child->weapon, r);
+								Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(listCollisionWeapon.at(i), r);
+
+								//goi den ham xu ly collision cua Oroku va Entity				
+								child->weapon->OnCollision(listCollisionWeapon.at(i), r, sideOroku);
+								listCollisionWeapon.at(i)->OnCollision(child->weapon, r, sideImpactor);
+							}
+						}
+					}
+
+					Entity::CollisionReturn R = GameCollision::RecteAndRect(child->weapon->GetBound(), mPlayer->GetBound());
+					if (R.IsCollided)
+					{
+						//lay phia va cham cua Weapon so voi Player 
+						Entity::SideCollisions sideWeapon = GameCollision::getSideCollision(child->weapon, R);
+
+						//lay phia va cham cua Player so voi Weapon
+						Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(mPlayer, R);
+
+						//goi den ham xu ly collision cua Weapon va Player
+						child->weapon->OnCollision(mPlayer, R, sideWeapon);
+						mPlayer->OnCollision(child->weapon, R, sideImpactor);
+					}
 				}
 			}
 		}
-
-		//vu khi cua oroku
-		if (child->weapon != nullptr)
+		else
 		{
-			if (GameCollision::RecteAndRect(child->weapon->GetBound(), mCameraExpand).IsCollided)
+			if (GameCollision::RecteAndRect(child->GetBound(), mCameraExpand).IsCollided)
 			{
-				listCollisionWeapon.clear();
-				mMap->GetQuadTree()->getEntitiesCollideAble(listCollisionWeapon, child->weapon);
-				for (size_t i = 0; i < listCollisionWeapon.size(); i++)
+				//oroku vs apple
+				for (auto childA : mPlayer->GetListAppleFly())
 				{
-					if (listCollisionWeapon.at(i)->Id == Entity::EntityId::Camel)
-						continue;
-
-					Entity::CollisionReturn r = GameCollision::RecteAndRect(child->weapon->GetBound(), listCollisionWeapon.at(i)->GetBound());
-					if (r.IsCollided)
+					Entity::CollisionReturn R = GameCollision::RecteAndRect(child->GetBound(), childA->GetBound());
+					if (R.IsCollided)
 					{
-						Entity::SideCollisions sideOroku = GameCollision::getSideCollision(child->weapon, r);
-						Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(listCollisionWeapon.at(i), r);
+						//lay phia va cham cua Entity so voi Oroku
+						Entity::SideCollisions sideOroku = GameCollision::getSideCollision(child, R);
 
-						//goi den ham xu ly collision cua Oroku va Entity				
-						child->weapon->OnCollision(listCollisionWeapon.at(i), r, sideOroku);
-						listCollisionWeapon.at(i)->OnCollision(child->weapon, r, sideImpactor);
+						//lay phia va cham cua Oroku so voi Entity
+						Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(childA, R);
+
+						//goi den ham xu ly collision cua StrongOroku va Entity
+						child->OnCollision(childA, R, sideOroku);
+						childA->OnCollision(child, R, sideImpactor);
+
+						if (childA->collisionWithOroku)
+						{
+							child->bloodOfEntity--;
+							child->collisionAppleWeapon = true;
+							if (child->bloodOfEntity <= 0)
+							{
+								mPlayer->allowOrokuEffect = true;
+								mPlayer->mOriginPositionItem = child->GetPosition();
+								mMap->RemoveOroku(child);//xoa oroku khoi listoroku trong map
+								if (child->weapon != nullptr)
+								{
+									delete child->weapon;
+									child->weapon = nullptr;
+								}
+								delete child;
+								child = nullptr;
+								return;
+							}
+							Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/Guard'sPants.wav", "Guard'sPants");
+							Sound::getInstance()->play("Guard'sPants", false, 1);
+						}
+					}
+				}
+
+				//oroku vs player
+				Entity::CollisionReturn R = GameCollision::RecteAndRect(child->GetBound(), mPlayer->GetBound());
+				if (R.IsCollided)
+				{
+					//lay phia va cham cua Entity so voi StrongOroku
+					Entity::SideCollisions sideOroku = GameCollision::getSideCollision(child, R);
+
+					//lay phia va cham cua StrongOroku so voi Entity
+					Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(mPlayer, R);
+
+					//goi den ham xu ly collision cua StrongOroku va Entity
+					child->OnCollision(mPlayer, R, sideOroku);
+					mPlayer->OnCollision(child, R, sideImpactor);
+
+					if (child->collisionWithPlayer)
+					{
+						mPlayer->bloodOfEntity--;
+						child->collisionWithPlayer = false;
+					}
+					if (mPlayer->collisionWithOroku)
+					{
+						child->bloodOfEntity--;
+						child->allowImunity = true;
+						mPlayer->collisionWithOroku = false;
+						if (child->bloodOfEntity <= 0)
+						{
+							mPlayer->allowOrokuEffect = true;
+							mPlayer->mOriginPositionItem = child->GetPosition();
+							mMap->RemoveOroku(child);//xoa oroku khoi listoroku trong map
+							if (child->weapon != nullptr)
+							{
+								delete child->weapon;
+								child->weapon = nullptr;
+							}
+							delete child;
+							child = nullptr;
+							break;
+						}
+						Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/Guard'sPants.wav", "Guard'sPants");
+						Sound::getInstance()->play("Guard'sPants", false, 1);
+					}
+				}
+
+				//oroku voi object
+				listCollisionOrokus.clear();
+				mMap->GetQuadTree()->getEntitiesCollideAble(listCollisionOrokus, child);
+				for (size_t i = 0; i < listCollisionOrokus.size(); i++)
+				{
+					if (listCollisionOrokus.at(i)->Tag == Entity::EntityTypes::OrokuControl ||
+						listCollisionOrokus.at(i)->Tag == Entity::EntityTypes::Fire ||
+						listCollisionOrokus.at(i)->Tag == Entity::EntityTypes::FireControl)
+					{
+						Entity::CollisionReturn r = GameCollision::RecteAndRect(child->GetBound(), listCollisionOrokus.at(i)->GetBound());
+						if (r.IsCollided)
+						{
+							Entity::SideCollisions sideOroku = GameCollision::getSideCollision(child, r);
+							Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(listCollisionOrokus.at(i), r);
+
+							//goi den ham xu ly collision cua Oroku va Entity				
+							child->OnCollision(listCollisionOrokus.at(i), r, sideOroku);
+							listCollisionOrokus.at(i)->OnCollision(child, r, sideImpactor);
+						}
+					}
+				}
+			}
+
+			//vu khi cua oroku
+			if (child->weapon != nullptr)
+			{
+				if (GameCollision::RecteAndRect(child->weapon->GetBound(), mCameraExpand).IsCollided)
+				{
+					listCollisionWeapon.clear();
+					mMap->GetQuadTree()->getEntitiesCollideAble(listCollisionWeapon, child->weapon);
+					for (size_t i = 0; i < listCollisionWeapon.size(); i++)
+					{
+						if (listCollisionWeapon.at(i)->Id == Entity::EntityId::Camel ||
+							listCollisionWeapon.at(i)->Tag == Entity::EntityTypes::Item ||
+							listCollisionWeapon.at(i)->Tag == Entity::EntityTypes::FallControl ||
+							listCollisionWeapon.at(i)->Tag == Entity::EntityTypes::OrokuControl)
+							continue;
+
+						Entity::CollisionReturn r = GameCollision::RecteAndRect(child->weapon->GetBound(), listCollisionWeapon.at(i)->GetBound());
+						if (r.IsCollided)
+						{
+							Entity::SideCollisions sideOroku = GameCollision::getSideCollision(child->weapon, r);
+							Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(listCollisionWeapon.at(i), r);
+
+							//goi den ham xu ly collision cua Oroku va Entity				
+							child->weapon->OnCollision(listCollisionWeapon.at(i), r, sideOroku);
+							listCollisionWeapon.at(i)->OnCollision(child->weapon, r, sideImpactor);
+						}
 					}
 				}
 
@@ -432,6 +659,18 @@ void Scene1::checkCollision()
 					//goi den ham xu ly collision cua Weapon va Player
 					child->weapon->OnCollision(mPlayer, R, sideWeapon);
 					mPlayer->OnCollision(child->weapon, R, sideImpactor);
+				}
+			}
+		}
+
+		if (GameCollision::RecteAndRect(child->GetBound(), mCameraExpand).IsCollided)
+		{
+			if (child->weapon != nullptr)
+			{
+				if (child->weapon->Tag == Entity::EntityTypes::Sword && child->weapon->weaponCollided)
+				{
+					Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/SwordChing.wav", "SwordChing");
+					Sound::getInstance()->play("SwordChing", false, 1);
 				}
 			}
 		}
@@ -457,12 +696,13 @@ void Scene1::checkCollision()
 				mMap->mBoss->OnCollision(childA, R, sideBoss);
 				childA->OnCollision(mMap->mBoss, R, sideImpactor);
 
-				if (childA->collisionWithOroku)
+				if (childA->collisionWithBoss)
 				{
 					mMap->mBoss->bloodOfEntity--;
 					if (mMap->mBoss->bloodOfEntity <= 0)
 					{
 						mPlayer->allowBossEffect = true;
+						mPlayer->mOriginPositionItem = mMap->mBoss->GetPosition();
 						if (mMap->mBoss->GetListWeapon().size() > 0)
 						{
 							for (size_t i = 0; i < mMap->mBoss->GetListWeapon().size(); i++)
@@ -507,6 +747,7 @@ void Scene1::checkCollision()
 				if (mMap->mBoss->bloodOfEntity <= 0)
 				{
 					mPlayer->allowBossEffect = true;
+					mPlayer->mOriginPositionItem = mMap->mBoss->GetPosition();
 					if (mMap->mBoss->GetListWeapon().size() > 0)
 					{
 						for (size_t i = 0; i < mMap->mBoss->GetListWeapon().size(); i++)
@@ -568,4 +809,33 @@ void Scene1::checkCollision()
 		}
 	}
 #pragma endregion
+}
+
+void Scene1::DrawQuadtree(QuadTree *quadtree)
+{
+	if (quadtree->GetNodes())
+	{
+		for (size_t i = 0; i < 4; i++)
+		{
+			DrawQuadtree(quadtree->GetNodes()[i]);
+		}
+	}
+
+	mDebugDraw->DrawRect(quadtree->Bound, mCamera);
+
+	if (quadtree->GetNodes())
+	{
+		for (size_t i = 0; i < 4; i++)
+		{
+			mDebugDraw->DrawRect(quadtree->GetNodes()[i]->Bound, mCamera);
+		}
+	}
+}
+
+void Scene1::DrawCollidable()
+{
+	for (auto child : mCollidable)
+	{
+		mDebugDraw->DrawRect(child->GetBound(), mCamera);
+	}
 }

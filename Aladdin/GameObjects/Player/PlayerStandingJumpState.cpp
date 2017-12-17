@@ -8,11 +8,12 @@
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 #include "../../GameObjects/MapObjects/Weapons/AppleWeapon.h"
+#include "../../GameComponents/Sound.h"
 
 PlayerStandingJumpState::PlayerStandingJumpState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
-	this->mPlayerData->player->AddPosition(0, -5);
+	this->mPlayerData->player->AddPosition(0, -10);
 	if (this->mPlayerData->player->collisionObjectMap)
 	{
 		this->mPlayerData->player->SetVy(Define::PLAYER_MIN_JUMP_VELOCITY * 1.5f);
@@ -157,9 +158,19 @@ void PlayerStandingJumpState::OnCollision(Entity *impactor, Entity::SideCollisio
 		{
 		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
 			if (impactor->Tag == Entity::EntityTypes::Spring)
+			{
+				Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/SpringDoing.wav", "SpringDoing");
+				Sound::getInstance()->play("SpringDoing", false, 1);
+				this->mPlayerData->player->collisionSpring = true;
+				this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
 				this->mPlayerData->player->SetState(new PlayerSomersaultState(this->mPlayerData));
+			}
 			else if (impactor->Id == Entity::EntityId::Camel)
+			{
+				Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/CamelSpit.wav", "CamelSpit");
+				Sound::getInstance()->play("CamelSpit", false, 1);
 				this->mPlayerData->player->SetState(new PlayerStandingJumpState(this->mPlayerData));
+			}
 			break;
 
 		default:
@@ -173,7 +184,7 @@ void PlayerStandingJumpState::OnCollision(Entity *impactor, Entity::SideCollisio
 	}
 	else if (impactor->Tag == Entity::EntityTypes::DownStairsControl || impactor->Tag == Entity::EntityTypes::UpStairsControl ||
 		impactor->Tag == Entity::EntityTypes::FallControl || impactor->Tag == Entity::EntityTypes::OrokuControl ||
-		impactor->Tag == Entity::EntityTypes::FireControl)
+		impactor->Tag == Entity::EntityTypes::FireControl || impactor->Tag == Entity::EntityTypes::VerticalRopeControl)
 	{
 
 	}
