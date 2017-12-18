@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="68" height="10" tilewidth="112" tileheight="112" nextobjectid="154">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="68" height="10" tilewidth="112" tileheight="112" nextobjectid="159">
  <tileset firstgid="1" source="Scene_1.tsx"/>
  <layer name="Tile Layer 1" width="68" height="10">
   <data encoding="csv">
@@ -136,7 +136,7 @@
   <object id="112" x="5044.67" y="449.333" width="21.334" height="52"/>
   <object id="113" x="5731.33" y="287" width="1860.33" height="20"/>
   <object id="114" name="HorizontalRope" x="6928.33" y="60.6685" width="318.01" height="3.99632"/>
-  <object id="115" x="6842.67" y="15.3332" width="84" height="112"/>
+  <object id="115" x="6842.67" y="15.3332" width="84" height="271"/>
   <object id="116" x="5578" y="118" width="156" height="20"/>
   <object id="117" x="5667.33" y="139.333" width="62.6667" height="366"/>
   <object id="118" x="5031.33" y="2.00017" width="34.6667" height="220"/>
@@ -163,6 +163,6 @@
   <object id="146" name="OrokuControl" x="5249.5" y="303" width="5" height="150"/>
   <object id="147" name="OrokuControl" x="1818" y="896.5" width="10" height="134"/>
   <object id="149" name="OrokuControl" x="4199.5" y="475" width="5" height="150"/>
-  <object id="153" name="TranslateScene" x="7567.7" y="154.242" width="24" height="133"/>
+  <object id="157" name="TranslateScene" x="7567.15" y="0.757576" width="24" height="286"/>
  </objectgroup>
 </map>

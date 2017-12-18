@@ -27,8 +27,9 @@ void Scene2::LoadContent(Player *player, Camera *camera)
 
 	mMap->SetCamera(mCamera);
 
-	mPlayer->mOriginPosition = D3DXVECTOR3(GameGlobal::GetWidth() / 4, 0, 0);
-	mPlayer->SetPosition(mPlayer->mOriginPosition);
+	mPlayer->mOriginPosition = D3DXVECTOR3(GameGlobal::GetWidth() / 4, 428, 0);
+	mPlayer->SetPosition(D3DXVECTOR3(GameGlobal::GetWidth() / 4, 0, 0));
+	mPlayer->collisionRevitalization = false;
 	mPlayer->SetMap(mMap);
 
 	mMap->SetPlayer(mPlayer);
@@ -677,6 +678,7 @@ void Scene2::checkCollision()
 				if (childA->collisionWithBoss)
 				{
 					mMap->mBoss->bloodOfEntity--;
+					mMap->mBoss->collisionAppleWeapon = true;
 					if (mMap->mBoss->bloodOfEntity <= 0)
 					{
 						mPlayer->allowBossEffect = true;

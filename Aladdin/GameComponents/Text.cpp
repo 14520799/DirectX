@@ -4,10 +4,11 @@ Text::Text()
 {
 }
 
-Text::Text(std::wstring Str, int Width, int Height, bool IsItalic, D3DCOLOR Color)
+Text::Text(std::wstring Message, int Size, int Width, int Height, bool IsItalic, D3DCOLOR Color)
 {
 	spriteHandler = GameGlobal::GetCurrentSpriteHandler();
-	string = Str;
+	message = Message;
+	size = Size;
 	width = Width;
 	height = Height;
 	isItalic = IsItalic;
@@ -15,7 +16,7 @@ Text::Text(std::wstring Str, int Width, int Height, bool IsItalic, D3DCOLOR Colo
 	font = NULL;
 	D3DXCreateFont(
 		GameGlobal::GetCurrentDevice(),
-		0,
+		size,
 		0,
 		FW_NORMAL,
 		1, 
@@ -44,20 +45,20 @@ void Text::Draw(D3DXVECTOR3 position)
 	rect.top = position.y - height / 2.0f;
 	rect.right = rect.left + width;
 	rect.bottom = rect.top + height;
-	font->DrawTextW(NULL, string.c_str(), -1, &rect, DT_LEFT, color);
+	font->DrawTextW(NULL, message.c_str(), -1, &rect, DT_LEFT, color);
 }
 
 std::wstring Text::GetString()
 {
-	return string;
+	return message;
 }
 
 void Text::SetString(std::wstring value)
 {
-	string = value;
+	message = value;
 }
 
 void Text::SetString(int value)
 {
-	string = std::to_wstring(value);
+	message = std::to_wstring(value);
 }

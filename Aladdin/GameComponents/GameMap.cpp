@@ -475,7 +475,7 @@ void GameMap::Update(float dt)
 		mListClouds.at(i)->SetVx(-Define::CLOUD_SPEED_X);
 		mListClouds.at(i)->Update(dt);
 		mListClouds.at(i)->Entity::Update(dt);
-		if (mListClouds.at(i)->GetPosition().x - mListClouds.at(i)->originPos.x > 1000)
+		if (mListClouds.at(i)->GetPosition().x - mListClouds.at(i)->originPos.x > 500)
 			mListClouds.at(i)->SetPosition(mListClouds.at(i)->originPos);
 	}
 
@@ -905,19 +905,25 @@ void GameMap::Draw()
 		GameGlobal::GetHeight() / 2 - mCamera->GetPosition().y + mCamera->GetBound().top + mPlayer->BloodInfoPos.y);
 	mPlayer->BloodInfo->Draw(mPlayer->BloodInfoPos, transBloodInfo);
 
-	//mPlayer->Score->Draw(D3DXVECTOR3(300, 20, 0));
+	mPlayer->TxtScore->Draw(D3DXVECTOR3(550, 70, 0));
 
 	D3DXVECTOR2 transAppleInfo = D3DXVECTOR2(GameGlobal::GetWidth() / 2 - mCamera->GetPosition().x + mCamera->GetBound().left + mPlayer->AppleInfoPos.x,
 		GameGlobal::GetHeight() / 2 - mCamera->GetPosition().y + mCamera->GetBound().top + mPlayer->AppleInfoPos.y);
 	mPlayer->AppleInfo->Draw(mPlayer->AppleInfoPos, transAppleInfo);
 
+	mPlayer->TxtApple->Draw(D3DXVECTOR3(655, 450, 0));
+
 	D3DXVECTOR2 transRubyInfo = D3DXVECTOR2(GameGlobal::GetWidth() / 2 - mCamera->GetPosition().x + mCamera->GetBound().left + mPlayer->RubyInfoPos.x,
 		GameGlobal::GetHeight() / 2 - mCamera->GetPosition().y + mCamera->GetBound().top + mPlayer->RubyInfoPos.y);
 	mPlayer->RubyInfo->Draw(mPlayer->RubyInfoPos, transRubyInfo);
 
+	mPlayer->TxtRuby->Draw(D3DXVECTOR3(550, 450, 0));
+
 	D3DXVECTOR2 transLifeInfo = D3DXVECTOR2(GameGlobal::GetWidth() / 2 - mCamera->GetPosition().x + mCamera->GetBound().left + mPlayer->LifeInfoPos.x,
 		GameGlobal::GetHeight() / 2 - mCamera->GetPosition().y + mCamera->GetBound().top + mPlayer->LifeInfoPos.y);
 	mPlayer->LifeInfo->Draw(mPlayer->LifeInfoPos, transLifeInfo);
+
+	mPlayer->TxtLife->Draw(D3DXVECTOR3(150, 450, 0));
 #pragma endregion
 }
 

@@ -66,7 +66,7 @@ public:
 	std::vector<MapObject*> GetListAppleFly();
 
 	bool allowMoveLeft, allowMoveRight, allowMoveUp;
-	//player co dang  mien nhiem sat thuong hay khong
+	//state phai duoc thuc hien xong moi chuyen sang state khac sau khi tha phim ra
 	bool allowDelayState;
 
 	bool onKeyUpPressing; //thong bao aladdin dang nhin len tren
@@ -74,7 +74,9 @@ public:
 	bool collisionItem, collisionSpring, collisionRevitalization, collisionFeddler;
 	bool collisionObjectMap;
 	bool collisionStarWeapon, collisionFireWeapon;
-	bool allowTranslateScene;
+	bool allowTranslateScene;//chuyen sang scene khac
+
+	int demHurting;//khi player bi trung don thi se chay bien dem nay de the hien player dang bi thuong
 
 	std::vector<MapObject*> mListApplePlayer; //apple cua player dang so huu
 	std::vector<MapObject*> mListAppleFly; //apple da duoc player nem di
@@ -100,10 +102,10 @@ public:
 				RubyInfoPos,
 				LifeInfoPos;
 
-	Text	*Score,
-			*Apple,
-			*Ruby,
-			*Life;
+	Text	*TxtScore,
+			*TxtApple,
+			*TxtRuby,
+			*TxtLife;
 protected:
     Camera      *mCamera;
 

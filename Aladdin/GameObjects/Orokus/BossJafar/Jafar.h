@@ -30,6 +30,8 @@ public:
 	std::vector<MapObject*> GetListWeapon();
 
 	float timeDelayTransfigureEffect;
+	float timeDelayHurting;
+	int demHurting;
 
 	MapObject *weapon;
 	MapObject *weaponEffect;

@@ -29,8 +29,8 @@
 </data>
  </layer>
  <objectgroup name="Object Layer 1">
-  <object id="1" x="0" y="500" width="2236" height="54.9091"/>
-  <object id="2" x="0" y="0" width="20" height="552"/>
-  <object id="3" x="2214" y="4" width="20" height="552"/>
+  <object id="1" x="0" y="478" width="2236" height="77.2121"/>
+  <object id="2" x="0" y="0" width="1" height="552"/>
+  <object id="3" x="2235.33" y="2.33333" width="1" height="552"/>
  </objectgroup>
 </map>

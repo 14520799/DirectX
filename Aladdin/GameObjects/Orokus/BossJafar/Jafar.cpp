@@ -226,6 +226,17 @@ void Jafar::Update(float dt)
 		}
 	}
 
+	if (collisionAppleWeapon)
+	{
+		timeDelayHurting += dt;
+		if (timeDelayHurting > 0.5f)
+		{
+			collisionAppleWeapon = false;
+			demHurting = 0;
+			timeDelayHurting = 0;
+		}
+	}
+
 	if (allowImunity)
 	{
 		timeImunity += dt;
@@ -233,6 +244,7 @@ void Jafar::Update(float dt)
 		if (timeImunity > 0.5f)
 		{
 			allowImunity = false;
+			demHurting = 0;
 			timeImunity = 0;
 		}
 	}
@@ -279,7 +291,17 @@ void Jafar::Draw(D3DXVECTOR2 trans)
 {
 	mCurrentAnimation->FlipVertical(this->mCurrentReverse);
 	mCurrentAnimation->SetPosition(this->GetPosition());
-	mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0), trans);
+	if (allowImunity || collisionAppleWeapon)
+	{
+		if (demHurting % 2 == 0)
+		{
+		}
+		else
+			mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0), trans);
+		demHurting++;
+	}
+	else
+		mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0), trans);
 	if (mListWeapon.size() > 0)
 	{
 		for (size_t i = 0; i < mListWeapon.size(); i++)

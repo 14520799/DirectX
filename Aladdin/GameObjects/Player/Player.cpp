@@ -51,10 +51,10 @@ Player::Player()
 	mScorePlayer = 0;
 	mRubyPlayer = 0;
 
-	Score = new Text(L"0", 100, 100, false, D3DCOLOR_XRGB(202, 229, 232));
-	Apple = new Text(L"0", 20, 20, false, D3DCOLOR_XRGB(202, 229, 232));
-	Ruby = new Text(L"0", 20, 20, false, D3DCOLOR_XRGB(202, 229, 232));
-	Life = new Text(L"0", 20, 20, false, D3DCOLOR_XRGB(202, 229, 232));
+	TxtScore = new Text(L"0", 50, 200, 50, false, D3DCOLOR_XRGB(202, 229, 232));
+	TxtApple = new Text(L"0", 30, 90, 30, false, D3DCOLOR_XRGB(202, 229, 232));
+	TxtRuby = new Text(L"0", 30, 60, 30, false, D3DCOLOR_XRGB(202, 229, 232));
+	TxtLife = new Text(L"0", 40, 80, 40, false, D3DCOLOR_XRGB(202, 229, 232));
 
 	this->Tag = Entity::EntityTypes::Aladdin;
 	this->CurrentMoveStairs = Entity::EntityCurrentMoveStairs::CurrentGround;
@@ -82,12 +82,13 @@ void Player::Update(float dt)
 	}
 
 	//xu ly player bi mat mau va chuyen sang state bi thuong
-	if (this->preBloodOfEntity != this->bloodOfEntity)
+	if (this->preBloodOfEntity != this->bloodOfEntity && this->bloodOfEntity >= 0)
 	{
 		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/AladdinHurt.wav", "AladdinHurt");
 		Sound::getInstance()->play("AladdinHurt", false, 1);
 		this->preBloodOfEntity = this->bloodOfEntity;
 		allowImunity = true;
+		demHurting = 0;
 		switch (bloodOfEntity)
 		{
 		case 9:
@@ -324,10 +325,10 @@ void Player::Update(float dt)
 	}
 
 	//ve text
-	Score->SetString(mScorePlayer);
-	Ruby->SetString(mRubyPlayer);
-	Life->SetString(mLifePlayer);
-	Apple->SetString(mListApplePlayer.size());
+	TxtScore->SetString(mScorePlayer);
+	TxtRuby->SetString(mRubyPlayer);
+	TxtLife->SetString(mLifePlayer);
+	TxtApple->SetString(mListApplePlayer.size());
 
 }
 
@@ -349,10 +350,10 @@ void Player::InitPlayer()
 
 	allowJump = true;
 	allowDelayState = true;
-	allowImunity = true;
 	timeImunity = 0;
 	timeDelayStates = 0;
 	timeDelayForFalling = 0;
+	demHurting = 0;
 }
 
 void Player::SetAppleFlyLeft(std::vector<MapObject*> &listAppleFly, MapObject *item, int i, float dt)
@@ -621,8 +622,18 @@ void Player::Draw(D3DXVECTOR3 position, RECT sourceRect, D3DXVECTOR2 scale, D3DX
 	{
 		D3DXVECTOR2 trans = D3DXVECTOR2(GameGlobal::GetWidth() / 2 - mCamera->GetPosition().x,
 			GameGlobal::GetHeight() / 2 - mCamera->GetPosition().y);
-		//ve player theo state
-		mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0), sourceRect, scale, trans, angle, rotationCenter, colorKey);
+		//xu ly player bi trung don
+		if(allowImunity && timeImunity <= 1.0f)
+		{
+			if(demHurting % 2 == 0)
+			{ }
+			else
+				mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0), sourceRect, scale, trans, angle, rotationCenter, colorKey);
+			demHurting++;
+		}
+		else
+			//ve player theo state
+			mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0), sourceRect, scale, trans, angle, rotationCenter, colorKey);
 		//ve qua tao bay ra
 		if (mListAppleFly.size() > 0)
 		{
@@ -643,7 +654,17 @@ void Player::Draw(D3DXVECTOR3 position, RECT sourceRect, D3DXVECTOR2 scale, D3DX
 	}
 	else
 	{
-		mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0));
+		if (allowImunity && timeImunity <= 1.0f)
+		{
+			if (demHurting % 2 == 0)
+			{
+			}
+			else
+				mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0));
+			demHurting++;
+		}
+		else
+			mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0));
 
 		if (mListAppleFly.size() > 0)
 		{
