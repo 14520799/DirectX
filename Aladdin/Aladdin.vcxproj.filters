@@ -466,9 +466,6 @@
     <ClCompile Include="GameComponents\Text.cpp">
       <Filter>Framework\GameComponents</Filter>
     </ClCompile>
-    <ClCompile Include="GameComponents\GameDebugDraw.cpp">
-      <Filter>Framework\GameComponents</Filter>
-    </ClCompile>
     <ClCompile Include="GameObjects\MapObjects\ObjectsMap\SpringAction.cpp">
       <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
     </ClCompile>
@@ -492,6 +489,30 @@
     </ClCompile>
     <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Bin.cpp">
       <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerGameOverState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\BeginScene.cpp">
+      <Filter>Framework\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\GameOverScene.cpp">
+      <Filter>Framework\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\CompleteScene.cpp">
+      <Filter>Framework\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\VictoryScene.cpp">
+      <Filter>Framework\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerMoveMoonState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerScene18PlusState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerScene18PlusStopState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -903,9 +924,6 @@
     <ClInclude Include="GameComponents\Text.h">
       <Filter>Framework\GameComponents</Filter>
     </ClInclude>
-    <ClInclude Include="GameComponents\GameDebugDraw.h">
-      <Filter>Framework\GameComponents</Filter>
-    </ClInclude>
     <ClInclude Include="GameObjects\MapObjects\ObjectsMap\SpringAction.h">
       <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
     </ClInclude>
@@ -929,6 +947,30 @@
     </ClInclude>
     <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Bin.h">
       <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerGameOverState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\BeginScene.h">
+      <Filter>Framework\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\GameOverScene.h">
+      <Filter>Framework\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\CompleteScene.h">
+      <Filter>Framework\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\VictoryScene.h">
+      <Filter>Framework\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerMoveMoonState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerScene18PlusState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerScene18PlusStopState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

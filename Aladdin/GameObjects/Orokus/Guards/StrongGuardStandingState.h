@@ -15,5 +15,7 @@ public:
 	virtual StateName GetState();
 
 protected:
+	bool allowSoundCommon;
+
 	float timeDelay;
 };

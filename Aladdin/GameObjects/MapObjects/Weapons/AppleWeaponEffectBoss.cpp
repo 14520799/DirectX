@@ -18,7 +18,7 @@ const char * AppleWeaponEffectBoss::FileName()
 
 int AppleWeaponEffectBoss::TotalFrame()
 {
-	return 11;
+	return 8;
 }
 
 int AppleWeaponEffectBoss::Row()
@@ -28,10 +28,10 @@ int AppleWeaponEffectBoss::Row()
 
 int AppleWeaponEffectBoss::Column()
 {
-	return 11;
+	return 8;
 }
 
 float AppleWeaponEffectBoss::SecondPerFrame()
 {
-	return 0.04f;
+	return 0.06f;
 }

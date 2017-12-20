@@ -1,5 +1,5 @@
 #include "Scene1.h"
-#include "Scene2.h"
+#include "CompleteScene.h"
 #include "../GameObjects/MapObjects/Weapons/AppleWeapon.h"
 #include "../GameControllers/SceneManager.h"
 #include "../GameDefines/GameDefine.h"
@@ -12,6 +12,8 @@ Scene1::Scene1()
 Scene1::~Scene1()
 {
 	delete mMap;
+
+	delete mCamera;
 }
 
 void Scene1::LoadContent()
@@ -19,10 +21,8 @@ void Scene1::LoadContent()
 	//set mau backcolor cho scene o day la mau xanh
 	mBackColor = D3DCOLOR_XRGB(0, 0, 0);
 
-	//Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/man1.wav", "man1");
-	//Sound::getInstance()->play("man1", true, 0);
-
-	//mDebugDraw = new GameDebugDraw();
+	//Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/AGMusicBossBattle.wav", "AGMusicBossBattle");
+	//Sound::getInstance()->play("AGMusicBossBattle", true, 0);
 
 	mMap = new GameMap("Resources/Scene_1/Scene_1.tmx");
 	mMap->LoadMapCloudsScene1("Resources/Scene_1/CloudsPosition.txt");
@@ -54,11 +54,12 @@ void Scene1::Update(float dt)
 {
 	if (mPlayer->allowTranslateScene)
 	{
-		SceneManager::GetInstance()->ReplaceScene(new Scene2(mPlayer, mCamera));
+		SceneManager::GetInstance()->ReplaceScene(new CompleteScene(mPlayer, 1));
 		return;
 	}
 
-	if (mPlayer->mCurrentState == PlayerState::Revival || mPlayer->mCurrentState == PlayerState::Death)
+	if (mPlayer->mCurrentState == PlayerState::Revival || mPlayer->mCurrentState == PlayerState::Death ||
+		mPlayer->mCurrentState == PlayerState::GameOver)
 	{
 		mPlayer->Update(dt);
 	}
@@ -78,16 +79,11 @@ void Scene1::Update(float dt)
 
 void Scene1::Draw()
 {
-	if (mPlayer->mCurrentState == PlayerState::Revival || mPlayer->mCurrentState == PlayerState::Death)
-		mPlayer->Draw(D3DXVECTOR3(GameGlobal::GetWidth() / 2, GameGlobal::GetHeight() / 2, 0));
+	if (mPlayer->mCurrentState == PlayerState::Revival || mPlayer->mCurrentState == PlayerState::Death ||
+		mPlayer->mCurrentState == PlayerState::GameOver)
+		mPlayer->Draw();
 	else
-	{
 		mMap->Draw();
-
-		//DrawQuadtree(mMap->GetQuadTree());
-
-		//DrawCollidable();
-	}
 }
 
 void Scene1::OnKeyDown(int keyCode)
@@ -148,8 +144,6 @@ void Scene1::CheckCameraAndWorldMap()
 
 void Scene1::checkCollision()
 {
-	//mCollidable.clear();
-
 	/*su dung de kiem tra xem khi nao mario khong dung tren 1 object hoac
 	dung qua sat mep trai hoac phai cua object do thi se chuyen state la falling*/
 	int widthBottomPlayer = 0;
@@ -368,6 +362,9 @@ void Scene1::checkCollision()
 							child->collisionAppleWeapon = true;
 							if (child->bloodOfEntity <= 0)
 							{
+								Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/StartGun.wav", "StartGun");
+								Sound::getInstance()->play("StartGun", false, 1);
+								mPlayer->mScorePlayer += 30;
 								mPlayer->allowOrokuEffect = true;
 								mPlayer->mOriginPositionItem = child->GetPosition();
 								mMap->RemoveOroku(child);//xoa oroku khoi listoroku trong map
@@ -380,8 +377,6 @@ void Scene1::checkCollision()
 								child = nullptr;
 								return;
 							}
-							Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/Guard'sPants.wav", "Guard'sPants");
-							Sound::getInstance()->play("Guard'sPants", false, 1);
 						}
 					}
 				}
@@ -407,6 +402,9 @@ void Scene1::checkCollision()
 						mPlayer->collisionWithOroku = false;
 						if (child->bloodOfEntity <= 0)
 						{
+							Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/StartGun.wav", "StartGun");
+							Sound::getInstance()->play("StartGun", false, 1);
+							mPlayer->mScorePlayer += 30;
 							mPlayer->allowOrokuEffect = true;
 							mPlayer->mOriginPositionItem = child->GetPosition();
 							mMap->RemoveOroku(child);//xoa oroku khoi listoroku trong map
@@ -419,8 +417,6 @@ void Scene1::checkCollision()
 							child = nullptr;
 							break;
 						}
-						Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/Guard'sPants.wav", "Guard'sPants");
-						Sound::getInstance()->play("Guard'sPants", false, 1);
 					}
 				}
 			}
@@ -526,7 +522,6 @@ void Scene1::checkCollision()
 						Entity::SideCollisions sideImpactor = GameCollision::getSideCollision(childA, R);
 
 						//goi den ham xu ly collision cua StrongOroku va Entity
-						child->OnCollision(childA, R, sideOroku);
 						childA->OnCollision(child, R, sideImpactor);
 
 						if (childA->collisionWithOroku)
@@ -535,6 +530,9 @@ void Scene1::checkCollision()
 							child->collisionAppleWeapon = true;
 							if (child->bloodOfEntity <= 0)
 							{
+								Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/StartGun.wav", "StartGun");
+								Sound::getInstance()->play("StartGun", false, 1);
+								mPlayer->mScorePlayer += 20;
 								mPlayer->allowOrokuEffect = true;
 								mPlayer->mOriginPositionItem = child->GetPosition();
 								mMap->RemoveOroku(child);//xoa oroku khoi listoroku trong map
@@ -547,9 +545,14 @@ void Scene1::checkCollision()
 								child = nullptr;
 								return;
 							}
-							Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/Guard'sPants.wav", "Guard'sPants");
-							Sound::getInstance()->play("Guard'sPants", false, 1);
+							if (child->Id == Entity::EntityId::Guard)
+							{
+								Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/Guard'sPants.wav", "Guard'sPants");
+								Sound::getInstance()->play("Guard'sPants", false, 1);
+							}
 						}
+
+						child->OnCollision(childA, R, sideOroku);
 					}
 				}
 
@@ -579,6 +582,9 @@ void Scene1::checkCollision()
 						mPlayer->collisionWithOroku = false;
 						if (child->bloodOfEntity <= 0)
 						{
+							Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/StartGun.wav", "StartGun");
+							Sound::getInstance()->play("StartGun", false, 1);
+							mPlayer->mScorePlayer += 20;
 							mPlayer->allowOrokuEffect = true;
 							mPlayer->mOriginPositionItem = child->GetPosition();
 							mMap->RemoveOroku(child);//xoa oroku khoi listoroku trong map
@@ -676,33 +682,4 @@ void Scene1::checkCollision()
 		}
 	}
 #pragma endregion
-}
-
-void Scene1::DrawQuadtree(QuadTree *quadtree)
-{
-	if (quadtree->GetNodes())
-	{
-		for (size_t i = 0; i < 4; i++)
-		{
-			DrawQuadtree(quadtree->GetNodes()[i]);
-		}
-	}
-
-	mDebugDraw->DrawRect(quadtree->Bound, mCamera);
-
-	if (quadtree->GetNodes())
-	{
-		for (size_t i = 0; i < 4; i++)
-		{
-			mDebugDraw->DrawRect(quadtree->GetNodes()[i]->Bound, mCamera);
-		}
-	}
-}
-
-void Scene1::DrawCollidable()
-{
-	for (auto child : mCollidable)
-	{
-		mDebugDraw->DrawRect(child->GetBound(), mCamera);
-	}
 }

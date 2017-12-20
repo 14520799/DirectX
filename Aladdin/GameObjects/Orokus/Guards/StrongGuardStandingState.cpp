@@ -5,6 +5,7 @@
 StrongGuardStandingState::StrongGuardStandingState(OrokuData *orokuData)
 {
 	this->mOrokuData = orokuData;
+	allowSoundCommon = true;
 	this->mOrokuData->strongGuard->allowDefault = true;
 	this->mOrokuData->strongGuard->settingAttack = false;
 	this->mOrokuData->strongGuard->runningFire = false;
@@ -22,10 +23,15 @@ void StrongGuardStandingState::Update(float dt)
 {
 	timeDelay += dt;
 
-	if (timeDelay > 0.6f)
+	if(timeDelay > 0.2f && allowSoundCommon)
 	{
 		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/GuardBeckon.wav", "GuardBeckon");
 		Sound::getInstance()->play("GuardBeckon", false, 1);
+		allowSoundCommon = false;
+	}
+
+	if (timeDelay > 0.6f)
+	{
 		this->mOrokuData->strongGuard->allowDefault = false;
 	}
 }

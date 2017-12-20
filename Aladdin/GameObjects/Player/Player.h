@@ -74,7 +74,9 @@ public:
 	bool collisionItem, collisionSpring, collisionRevitalization, collisionFeddler;
 	bool collisionObjectMap;
 	bool collisionStarWeapon, collisionFireWeapon;
-	bool allowTranslateScene;//chuyen sang scene khac
+	bool allowTranslateScene;//khi aladdin qua scene thi se cho phep chuyen sang scene khac
+	bool VictoryGame;//khi player giet boss thi se victory game
+	bool allowShowTheEnd;//sau khi thuc hien xong canh 18+ thi se cho xuat hien chu theend
 
 	int demHurting;//khi player bi trung don thi se chay bien dem nay de the hien player dang bi thuong
 
@@ -92,6 +94,7 @@ public:
 	PlayerState::StateName mCurrentState, mPreCurrentState;
 
 	GameMap *mMap;
+	Camera  *mCamera;
 
 	Animation	*BloodInfo,
 				*AppleInfo,
@@ -107,8 +110,6 @@ public:
 			*TxtRuby,
 			*TxtLife;
 protected:
-    Camera      *mCamera;
-
     PlayerData	*mPlayerData;
 
     Animation	*mCurrentAnimation,
@@ -140,7 +141,11 @@ protected:
 				*mAnimationJumpingThrowApple,
 				*mAnimationClimbingThrowApple,
 				*mAnimationDeath,
-				*mAnimationRevival;
+				*mAnimationRevival,
+				*mAnimationGameOver,
+				*mAnimationMoveMoon,
+				*mAnimationScene18Plus,
+				*mAnimationScene18PlusStop;
 
     void changeAnimation(PlayerState::StateName state);
 
@@ -149,5 +154,6 @@ protected:
 	float timeImunity; //time duoc mien sat thuong sau khi hoi sinh
 	float timeDelayStates; //time delay thuc thi xong state nay roi chuyen sang state khac
 	float timeDelayForFalling;
+	float timeDelaySound;//khi player duoc giu nguyen phim A hoac S thi se cho delay 1 time roi phat tiep sound
 };
 

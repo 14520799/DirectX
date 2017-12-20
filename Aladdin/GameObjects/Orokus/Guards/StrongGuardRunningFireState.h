@@ -16,4 +16,5 @@ public:
 	virtual StateName GetState();
 protected:
 	float originPosX;
+	float timeSound;
 };

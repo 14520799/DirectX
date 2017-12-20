@@ -13,7 +13,6 @@
 #include "../GameObjects/Player/Player.h"
 #include "../GameObjects/Orokus/Oroku.h"
 #include "../GameComponents/Sound.h"
-#include "../GameComponents/GameDebugDraw.h"
 
 class Scene1 : public Scene
 {
@@ -32,8 +31,6 @@ public:
 protected:
     void checkCollision();
     void CheckCameraAndWorldMap();
-	void DrawQuadtree(QuadTree *quadtree);
-	void DrawCollidable();
 
     GameMap *mMap;
     Camera	*mCamera;
@@ -43,6 +40,5 @@ protected:
 	std::vector<Entity*> mCollidable;
 
 	RECT mCameraExpand;
-	GameDebugDraw *mDebugDraw;
 };
 

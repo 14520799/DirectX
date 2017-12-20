@@ -25,7 +25,7 @@ Text::Text(std::wstring Message, int Size, int Width, int Height, bool IsItalic,
 		OUT_DEFAULT_PRECIS, 
 		ANTIALIASED_QUALITY, 
 		FF_DONTCARE, 
-		L"Arial",    
+		L"Algerian",    
 		&font);
 }
 
@@ -45,7 +45,7 @@ void Text::Draw(D3DXVECTOR3 position)
 	rect.top = position.y - height / 2.0f;
 	rect.right = rect.left + width;
 	rect.bottom = rect.top + height;
-	font->DrawTextW(NULL, message.c_str(), -1, &rect, DT_LEFT, color);
+	font->DrawTextW(GameGlobal::GetCurrentSpriteHandler(), message.c_str(), -1, &rect, DT_LEFT, color);
 }
 
 std::wstring Text::GetString()

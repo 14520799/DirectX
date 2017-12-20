@@ -1,13 +1,21 @@
 #include "Scene2.h"
 #include "../GameControllers/SceneManager.h"
+#include "../Scenes/CompleteScene.h"
 #include "../GameDefines/GameDefine.h"
 
-Scene2::Scene2(Player *player, Camera *camera)
+Scene2::Scene2(Player *player)
 {
-	LoadContent(player, camera);
+	LoadContent(player);
 }
 
-void Scene2::LoadContent(Player *player, Camera *camera)
+Scene2::~Scene2()
+{
+	delete mMap;
+
+	delete mCamera;
+}
+
+void Scene2::LoadContent(Player *player)
 {
 	//set mau backcolor cho scene o day la mau xanh
 	mBackColor = D3DCOLOR_XRGB(0, 0, 0);
@@ -15,21 +23,23 @@ void Scene2::LoadContent(Player *player, Camera *camera)
 	//Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/man1.wav", "man1");
 	//Sound::getInstance()->play("man1", true, 0);
 
-	//mDebugDraw = new GameDebugDraw();
-
 	mPlayer = player;
-	mCamera = camera;
 
 	mMap = new GameMap("Resources/Scene_2/Scene_2.tmx");
 	mMap->LoadMapCloudsScene2("Resources/Scene_2/CloudsPosition.txt");
 	mMap->LoadMapItems("Resources/Scene_2/ItemsPosition.txt");
 	mMap->LoadMapOrokus("Resources/Scene_2/OrokusPosition.txt");
 
+	mCamera = new Camera(GameGlobal::GetWidth(), GameGlobal::GetHeight());
+	mCamera->SetPosition(GameGlobal::GetWidth() / 2,
+		mMap->GetHeight() - mCamera->GetHeight());
+
 	mMap->SetCamera(mCamera);
 
 	mPlayer->mOriginPosition = D3DXVECTOR3(GameGlobal::GetWidth() / 4, 428, 0);
 	mPlayer->SetPosition(D3DXVECTOR3(GameGlobal::GetWidth() / 4, 0, 0));
 	mPlayer->collisionRevitalization = false;
+	mPlayer->SetCamera(mCamera);
 	mPlayer->SetMap(mMap);
 
 	mMap->SetPlayer(mPlayer);
@@ -37,13 +47,20 @@ void Scene2::LoadContent(Player *player, Camera *camera)
 
 void Scene2::Update(float dt)
 {
-	if (mPlayer->mCurrentState == PlayerState::Revival || mPlayer->mCurrentState == PlayerState::Death)
+	if (mPlayer->mCurrentState == PlayerState::Revival || mPlayer->mCurrentState == PlayerState::Death ||
+		mPlayer->mCurrentState == PlayerState::GameOver) 
 	{
 		mPlayer->Update(dt);
 	}
 	else
 	{
 		checkCollision();
+
+		if (mPlayer->VictoryGame)
+		{
+			SceneManager::GetInstance()->ReplaceScene(new CompleteScene(mPlayer, 2));
+			return;
+		}
 
 		mMap->Update(dt);
 
@@ -57,16 +74,11 @@ void Scene2::Update(float dt)
 
 void Scene2::Draw()
 {
-	if (mPlayer->mCurrentState == PlayerState::Revival || mPlayer->mCurrentState == PlayerState::Death)
-		mPlayer->Draw(D3DXVECTOR3(GameGlobal::GetWidth() / 2, GameGlobal::GetHeight() / 2, 0));
+	if (mPlayer->mCurrentState == PlayerState::Revival || mPlayer->mCurrentState == PlayerState::Death ||
+		mPlayer->mCurrentState == PlayerState::GameOver)
+		mPlayer->Draw();
 	else
-	{
 		mMap->Draw();
-
-		//DrawQuadtree(mMap->GetQuadTree());
-
-		//DrawCollidable();
-	}
 }
 
 void Scene2::OnKeyDown(int keyCode)
@@ -127,8 +139,6 @@ void Scene2::CheckCameraAndWorldMap()
 
 void Scene2::checkCollision()
 {
-	//mCollidable.clear();
-
 	/*su dung de kiem tra xem khi nao mario khong dung tren 1 object hoac
 	dung qua sat mep trai hoac phai cua object do thi se chuyen state la falling*/
 	int widthBottomPlayer = 0;
@@ -677,6 +687,8 @@ void Scene2::checkCollision()
 
 				if (childA->collisionWithBoss)
 				{
+					Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/JafarSnake.wav", "JafarSnake");
+					Sound::getInstance()->play("JafarSnake", false, 1);
 					mMap->mBoss->bloodOfEntity--;
 					mMap->mBoss->collisionAppleWeapon = true;
 					if (mMap->mBoss->bloodOfEntity <= 0)
@@ -694,6 +706,7 @@ void Scene2::checkCollision()
 						}
 						delete mMap->mBoss;
 						mMap->mBoss = nullptr;
+						mPlayer->VictoryGame = true;
 						return;
 					}
 				}
@@ -721,6 +734,8 @@ void Scene2::checkCollision()
 			}
 			if (mPlayer->collisionWithOroku)
 			{
+				Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/JafarSnake.wav", "JafarSnake");
+				Sound::getInstance()->play("JafarSnake", false, 1);
 				mMap->mBoss->bloodOfEntity--;
 				mMap->mBoss->allowImunity = true;
 				mPlayer->collisionWithOroku = false;
@@ -739,6 +754,7 @@ void Scene2::checkCollision()
 					}
 					delete mMap->mBoss;
 					mMap->mBoss = nullptr;
+					mPlayer->VictoryGame = true;
 					return;
 				}
 			}
@@ -789,33 +805,4 @@ void Scene2::checkCollision()
 		}
 	}
 #pragma endregion
-}
-
-void Scene2::DrawQuadtree(QuadTree *quadtree)
-{
-	if (quadtree->GetNodes())
-	{
-		for (size_t i = 0; i < 4; i++)
-		{
-			DrawQuadtree(quadtree->GetNodes()[i]);
-		}
-	}
-
-	mDebugDraw->DrawRect(quadtree->Bound, mCamera);
-
-	if (quadtree->GetNodes())
-	{
-		for (size_t i = 0; i < 4; i++)
-		{
-			mDebugDraw->DrawRect(quadtree->GetNodes()[i]->Bound, mCamera);
-		}
-	}
-}
-
-void Scene2::DrawCollidable()
-{
-	for (auto child : mCollidable)
-	{
-		mDebugDraw->DrawRect(child->GetBound(), mCamera);
-	}
 }

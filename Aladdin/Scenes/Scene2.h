@@ -13,15 +13,15 @@
 #include "../GameObjects/Player/Player.h"
 #include "../GameObjects/Orokus/Oroku.h"
 #include "../GameComponents/Sound.h"
-#include "../GameComponents/GameDebugDraw.h"
 
 class Scene2 : public Scene
 {
 public:
-	Scene2(Player *player, Camera *camera);
+	Scene2(Player *player);
+	~Scene2();
 
 	void Update(float dt);
-	void LoadContent(Player *player, Camera *camera);
+	void LoadContent(Player *player);
 	void Draw();
 
 	void OnKeyDown(int keyCode);
@@ -31,8 +31,6 @@ public:
 protected:
 	void checkCollision();
 	void CheckCameraAndWorldMap();
-	void DrawQuadtree(QuadTree *quadtree);
-	void DrawCollidable();
 
 	GameMap *mMap;
 	Camera	*mCamera;
@@ -42,5 +40,4 @@ protected:
 	std::vector<Entity*> mCollidable;
 
 	RECT mCameraExpand;
-	GameDebugDraw *mDebugDraw;
 };

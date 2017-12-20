@@ -26,8 +26,6 @@ void JafarSnakeAttackState::Update(float dt)
 			timeCreateWeapon += dt;
 			if (timeCreateWeapon > 1.0f)
 			{
-				Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/JafarSnake.wav", "JafarSnake");
-				Sound::getInstance()->play("JafarSnake", false, 1);
 				this->mOrokuData->jafar->weapon = new FireWeapon(this->mOrokuData->jafar->GetPosition() + D3DXVECTOR3(-40, 30, 0));
 				this->mOrokuData->jafar->mListWeapon.push_back(this->mOrokuData->jafar->weapon);
 				timeCreateWeapon = 0;
@@ -41,8 +39,6 @@ void JafarSnakeAttackState::Update(float dt)
 			timeCreateWeapon += dt;
 			if (timeCreateWeapon > 1.0f)
 			{
-				Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/JafarSnake.wav", "JafarSnake");
-				Sound::getInstance()->play("JafarSnake", false, 1);
 				this->mOrokuData->jafar->weapon = new FireWeapon(this->mOrokuData->jafar->GetPosition() + D3DXVECTOR3(40, 30, 0));
 				this->mOrokuData->jafar->mListWeapon.push_back(this->mOrokuData->jafar->weapon);
 				timeCreateWeapon = 0;

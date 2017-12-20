@@ -1,13 +1,13 @@
 #include "Game.h"
 #include "GameGlobal.h"
 #include "../GameControllers/SceneManager.h"
-#include "../Scenes/Scene1.h"
+#include "../Scenes/BeginScene.h"
 
 Game::Game(int fps)
 {
 	mFPS = fps;
 
-	SceneManager::GetInstance()->ReplaceScene(new Scene1());
+	SceneManager::GetInstance()->ReplaceScene(new BeginScene());
 
 	InitLoop();
 }

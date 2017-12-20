@@ -19,7 +19,7 @@ namespace Define
 #pragma region ITEM
 	const float STAIRS_FALL = 300.0f;
 	const float CIVILIAN_SWORD_MIN_VELOCITY = -500.0f;
-	const float ITEM_MIN_VELOCITY = -50.0f;
+	const float ITEM_MIN_VELOCITY = -50.0f;//toc do theo truc Vy qua tao bay ra khi aladdin nem
 	const float ITEM_SPEED_X = 20.0f;
 	const float ITEM_SPEED_Y = 10.0f;
 	const float CLOUD_SPEED_X = 50.0f;

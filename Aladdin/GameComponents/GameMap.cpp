@@ -302,7 +302,7 @@ void GameMap::LoadMapOrokus(char* filepath)
 			case 0:
 				mBoss = new Jafar(position);
 				mBoss->Tag = Entity::EntityTypes::Oroku;
-				mBoss->bloodOfEntity = Define::BOSS_BLOOD;
+				mBoss->bloodOfEntity = 2;
 				break;
 			case 1:
 				oroku = new ThinGuard(position);
@@ -475,7 +475,7 @@ void GameMap::Update(float dt)
 		mListClouds.at(i)->SetVx(-Define::CLOUD_SPEED_X);
 		mListClouds.at(i)->Update(dt);
 		mListClouds.at(i)->Entity::Update(dt);
-		if (mListClouds.at(i)->GetPosition().x - mListClouds.at(i)->originPos.x > 500)
+		if (mListClouds.at(i)->GetPosition().x - mListClouds.at(i)->originPos.x < -500)
 			mListClouds.at(i)->SetPosition(mListClouds.at(i)->originPos);
 	}
 
@@ -489,7 +489,7 @@ void GameMap::Update(float dt)
 			delete mListMapObjects[i];
 			mListMapObjects[i] = new RevitalizationAction(pos);
 			mListMapObjects[i]->Id = Entity::EntityId::Revitalization_Action;
-			mPlayer->mRevivalPosition = mPlayer->GetPosition();
+			mPlayer->mRevivalPosition = mPlayer->GetPosition() - D3DXVECTOR3(0, -10, 0);
 			mPlayer->collisionRevitalization = true;
 		}
 		else if (mListMapObjects[i]->Id == Entity::EntityId::Revitalization_Action)
@@ -905,7 +905,7 @@ void GameMap::Draw()
 		GameGlobal::GetHeight() / 2 - mCamera->GetPosition().y + mCamera->GetBound().top + mPlayer->BloodInfoPos.y);
 	mPlayer->BloodInfo->Draw(mPlayer->BloodInfoPos, transBloodInfo);
 
-	mPlayer->TxtScore->Draw(D3DXVECTOR3(550, 70, 0));
+	mPlayer->TxtScore->Draw(D3DXVECTOR3(600, 60, 0));
 
 	D3DXVECTOR2 transAppleInfo = D3DXVECTOR2(GameGlobal::GetWidth() / 2 - mCamera->GetPosition().x + mCamera->GetBound().left + mPlayer->AppleInfoPos.x,
 		GameGlobal::GetHeight() / 2 - mCamera->GetPosition().y + mCamera->GetBound().top + mPlayer->AppleInfoPos.y);

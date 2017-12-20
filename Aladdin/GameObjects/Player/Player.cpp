@@ -26,6 +26,10 @@
 #include "PlayerJumpingThrowAppleState.h"
 #include "PlayerClimbingThrowAppleState.h"
 #include "PlayerRevivalState.h"
+#include "PlayerGameOverState.h"
+#include "PlayerMoveMoonState.h"
+#include "PlayerScene18PlusState.h"
+#include "PlayerScene18PlusStopState.h"
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 #include "../../GameObjects/MapObjects/Weapons/AppleWeaponEffect.h"
@@ -39,6 +43,7 @@ Player::Player()
 	mAnimationFalling = new Animation("Resources/Aladdin/Falling/Falling.png", 1, 1, 1, 0.0f);
 	mAnimationSitting = new Animation("Resources/Aladdin/Sitting/Sitting.png", 1, 1, 1, 0.0f);
 	mAnimationVerticalClimbingDefault = new Animation("Resources/Aladdin/Climbing/VerticalClimbing/VerticalClimbingDefault.png", 1, 1, 1, 0.0f);
+	mAnimationScene18PlusStop = new Animation("Resources/Aladdin/Victory/Scene18PlusStop.png", 1, 1, 1, 0.0f);
 
 	AppleInfo = new Animation("Resources/AladdinInfo/AppleInfo.png", 1, 1, 1, 0.0f);
 	AppleInfoPos = D3DXVECTOR3(GameGlobal::GetWidth() / 2 - 30, GameGlobal::GetHeight() / 2 - 30, 0);
@@ -47,14 +52,14 @@ Player::Player()
 	LifeInfo = new Animation("Resources/AladdinInfo/LifeInfo.png", 1, 1, 1, 0.0f);
 	LifeInfoPos = D3DXVECTOR3(40, GameGlobal::GetHeight() / 2 - 30, 0);
 
-	mLifePlayer = 3;
+	mLifePlayer = 0;
 	mScorePlayer = 0;
 	mRubyPlayer = 0;
 
-	TxtScore = new Text(L"0", 50, 200, 50, false, D3DCOLOR_XRGB(202, 229, 232));
-	TxtApple = new Text(L"0", 30, 90, 30, false, D3DCOLOR_XRGB(202, 229, 232));
-	TxtRuby = new Text(L"0", 30, 60, 30, false, D3DCOLOR_XRGB(202, 229, 232));
-	TxtLife = new Text(L"0", 40, 80, 40, false, D3DCOLOR_XRGB(202, 229, 232));
+	TxtScore = new Text(L"0", 50, 200, 50, false, D3DCOLOR_XRGB(238, 201, 0));
+	TxtApple = new Text(L"0", 30, 90, 30, false, D3DCOLOR_XRGB(232, 232, 232));
+	TxtRuby = new Text(L"0", 30, 60, 30, false, D3DCOLOR_XRGB(232, 232, 232));
+	TxtLife = new Text(L"0", 40, 80, 40, false, D3DCOLOR_XRGB(232, 232, 232));
 
 	this->Tag = Entity::EntityTypes::Aladdin;
 	this->CurrentMoveStairs = Entity::EntityCurrentMoveStairs::CurrentGround;
@@ -71,7 +76,56 @@ Player::~Player()
 
 void Player::Update(float dt)
 {
-	if (this->mCurrentState == PlayerState::Revival || this->mCurrentState == PlayerState::Death)
+	//nhung state Victory game cua player
+	if (VictoryGame)
+	{
+		for (size_t i = 0; i < mListAppleEffect.size(); i++)
+		{
+			delete mListAppleEffect[i];
+			mListAppleEffect[i] = nullptr;
+		}
+		mListAppleEffect.clear();
+		for (size_t i = 0; i < mListAppleFly.size(); i++)
+		{
+			delete mListAppleFly[i];
+			mListAppleFly[i] = nullptr;
+		}
+		mListAppleFly.clear();
+		for (size_t i = 0; i < mListApplePlayer.size(); i++)
+		{
+			delete mListApplePlayer[i];
+			mListApplePlayer[i] = nullptr;
+		}
+		mListApplePlayer.clear();
+		this->SetState(new PlayerMoveMoonState(this->mPlayerData));
+		VictoryGame = false;
+	}
+
+	if (mCurrentState == PlayerState::MoveMoon)
+	{
+		this->AddVx(0.5f);
+		this->AddVy(-0.1f);
+		mCurrentAnimation->Update(dt);
+		this->Entity::Update(dt);
+		if (this->mPlayerData->state)
+		{
+			this->mPlayerData->state->Update(dt);
+		}
+		return;
+	}
+	else if (mCurrentState == PlayerState::Scene18Plus || mCurrentState == PlayerState::Scene18PlusStop)
+	{
+		mCurrentAnimation->Update(dt);
+		if (this->mPlayerData->state)
+		{
+			this->mPlayerData->state->Update(dt);
+		}
+		return;
+	}
+
+	//nhung state thua cuoc cua player
+	if (this->mCurrentState == PlayerState::Revival || this->mCurrentState == PlayerState::Death ||
+		this->mCurrentState == PlayerState::GameOver)
 	{
 		mCurrentAnimation->Update(dt);
 		if (this->mPlayerData->state)
@@ -318,9 +372,14 @@ void Player::Update(float dt)
 	}
 
 	//hoi sinh player
-	if (bloodOfEntity < 0 && mLifePlayer > 0)
+	if (bloodOfEntity < 0 && mLifePlayer >= 0)
 	{
 		mLifePlayer--;
+		if (mLifePlayer < 0)
+		{
+			this->SetState(new PlayerGameOverState(this->mPlayerData));
+			return;
+		}
 		this->SetState(new PlayerDeathState(this->mPlayerData));
 	}
 
@@ -329,17 +388,16 @@ void Player::Update(float dt)
 	TxtRuby->SetString(mRubyPlayer);
 	TxtLife->SetString(mLifePlayer);
 	TxtApple->SetString(mListApplePlayer.size());
-
 }
 
 void Player::InitPlayer()
 {
-	if(collisionRevitalization)
+	if (collisionRevitalization)
 		this->SetPosition(this->mRevivalPosition);
 	else
 		this->SetPosition(this->mOriginPosition);
 
-	this->bloodOfEntity = Define::ALADDIN_BLOOD;
+	this->bloodOfEntity = 1;
 	this->preBloodOfEntity = this->bloodOfEntity;
 	delete BloodInfo;
 	BloodInfo = new Animation("Resources/AladdinInfo/BloodInfo_10.png", 4, 1, 4, 0.1f);
@@ -353,6 +411,7 @@ void Player::InitPlayer()
 	timeImunity = 0;
 	timeDelayStates = 0;
 	timeDelayForFalling = 0;
+	timeDelaySound = 0.5f;
 	demHurting = 0;
 }
 
@@ -367,7 +426,7 @@ void Player::SetAppleFlyLeft(std::vector<MapObject*> &listAppleFly, MapObject *i
 			item->AddVy(Define::ITEM_SPEED_Y);
 			item->DirectionDown = true;
 		}
-		else if(item->GetVy() > Define::ITEM_MIN_VELOCITY)
+		else if (item->GetVy() > Define::ITEM_MIN_VELOCITY)
 			item->AddVy(-Define::ITEM_SPEED_Y);
 		item->Entity::Update(dt);
 		return;
@@ -401,14 +460,19 @@ void Player::SetAppleFlyRight(std::vector<MapObject*> &listAppleFly, MapObject *
 		return;
 	}
 	item->mSettingRightItem = true;
-	item->AddVx(Define::ITEM_SPEED_X);
-	if (item->GetVy() <= Define::ITEM_MIN_VELOCITY || item->DirectionDown)
+	if (item->mSettingRightItem)
 	{
-		item->AddVy(Define::ITEM_SPEED_Y);
-		item->DirectionDown = true;
+		item->AddVx(Define::ITEM_SPEED_X);
+		if (item->GetVy() <= Define::ITEM_MIN_VELOCITY || item->DirectionDown)
+		{
+			item->AddVy(Define::ITEM_SPEED_Y);
+			item->DirectionDown = true;
+		}
+		else if (item->GetVy() > Define::ITEM_MIN_VELOCITY)
+			item->AddVy(-Define::ITEM_SPEED_Y);
+		item->Entity::Update(dt);
+		return;
 	}
-	else if (item->GetVy() > Define::ITEM_MIN_VELOCITY)
-		item->AddVy(-Define::ITEM_SPEED_Y);
 	item->Entity::Update(dt);
 }
 
@@ -480,8 +544,6 @@ void Player::OnKeyPressed(int key)
 	}
 	else if (key == 0x41) //tan cong bang phim A
 	{
-		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/LowSword.wav", "LowSword");
-		Sound::getInstance()->play("LowSword", false, 1);
 		if (mCurrentState == PlayerState::Standing || mCurrentState == PlayerState::Running || mCurrentState == PlayerState::RunningStop ||
 			mCurrentState == PlayerState::Default || mCurrentState == PlayerState::StandingThrowApple || mCurrentState == PlayerState::Pushing)
 		{
@@ -501,6 +563,13 @@ void Player::OnKeyPressed(int key)
 			mCurrentState == PlayerState::VerticalClimbingDefault || mCurrentState == PlayerState::VerticalClimbing)
 		{
 			this->SetState(new PlayerClimbingAttackState(this->mPlayerData));
+		}
+		timeDelaySound += 0.1f;
+		if (timeDelaySound > 0.5f)
+		{
+			Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/LowSword.wav", "LowSword");
+			Sound::getInstance()->play("LowSword", false, 1);
+			timeDelaySound = 0;
 		}
 	}
 	else if (key == 0x53) //tan cong bang phim S
@@ -555,6 +624,13 @@ void Player::OnKeyPressed(int key)
 
 			apple->SetVy(0);
 			apple->Tag = Entity::EntityTypes::AppleWeapon;
+			timeDelaySound += 0.1f;
+			if (timeDelaySound > 0.5f)
+			{
+				Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/ObjectThrow.wav", "ObjectThrow");
+				Sound::getInstance()->play("ObjectThrow", false, 1);
+				timeDelaySound = 0;
+			}
 		}
 	}
 }
@@ -623,17 +699,27 @@ void Player::Draw(D3DXVECTOR3 position, RECT sourceRect, D3DXVECTOR2 scale, D3DX
 		D3DXVECTOR2 trans = D3DXVECTOR2(GameGlobal::GetWidth() / 2 - mCamera->GetPosition().x,
 			GameGlobal::GetHeight() / 2 - mCamera->GetPosition().y);
 		//xu ly player bi trung don
-		if(allowImunity && timeImunity <= 1.0f)
+		if (allowImunity && timeImunity <= 1.0f)
 		{
-			if(demHurting % 2 == 0)
-			{ }
+			if (demHurting % 2 == 0)
+			{
+			}
 			else
 				mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0), sourceRect, scale, trans, angle, rotationCenter, colorKey);
 			demHurting++;
 		}
 		else
-			//ve player theo state
-			mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0), sourceRect, scale, trans, angle, rotationCenter, colorKey);
+		{
+			if (this->mCurrentState == PlayerState::Revival || this->mCurrentState == PlayerState::Death ||
+				this->mCurrentState == PlayerState::GameOver)
+			{
+				//ve player theo state
+				mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0), sourceRect, scale, trans, angle, rotationCenter, colorKey);
+				return;
+			}
+			else
+				mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0), sourceRect, scale, trans, angle, rotationCenter, colorKey);
+		}
 		//ve qua tao bay ra
 		if (mListAppleFly.size() > 0)
 		{
@@ -654,37 +740,43 @@ void Player::Draw(D3DXVECTOR3 position, RECT sourceRect, D3DXVECTOR2 scale, D3DX
 	}
 	else
 	{
-		if (allowImunity && timeImunity <= 1.0f)
-		{
-			if (demHurting % 2 == 0)
-			{
-			}
-			else
-				mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0));
-			demHurting++;
-		}
-		else
-			mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0));
+		//if (allowImunity && timeImunity <= 1.0f)
+		//{
+		//	if (demHurting % 2 == 0)
+		//	{
+		//	}
+		//	else
+		//		mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0));
+		//	demHurting++;
+		//}
+		//else
+		//{
+		//	if (this->mCurrentState == PlayerState::Revival || this->mCurrentState == PlayerState::Death ||
+		//		this->mCurrentState == PlayerState::GameOver)
+		//	{
+		//		//ve player theo state
+		//		return;
+		//	}
+		//	else
+		//		mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0));
+		//}
 
-		if (mListAppleFly.size() > 0)
-		{
-			for (size_t i = 0; i < mListAppleFly.size(); i++)
-			{
-				mListAppleFly.at(i)->Draw(D3DXVECTOR3(mListAppleFly.at(i)->posX, mListAppleFly.at(i)->posY, 0));
-			}
-		}
-		if (mListAppleEffect.size() > 0)
-		{
-			for (size_t i = 0; i < mListAppleEffect.size(); i++)
-			{
-				mListAppleEffect.at(i)->Draw(D3DXVECTOR3(mListAppleEffect.at(i)->posX, mListAppleEffect.at(i)->posY, 0));
-			}
-		}
+		//if (mListAppleFly.size() > 0)
+		//{
+		//	for (size_t i = 0; i < mListAppleFly.size(); i++)
+		//	{
+		//		mListAppleFly.at(i)->Draw(D3DXVECTOR3(mListAppleFly.at(i)->posX, mListAppleFly.at(i)->posY, 0));
+		//	}
+		//}
+		//if (mListAppleEffect.size() > 0)
+		//{
+		//	for (size_t i = 0; i < mListAppleEffect.size(); i++)
+		//	{
+		//		mListAppleEffect.at(i)->Draw(D3DXVECTOR3(mListAppleEffect.at(i)->posX, mListAppleEffect.at(i)->posY, 0));
+		//	}
+		//}
 
-		BloodInfo->Draw(BloodInfoPos);
-		AppleInfo->Draw(AppleInfoPos);
-		RubyInfo->Draw(RubyInfoPos);
-		LifeInfo->Draw(LifeInfoPos);
+		mCurrentAnimation->Draw(D3DXVECTOR3(posX, posY, 0));
 	}
 }
 
@@ -695,6 +787,7 @@ void Player::SetState(PlayerState *newState)
 	allowMoveUp = true;
 	allowDelayState = false;
 	timeDelayStates = 0;
+	timeDelaySound = 0.5f;
 
 	delete this->mPlayerData->state;
 
@@ -991,6 +1084,28 @@ void Player::changeAnimation(PlayerState::StateName state)
 		delete mAnimationRevival;
 		mAnimationRevival = new Animation("Resources/Aladdin/Revival/Revival.png", 14, 1, 14, 0.1f);
 		mCurrentAnimation = mAnimationRevival;
+		break;
+
+	case PlayerState::GameOver:
+		delete mAnimationGameOver;
+		mAnimationGameOver = new Animation("Resources/Aladdin/GameOver/GameOver.png", 12, 2, 6, 0.1f);
+		mCurrentAnimation = mAnimationGameOver;
+		break;
+
+	case PlayerState::MoveMoon:
+		delete mAnimationMoveMoon;
+		mAnimationMoveMoon = new Animation("Resources/Aladdin/Victory/MoveMoon.png", 5, 1, 5, 1.0f);
+		mCurrentAnimation = mAnimationMoveMoon;
+		break;
+
+	case PlayerState::Scene18Plus:
+		delete mAnimationScene18Plus;
+		mAnimationScene18Plus = new Animation("Resources/Aladdin/Victory/Scene18Plus.png", 10, 1, 10, 0.3f);
+		mCurrentAnimation = mAnimationScene18Plus;
+		break;
+
+	case PlayerState::Scene18PlusStop:
+		mCurrentAnimation = mAnimationScene18PlusStop;
 		break;
 
 	default:

@@ -207,8 +207,7 @@ void PlayerFallingState::OnCollision(Entity *impactor, Entity::SideCollisions si
 			//this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
 			if (noPressed)
 			{
-				if (this->mPlayerData->player->GetVy() == Define::PLAYER_MAX_JUMP_VELOCITY &&
-					timeAllowStop > 0.5f)
+				if (timeAllowStop > 0.5f)
 					this->mPlayerData->player->SetState(new PlayerFallingStopState(this->mPlayerData));
 				else
 					this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));

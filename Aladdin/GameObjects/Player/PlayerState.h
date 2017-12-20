@@ -36,7 +36,11 @@ public:
 		SittingThrowApple,
 		ClimbingThrowApple,
         Death,
-		Revival
+		Revival,
+		GameOver,
+		MoveMoon,
+		Scene18Plus,
+		Scene18PlusStop
     };
 
     ~PlayerState();

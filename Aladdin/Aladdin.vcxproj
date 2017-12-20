@@ -89,7 +89,6 @@
     <ClCompile Include="GameComponents\Camera.cpp" />
     <ClCompile Include="GameComponents\Game.cpp" />
     <ClCompile Include="GameComponents\GameCollision.cpp" />
-    <ClCompile Include="GameComponents\GameDebugDraw.cpp" />
     <ClCompile Include="GameComponents\GameGlobal.cpp" />
     <ClCompile Include="GameComponents\GameMap.cpp" />
     <ClCompile Include="GameComponents\GameTime.cpp" />
@@ -178,14 +177,18 @@
     <ClCompile Include="GameObjects\Player\PlayerDefaultState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerFallingStopState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerClimbingAttackState.cpp" />
+    <ClCompile Include="GameObjects\Player\PlayerGameOverState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerHorizontalClimbingDefaultState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerHorizontalClimbingState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerClimbingThrowAppleState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerJumpingAttackState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerJumpingThowAppleState.cpp" />
+    <ClCompile Include="GameObjects\Player\PlayerMoveMoonState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerPushingState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerRevivalState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerRunningStopState.cpp" />
+    <ClCompile Include="GameObjects\Player\PlayerScene18PlusState.cpp" />
+    <ClCompile Include="GameObjects\Player\PlayerScene18PlusStopState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerSittingThrowAppleState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerSomersaultState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerStandingJumpState.cpp" />
@@ -225,15 +228,18 @@
     <ClCompile Include="MapReader\TmxTileOffset.cpp" />
     <ClCompile Include="MapReader\TmxTileset.cpp" />
     <ClCompile Include="MapReader\TmxUtil.cpp" />
+    <ClCompile Include="Scenes\BeginScene.cpp" />
+    <ClCompile Include="Scenes\CompleteScene.cpp" />
+    <ClCompile Include="Scenes\GameOverScene.cpp" />
     <ClCompile Include="Scenes\Scene1.cpp" />
     <ClCompile Include="Scenes\Scene2.cpp" />
+    <ClCompile Include="Scenes\VictoryScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameComponents\Animation.h" />
     <ClInclude Include="GameComponents\Camera.h" />
     <ClInclude Include="GameComponents\Game.h" />
     <ClInclude Include="GameComponents\GameCollision.h" />
-    <ClInclude Include="GameComponents\GameDebugDraw.h" />
     <ClInclude Include="GameComponents\GameGlobal.h" />
     <ClInclude Include="GameComponents\GameMap.h" />
     <ClInclude Include="GameComponents\GameTime.h" />
@@ -323,14 +329,18 @@
     <ClInclude Include="GameObjects\Player\PlayerDefaultState.h" />
     <ClInclude Include="GameObjects\Player\PlayerFallingStopState.h" />
     <ClInclude Include="GameObjects\Player\PlayerClimbingAttackState.h" />
+    <ClInclude Include="GameObjects\Player\PlayerGameOverState.h" />
     <ClInclude Include="GameObjects\Player\PlayerHorizontalClimbingDefaultState.h" />
     <ClInclude Include="GameObjects\Player\PlayerHorizontalClimbingState.h" />
     <ClInclude Include="GameObjects\Player\PlayerClimbingThrowAppleState.h" />
     <ClInclude Include="GameObjects\Player\PlayerJumpingAttackState.h" />
     <ClInclude Include="GameObjects\Player\PlayerJumpingThrowAppleState.h" />
+    <ClInclude Include="GameObjects\Player\PlayerMoveMoonState.h" />
     <ClInclude Include="GameObjects\Player\PlayerPushingState.h" />
     <ClInclude Include="GameObjects\Player\PlayerRevivalState.h" />
     <ClInclude Include="GameObjects\Player\PlayerRunningStopState.h" />
+    <ClInclude Include="GameObjects\Player\PlayerScene18PlusState.h" />
+    <ClInclude Include="GameObjects\Player\PlayerScene18PlusStopState.h" />
     <ClInclude Include="GameObjects\Player\PlayerSittingThrowAppleState.h" />
     <ClInclude Include="GameObjects\Player\PlayerSomersaultState.h" />
     <ClInclude Include="GameObjects\Player\PlayerStandingJumpState.h" />
@@ -372,8 +382,12 @@
     <ClInclude Include="MapReader\TmxUtil.h" />
     <ClInclude Include="MapReader\zconf.h" />
     <ClInclude Include="MapReader\zlib.h" />
+    <ClInclude Include="Scenes\BeginScene.h" />
+    <ClInclude Include="Scenes\CompleteScene.h" />
+    <ClInclude Include="Scenes\GameOverScene.h" />
     <ClInclude Include="Scenes\Scene1.h" />
     <ClInclude Include="Scenes\Scene2.h" />
+    <ClInclude Include="Scenes\VictoryScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MapReader\Tmx.h.in" />

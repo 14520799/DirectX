@@ -2,10 +2,12 @@
 #include "StrongGuardStandingState.h"
 #include "StrongGuardRunningState.h"
 #include "StrongGuardAttackState.h"
+#include "../../../GameComponents/Sound.h"
 
 StrongGuardRunningFireState::StrongGuardRunningFireState(OrokuData *orokuData)
 {
 	this->mOrokuData = orokuData;
+	timeSound = 0.5f;
 	this->mOrokuData->strongGuard->runningFire = true;
 	this->mOrokuData->strongGuard->effectFire = true;
 	this->mOrokuData->strongGuard->SetVx(this->mOrokuData->strongGuard->GetVx());
@@ -18,6 +20,14 @@ StrongGuardRunningFireState::~StrongGuardRunningFireState()
 
 void StrongGuardRunningFireState::Update(float dt)
 {
+	timeSound += dt;
+	if (timeSound > 0.5f)
+	{
+		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/Aaah.wav", "Aaah");
+		Sound::getInstance()->play("Aaah", false, 1);
+		timeSound = 0;
+	}
+
 	if (this->mOrokuData->strongGuard->effectFire)
 		this->mOrokuData->strongGuard->mOriginPositionItem = this->mOrokuData->strongGuard->GetPosition();
 

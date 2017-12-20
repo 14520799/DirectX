@@ -166,7 +166,7 @@ void Jafar::Update(float dt)
 				}
 				if (mListWeapon.at(i)->directionFireWeapon == Entity::DirectionFireWeapon::DirectionLeft)
 				{
-					mListWeapon.at(i)->AddVx(-Define::ITEM_SPEED_X / 4);
+					mListWeapon.at(i)->AddVx(-Define::ITEM_SPEED_X / 5);
 					if(mListWeapon.at(i)->GetVy() < 300 && !mListWeapon.at(i)->fireWeaponFlyStraight)
 						mListWeapon.at(i)->AddVy(Define::ITEM_SPEED_Y);
 					else
