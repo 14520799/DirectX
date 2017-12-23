@@ -55,8 +55,8 @@ void PlayerRunningState::HandleKeyboard(std::map<int, bool> keys)
 	}
 	else
 	{
-		if (this->mPlayerData->player->GetVx() < -Define::PLAYER_MAX_RUNNING_SPEED ||
-			this->mPlayerData->player->GetVx() > Define::PLAYER_MAX_RUNNING_SPEED)
+		if (this->mPlayerData->player->GetVx() <= -Define::PLAYER_MAX_RUNNING_SPEED ||
+			this->mPlayerData->player->GetVx() >= Define::PLAYER_MAX_RUNNING_SPEED)
 			this->mPlayerData->player->SetState(new PlayerRunningStopState(this->mPlayerData));
 		else
 			this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
@@ -71,12 +71,7 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 		this->mPlayerData->player->CurrentMoveStairs = Entity::EntityCurrentMoveStairs::CurrentGround;
 		return;
 	}
-	if (impactor->Tag == Entity::EntityTypes::Fire)
-	{
-		this->mPlayerData->player->effectFire = true;
-		this->mPlayerData->player->mOriginPositionItem = D3DXVECTOR3(
-			this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y - 55, 0);
-	}
+
 	//lay phia va cham so voi player
 	//GameCollision::SideCollisions side = GameCollision::getSideCollision(this->mPlayerData->player, data);
 	if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot ||
@@ -120,7 +115,7 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Oroku ||
 		impactor->Tag == Entity::EntityTypes::Fire || impactor->Tag == Entity::EntityTypes::FallControl ||
 		impactor->Tag == Entity::EntityTypes::OrokuControl || impactor->Tag == Entity::EntityTypes::FireControl ||
-		impactor->Tag == Entity::EntityTypes::Spring)
+		impactor->Tag == Entity::EntityTypes::Spring || impactor->Tag == Entity::EntityTypes::Pot)
 	{
 
 	}
@@ -172,6 +167,18 @@ void PlayerRunningState::OnCollision(Entity *impactor, Entity::SideCollisions si
 		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
 			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
 			this->mPlayerData->player->SetVy(0);
+			break;
+
+		default:
+			break;
+		}
+	}
+	else if (impactor->Tag == Entity::EntityTypes::Bin)
+	{
+		switch (side)
+		{
+		case Entity::Bottom:
+			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
 			break;
 
 		default:

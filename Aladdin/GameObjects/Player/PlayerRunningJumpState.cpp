@@ -14,7 +14,6 @@
 PlayerRunningJumpState::PlayerRunningJumpState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
-	this->mPlayerData->player->AddPosition(0, -10);
 	if (this->mPlayerData->player->collisionObjectMap)
 	{
 		this->mPlayerData->player->SetVy(Define::PLAYER_MIN_JUMP_VELOCITY * 1.5f);
@@ -125,7 +124,7 @@ void PlayerRunningJumpState::OnCollision(Entity *impactor, Entity::SideCollision
 
 	if (impactor->Tag == Entity::EntityTypes::VerticalRope)
 	{
-		this->mPlayerData->player->SetPosition(impactor->GetPosition().x, this->mPlayerData->player->GetPosition().y);
+		this->mPlayerData->player->SetPosition(impactor->GetPosition().x, this->mPlayerData->player->GetPosition().y - 3);
 		this->mPlayerData->player->SetState(new PlayerVerticalClimbingDefaultState(this->mPlayerData));
 	}
 	else if (impactor->Tag == Entity::EntityTypes::HorizontalRope)
@@ -201,6 +200,25 @@ void PlayerRunningJumpState::OnCollision(Entity *impactor, Entity::SideCollision
 	{
 
 	}
+	else if (impactor->Tag == Entity::EntityTypes::Bin)
+	{
+		switch (side)
+		{
+		case Entity::Bottom:
+			if (this->mPlayerData->player->GetVy() >= 0)
+			{
+				this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
+				if (noPressed)
+					this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
+				else
+					this->mPlayerData->player->SetState(new PlayerRunningState(this->mPlayerData));
+				break;
+			}
+
+		default:
+			break;
+		}
+	}
 	else
 	{
 		switch (side)
@@ -220,16 +238,18 @@ void PlayerRunningJumpState::OnCollision(Entity *impactor, Entity::SideCollision
 		case Entity::Top:
 			this->mPlayerData->player->AddPosition(0, data.RegionCollision.bottom - data.RegionCollision.top);
 			this->mPlayerData->player->SetVy(0);
-			this->mPlayerData->player->SetState(new PlayerFallingState(this->mPlayerData));
 			break;
 
 		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
-			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
-			if (noPressed)
-				this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
-			else
-				this->mPlayerData->player->SetState(new PlayerRunningState(this->mPlayerData));
-			break;
+			if (this->mPlayerData->player->GetVy() >= 0)
+			{
+				this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
+				if (noPressed)
+					this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
+				else
+					this->mPlayerData->player->SetState(new PlayerRunningState(this->mPlayerData));
+				break;
+			}
 
 		default:
 			break;

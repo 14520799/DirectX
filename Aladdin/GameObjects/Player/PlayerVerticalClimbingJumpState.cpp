@@ -152,7 +152,6 @@ void PlayerVerticalClimbingJumpState::OnCollision(Entity *impactor, Entity::Side
 			break;
 		
 		case Entity::Top: case Entity::TopLeft: case Entity::TopRight:
-			//this->mPlayerData->player->AddPosition(0, data.RegionCollision.bottom - data.RegionCollision.top);
 			break;
 
 		case Entity::BottomRight: case Entity::BottomLeft: case Entity::Bottom:

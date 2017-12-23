@@ -9,4 +9,3 @@ l						Life
 S						ObjectStairs
 s						spring
 F						Feddler
-B						Bin

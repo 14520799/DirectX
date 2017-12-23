@@ -107,11 +107,11 @@ void PlayerJumpingThrowAppleState::OnCollision(Entity *impactor, Entity::SideCol
 		//this->mPlayerData->player->SetPosition(this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y + (this->mPlayerData->player->GetPosition().y - impactor->GetPosition().y));
 		this->mPlayerData->player->SetState(new PlayerHorizontalClimbingState(this->mPlayerData));
 	}
-	//else if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot) &&
-	//	!this->mPlayerData->player->allowImunity)
-	//{
-	//	this->mPlayerData->player->bloodOfEntity--;
-	//}
+	else if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot) &&
+		!this->mPlayerData->player->allowImunity)
+	{
+		this->mPlayerData->player->bloodOfEntity--;
+	}
 	else if (impactor->Tag == Entity::EntityTypes::Item)
 	{
 		if (impactor->Id == Entity::EntityId::Revitalization_Default || impactor->Id == Entity::EntityId::Feddler_Standing)
@@ -160,9 +160,26 @@ void PlayerJumpingThrowAppleState::OnCollision(Entity *impactor, Entity::SideCol
 
 	}
 	else if (impactor->Tag == Entity::EntityTypes::DownStairsControl || impactor->Tag == Entity::EntityTypes::UpStairsControl ||
-		impactor->Tag == Entity::EntityTypes::FallControl || impactor->Tag == Entity::EntityTypes::OrokuControl)
+		impactor->Tag == Entity::EntityTypes::FallControl || impactor->Tag == Entity::EntityTypes::OrokuControl ||
+		impactor->Tag == Entity::EntityTypes::VerticalRopeControl)
 	{
 
+	}
+	else if (impactor->Tag == Entity::EntityTypes::Bin)
+	{
+		switch (side)
+		{
+		case Entity::Bottom:
+			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
+			if (noPressed)
+				this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
+			else
+				this->mPlayerData->player->SetState(new PlayerRunningState(this->mPlayerData));
+			break;
+
+		default:
+			break;
+		}
 	}
 	else
 	{

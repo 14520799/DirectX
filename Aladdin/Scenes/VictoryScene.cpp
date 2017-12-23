@@ -17,8 +17,9 @@ void VictoryScene::LoadContent(Player *player)
 	//set mau backcolor cho scene o day la mau xanh
 	mBackColor = D3DCOLOR_XRGB(0, 0, 0);
 
-	//Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/AGMusicEndCredits.wav", "AGMusicEndCredits");
-	//Sound::getInstance()->play("AGMusicEndCredits", true, 0);
+	Sound::getInstance()->loadSound("Resources/Sounds/MusicScene/BeginEndGame.wav", "BeginEndGame");
+	Sound::getInstance()->play("BeginEndGame", true, 0);
+	Sound::getInstance()->setVolume(100, "BeginEndGame");
 
 	mPlayer = player;
 	mPlayer->SetPosition(0, 220);

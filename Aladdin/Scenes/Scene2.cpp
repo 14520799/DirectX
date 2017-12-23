@@ -20,8 +20,8 @@ void Scene2::LoadContent(Player *player)
 	//set mau backcolor cho scene o day la mau xanh
 	mBackColor = D3DCOLOR_XRGB(0, 0, 0);
 
-	//Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/man1.wav", "man1");
-	//Sound::getInstance()->play("man1", true, 0);
+	Sound::getInstance()->loadSound("Resources/Sounds/MusicScene/BossTune.wav", "BossTune");
+	Sound::getInstance()->play("BossTune", true, 0);
 
 	mPlayer = player;
 
@@ -58,8 +58,13 @@ void Scene2::Update(float dt)
 
 		if (mPlayer->VictoryGame)
 		{
-			SceneManager::GetInstance()->ReplaceScene(new CompleteScene(mPlayer, 2));
-			return;
+			mPlayer->timeDelayScene += dt;
+			if (mPlayer->timeDelayScene > 3.0f)
+			{
+				Sound::getInstance()->stop("BossTune");
+				SceneManager::GetInstance()->ReplaceScene(new CompleteScene(mPlayer, 2));
+				return;
+			}
 		}
 
 		mMap->Update(dt);
@@ -76,7 +81,10 @@ void Scene2::Draw()
 {
 	if (mPlayer->mCurrentState == PlayerState::Revival || mPlayer->mCurrentState == PlayerState::Death ||
 		mPlayer->mCurrentState == PlayerState::GameOver)
-		mPlayer->Draw();
+	{
+		mPlayer->SetPosition(D3DXVECTOR3(GameGlobal::GetWidth() / 2, GameGlobal::GetHeight() / 2, 0));
+		mPlayer->Draw(D3DXVECTOR3(GameGlobal::GetWidth() / 2, GameGlobal::GetHeight() / 2, 0));
+	}
 	else
 		mMap->Draw();
 }
@@ -781,13 +789,9 @@ void Scene2::checkCollision()
 					if (mPlayer->collisionStarWeapon)
 					{
 						if (mMap->mBoss->GetPosition().x - mPlayer->GetPosition().x > 5)
-						{
-							mPlayer->AddPosition(5, 0);
-						}
+							mPlayer->AddPosition(10, 0);
 						else if (mMap->mBoss->GetPosition().x - mPlayer->GetPosition().x < -5)
-						{
-							mPlayer->AddPosition(-5, 0);
-						}
+							mPlayer->AddPosition(-10, 0);
 						else if (mMap->mBoss->GetPosition().x - mPlayer->GetPosition().x > 5 ||
 							mMap->mBoss->GetPosition().x - mPlayer->GetPosition().x < -5)
 						{

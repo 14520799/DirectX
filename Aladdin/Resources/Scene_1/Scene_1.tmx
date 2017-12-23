@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="68" height="10" tilewidth="112" tileheight="112" nextobjectid="163">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="68" height="10" tilewidth="112" tileheight="112" nextobjectid="169">
  <tileset firstgid="1" source="Scene_1.tsx"/>
  <layer name="Tile Layer 1" width="68" height="10">
   <data encoding="csv">
@@ -166,5 +166,6 @@
   <object id="157" name="TranslateScene" x="7567.15" y="0.757576" width="24" height="286"/>
   <object id="159" name="FireControl" x="5103.83" y="1084.17" width="5" height="5"/>
   <object id="160" name="FireControl" x="4898.16" y="1084.83" width="5" height="5"/>
+  <object id="165" name="OrokuControl" x="6927.5" y="135" width="5" height="150"/>
  </objectgroup>
 </map>

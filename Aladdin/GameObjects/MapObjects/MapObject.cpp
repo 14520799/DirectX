@@ -37,7 +37,7 @@ RECT MapObject::GetBound()
 
 	rect.left = this->posX - this->GetWidth() / 4;
 	rect.right = this->posX + this->GetWidth() / 4;
-	rect.top = this->posY - this->GetHeight() / 8;
+	rect.top = this->posY - this->GetHeight() / 2;
 	rect.bottom = this->posY + this->GetHeight() / 4;
 
 	return rect;

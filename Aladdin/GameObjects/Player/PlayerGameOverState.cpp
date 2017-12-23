@@ -21,6 +21,8 @@ void PlayerGameOverState::Update(float dt)
 	timeDelay += dt;
 	if (timeDelay > 2.5f)
 	{
+		Sound::getInstance()->stop("Scene1");
+		Sound::getInstance()->stop("SceneFinal");
 		SceneManager::GetInstance()->ReplaceScene(new GameOverScene());
 	}
 }

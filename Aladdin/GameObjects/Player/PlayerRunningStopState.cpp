@@ -46,12 +46,6 @@ void PlayerRunningStopState::OnCollision(Entity *impactor, Entity::SideCollision
 {
 	//lay phia va cham so voi player
 	//GameCollision::SideCollisions side = GameCollision::getSideCollision(this->mPlayerData->player, data);
-	if (impactor->Tag == Entity::EntityTypes::Fire)
-	{
-		this->mPlayerData->player->effectFire = true;
-		this->mPlayerData->player->mOriginPositionItem = D3DXVECTOR3(
-			this->mPlayerData->player->GetPosition().x, impactor->GetPosition().y - 55, 0);
-	}
 	if ((impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot ||
 		impactor->Tag == Entity::EntityTypes::Fire) &&
 		!this->mPlayerData->player->allowImunity)
@@ -60,7 +54,7 @@ void PlayerRunningStopState::OnCollision(Entity *impactor, Entity::SideCollision
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Item)
 	{
-		if (impactor->Id == Entity::EntityId::Revitalization_Default)
+		if (impactor->Id == Entity::EntityId::Revitalization_Default || impactor->Id == Entity::EntityId::Feddler_Standing)
 			return;
 		this->mPlayerData->player->allowItemEffect = true;
 		this->mPlayerData->player->collisionItem = true;

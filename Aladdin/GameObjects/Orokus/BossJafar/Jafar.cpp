@@ -2,7 +2,6 @@
 #include "JafarDefaultState.h"
 #include "JafarWitchAttackState.h"
 #include "JafarSnakeAttackState.h"
-#include "../..//MapObjects/Weapons/FireEffect.h"
 #include "../../MapObjects/Weapons/StarWeaponEffect.h"
 #include "../../MapObjects/Items/LampEffect.h"
 #include "../../Player/Player.h"
@@ -63,6 +62,14 @@ void Jafar::Update(float dt)
 		{
 			delete TransfigureEffect;
 			TransfigureEffect = nullptr;
+		}
+	}
+
+	if (mListFireDecoration.size() > 0)
+	{
+		for (size_t i = 0; i < mListFireDecoration.size(); i++)
+		{
+			mListFireDecoration.at(i)->Update(dt);
 		}
 	}
 
@@ -320,6 +327,13 @@ void Jafar::Draw(D3DXVECTOR2 trans)
 	}
 	if (TransfigureEffect != nullptr)
 		TransfigureEffect->Draw(trans);
+	if (mListFireDecoration.size() > 0)
+	{
+		for (size_t i = 0; i < mListFireDecoration.size(); i++)
+		{
+			mListFireDecoration.at(i)->Draw(trans);
+		}
+	}
 }
 
 void Jafar::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)

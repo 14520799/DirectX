@@ -35,7 +35,7 @@ public:
         None, Aladdin, Static, Ground,
 		VerticalRope, VerticalRopeControl, HorizontalRope, Fire, FireControl, AppleWeapon,
 		Stairs, UpStairs, UpStairsControl, CenterStairs, DownStairs, DownStairsControl, GroundControl, FallControl,
-		Oroku, OrokuControl, Sword, Pot, ObjStairs, Spring, SpringAction, StarWeapon, FireWeapon, Bin,
+		Oroku, OrokuControl, Sword, Pot, ObjStairs, Spring, SpringAction, StarWeapon, FireWeapon, Bin, JasMine,
 		Item, TranslateScene
     };
 

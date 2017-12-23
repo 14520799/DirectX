@@ -1,12 +1,3 @@
 Character				Mean
-A						AppleItem
-R						Ruby
-r						Revitalization
-H						HeadGenie
-h						Heart
-L						Lamp
-l						Life
-S						ObjectStairs
-s						spring
-F						Feddler
 B						Bin
+J						JasMine

@@ -165,7 +165,8 @@ void PlayerFallingState::OnCollision(Entity *impactor, Entity::SideCollisions si
 	}
 	else if (impactor->Tag == Entity::EntityTypes::UpStairsControl || impactor->Tag == Entity::EntityTypes::DownStairsControl ||
 		impactor->Tag == Entity::EntityTypes::GroundControl || impactor->Tag == Entity::EntityTypes::FallControl ||
-		impactor->Tag == Entity::EntityTypes::OrokuControl || impactor->Tag == Entity::EntityTypes::FireControl)
+		impactor->Tag == Entity::EntityTypes::OrokuControl || impactor->Tag == Entity::EntityTypes::FireControl ||
+		impactor->Tag == Entity::EntityTypes::VerticalRopeControl)
 	{
 
 	}

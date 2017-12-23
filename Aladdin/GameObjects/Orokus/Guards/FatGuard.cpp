@@ -60,8 +60,8 @@ void FatGuard::Update(float dt)
 	if (weapon->collisionWithPlayer || weapon->weaponCollided)
 	{
 		weaponEffect = new SwordWeaponEffect(weapon->GetPosition());
-		allowDrawWeapon = false;
 		weapon->SetPosition(0, 0);
+		allowDrawWeapon = false;
 		weapon->collisionWithPlayer = false;
 		weapon->weaponCollided = false;
 	}

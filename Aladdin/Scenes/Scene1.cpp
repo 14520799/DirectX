@@ -21,8 +21,9 @@ void Scene1::LoadContent()
 	//set mau backcolor cho scene o day la mau xanh
 	mBackColor = D3DCOLOR_XRGB(0, 0, 0);
 
-	//Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/AGMusicBossBattle.wav", "AGMusicBossBattle");
-	//Sound::getInstance()->play("AGMusicBossBattle", true, 0);
+	Sound::getInstance()->loadSound("Resources/Sounds/MusicScene/Scene1.wav", "Scene1");
+	Sound::getInstance()->play("Scene1", true, 0);
+	Sound::getInstance()->setVolume(100, "Scene1");
 
 	mMap = new GameMap("Resources/Scene_1/Scene_1.tmx");
 	mMap->LoadMapCloudsScene1("Resources/Scene_1/CloudsPosition.txt");
@@ -30,9 +31,7 @@ void Scene1::LoadContent()
 	mMap->LoadMapOrokus("Resources/Scene_1/OrokusPosition.txt");
 
 	mCamera = new Camera(GameGlobal::GetWidth(), GameGlobal::GetHeight());
-	mCamera->SetPosition(GameGlobal::GetWidth() / 2,
-		mMap->GetHeight() - mCamera->GetHeight());
-
+	mCamera->SetPosition(GameGlobal::GetWidth() / 2, mMap->GetHeight() - mCamera->GetHeight());
 	mMap->SetCamera(mCamera);
 
 	mPlayer = new Player();
@@ -54,6 +53,7 @@ void Scene1::Update(float dt)
 {
 	if (mPlayer->allowTranslateScene)
 	{
+		Sound::getInstance()->stop("Scene1");
 		SceneManager::GetInstance()->ReplaceScene(new CompleteScene(mPlayer, 1));
 		return;
 	}

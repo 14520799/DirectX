@@ -23,7 +23,7 @@ const char * LampAttack::FileName()
 
 int LampAttack::TotalFrame()
 {
-	return 9;
+	return 1;
 }
 
 int LampAttack::Row()
@@ -33,12 +33,12 @@ int LampAttack::Row()
 
 int LampAttack::Column()
 {
-	return 9;
+	return 1;
 }
 
 float LampAttack::SecondPerFrame()
 {
-	return 0.1f;
+	return 0.0f;
 }
 
 void LampAttack::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)

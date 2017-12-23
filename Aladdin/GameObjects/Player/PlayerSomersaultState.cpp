@@ -12,8 +12,7 @@
 PlayerSomersaultState::PlayerSomersaultState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
-	this->mPlayerData->player->AddPosition(0, -50);
-	this->mPlayerData->player->SetVy(Define::PLAYER_MIN_JUMP_VELOCITY * 1.2f);
+	this->mPlayerData->player->SetVy(Define::PLAYER_MIN_JUMP_VELOCITY * 1.5f);
 	noPressed = false;
 }
 
@@ -182,12 +181,15 @@ void PlayerSomersaultState::OnCollision(Entity *impactor, Entity::SideCollisions
 			break;
 
 		case Entity::Bottom:
-			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
-			if (noPressed)
-				this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
-			else
-				this->mPlayerData->player->SetState(new PlayerRunningState(this->mPlayerData));
-			break;
+			if (this->mPlayerData->player->GetVy() >= 0)
+			{
+				this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
+				if (noPressed)
+					this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
+				else
+					this->mPlayerData->player->SetState(new PlayerRunningState(this->mPlayerData));
+				break;
+			}
 
 		default:
 			break;

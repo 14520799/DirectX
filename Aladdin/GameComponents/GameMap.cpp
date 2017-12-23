@@ -21,6 +21,7 @@
 #include "../GameObjects/MapObjects/ObjectsMap/Stairs.h"
 #include "../GameObjects/MapObjects/ObjectsMap/Spring.h"
 #include "../GameObjects/MapObjects/ObjectsMap/Bin.h"
+#include "../GameObjects/MapObjects/ObjectsMap/JasMine.h"
 #include "../GameObjects/MapObjects/ObjectsMap/SpringAction.h"
 #include "../GameObjects/MapObjects/ObjectsMap/Cloud1_Scene1.h"
 #include "../GameObjects/MapObjects/ObjectsMap/Cloud2_Scene1.h"
@@ -268,12 +269,15 @@ void GameMap::LoadMapItems(char* filepath)
 			case 'B':
 				item = new Bin(position);
 				break;
+			case 'J':
+				item = new JasMine(position);
+				break;
 			default:
 				break;
 			}
 			item->originPos = position;
 			mListMapObjects.push_back(item);
-			if (item->Tag == Entity::EntityTypes::Bin)
+			if (item->Tag == Entity::EntityTypes::JasMine)
 				continue;
 			mQuadTree->insertEntity(item);
 		}
@@ -302,7 +306,7 @@ void GameMap::LoadMapOrokus(char* filepath)
 			case 0:
 				mBoss = new Jafar(position);
 				mBoss->Tag = Entity::EntityTypes::Oroku;
-				mBoss->bloodOfEntity = 2;
+				mBoss->bloodOfEntity = Define::BOSS_BLOOD;
 				break;
 			case 1:
 				oroku = new ThinGuard(position);
@@ -489,7 +493,7 @@ void GameMap::Update(float dt)
 			delete mListMapObjects[i];
 			mListMapObjects[i] = new RevitalizationAction(pos);
 			mListMapObjects[i]->Id = Entity::EntityId::Revitalization_Action;
-			mPlayer->mRevivalPosition = mPlayer->GetPosition() - D3DXVECTOR3(0, -10, 0);
+			mPlayer->mRevivalPosition = pos + D3DXVECTOR3(0, -50, 0);
 			mPlayer->collisionRevitalization = true;
 		}
 		else if (mListMapObjects[i]->Id == Entity::EntityId::Revitalization_Action)
@@ -624,7 +628,7 @@ void GameMap::Update(float dt)
 		timeDelayCreateFireEffectPlayer += dt;
 		if (timeDelayCreateFireEffectPlayer > 0.5f)
 		{
-			itemEffect = new FireEffect(D3DXVECTOR3(mPlayer->GetPosition().x, mBoss->GetPosition().y + mBoss->GetHeight() / 2 - 55, 0));
+			itemEffect = new FireEffect(D3DXVECTOR3(mPlayer->GetPosition().x, mBoss->GetPosition().y + mBoss->GetHeight() / 2, 0));
 			this->mBoss->mListWeaponEffect.push_back(itemEffect);
 			timeDelayCreateFireEffectPlayer = 0;
 		}
@@ -668,10 +672,68 @@ void GameMap::Update(float dt)
 			mBoss->SetPlayer(this->GetPlayer());
 			mBoss->settedPlayer = true;
 		}
+		if (mBoss->bloodOfEntity <= 10 && mBoss->mListFireDecoration.size() == 0)
+		{
+			for (size_t i = 0; i < 3; i++)
+			{
+				int kc = i * 50 - 50;
+				itemEffect = new FireEffect(D3DXVECTOR3(mBoss->GetPosition().x + kc, mBoss->GetPosition().y + mBoss->GetHeight() / 2 - 55, 0));
+				mBoss->mListFireDecoration.push_back(itemEffect);
+			}
+		}
 		mBoss->Update(dt);
 	}
 
 #pragma region Update Aniamation Effect
+	//xy ly nhung effect cua item khi attack
+	if (mListItemAttackEffects.size() != 0)
+	{
+		for (size_t i = 0; i < mListItemAttackEffects.size(); i++)
+		{
+			mListItemAttackEffects.at(i)->Update(dt);
+			if (i == 0)
+			{
+				mListItemAttackEffects.at(i)->AddVx(-15);
+				mListItemAttackEffects.at(i)->AddVy(-6);
+			}
+			else if (i == 1)
+			{
+				mListItemAttackEffects.at(i)->AddVx(-8);
+				mListItemAttackEffects.at(i)->AddVy(-15);
+			}
+			else if (i == 2)
+			{
+				mListItemAttackEffects.at(i)->AddVx(8);
+				mListItemAttackEffects.at(i)->AddVy(-15);
+			}
+			else if (i == 3)
+			{
+				mListItemAttackEffects.at(i)->AddVx(15);
+				mListItemAttackEffects.at(i)->AddVy(-6);
+			}
+
+			mListItemAttackEffects.at(i)->Entity::Update(dt);
+			mListItemAttackEffects.at(i)->timeDelayItemEffect += dt;
+			if (mListItemAttackEffects.at(i)->timeDelayItemEffect > 0.6f)
+			{
+				itemEffect = new OrokuEffect(mListItemAttackEffects.at(i)->GetPosition());
+				mListItemEffects.push_back(itemEffect);
+				mListItemAttackEffects.at(i)->SetPosition(mListItemAttackEffects.at(i)->originPos);
+				for (size_t j = 0; j < mListPlayerSupport.size(); j++)
+				{
+					if (mListPlayerSupport.at(j)->GetPosition() == mListItemAttackEffects.at(i)->GetPosition())
+					{
+						mListPlayerSupport.erase(mListPlayerSupport.begin() + j);
+						break;
+					}
+				}
+				delete mListItemAttackEffects.at(i);
+				mListItemAttackEffects.at(i) = nullptr;
+				mListItemAttackEffects.erase(mListItemAttackEffects.begin() + i);
+				i--;
+			}
+		}
+	}
 	//chay animation cho effect roi huy
 	if (mListItemEffects.size() != 0)
 	{
@@ -714,53 +776,6 @@ void GameMap::Update(float dt)
 						break;
 					i--;
 				}
-			}
-		}
-	}
-	//xy ly nhung effect cua item khi attack
-	if (mListItemAttackEffects.size() != 0)
-	{
-		for (size_t i = 0; i < mListItemAttackEffects.size(); i++)
-		{
-			mListItemAttackEffects.at(i)->Update(dt);
-			if (i == 0)
-			{
-				mListItemAttackEffects.at(i)->AddVx(-4);
-				mListItemAttackEffects.at(i)->AddVy(-2);
-			}
-			else if (i == 1)
-			{
-				mListItemAttackEffects.at(i)->AddVx(-4);
-				mListItemAttackEffects.at(i)->AddVy(-8);
-			}
-			else if (i == 2)
-			{
-				mListItemAttackEffects.at(i)->AddVx(4);
-				mListItemAttackEffects.at(i)->AddVy(-8);
-			}
-			else if (i == 3)
-			{
-				mListItemAttackEffects.at(i)->AddVx(4);
-				mListItemAttackEffects.at(i)->AddVy(-2);
-			}
-
-			mListItemAttackEffects.at(i)->Entity::Update(dt);
-			mListItemAttackEffects.at(i)->timeDelayItemEffect += dt;
-			if (mListItemAttackEffects.at(i)->timeDelayItemEffect > 1.0f)
-			{
-				mListItemAttackEffects.at(i)->SetPosition(mListItemAttackEffects.at(i)->originPos);
-				for (size_t j = 0; j < mListPlayerSupport.size(); j++)
-				{
-					if (mListPlayerSupport.at(j)->GetPosition() == mListItemAttackEffects.at(i)->GetPosition())
-					{
-						mListPlayerSupport.erase(mListPlayerSupport.begin() + j);
-						break;
-					}
-				}
-				delete mListItemAttackEffects.at(i);
-				mListItemAttackEffects.at(i) = nullptr;
-				mListItemAttackEffects.erase(mListItemAttackEffects.begin() + i);
-				i--;
 			}
 		}
 	}
@@ -818,6 +833,11 @@ void GameMap::Draw()
 			{
 				for (size_t i = 0; i < mListItemAttackEffects.size(); i++)
 				{
+					if (i == 0 || i == 1)
+					{
+						mListItemAttackEffects.at(i)->mAnimation->FlipVertical(true);
+						mListItemAttackEffects.at(i)->SetPosition(mListItemAttackEffects.at(i)->GetPosition());
+					}
 					mListItemAttackEffects.at(i)->Draw(D3DXVECTOR3(mListItemAttackEffects.at(i)->posX, mListItemAttackEffects.at(i)->posY, 0), trans);
 				}
 			}

@@ -17,8 +17,9 @@ void GameOverScene::LoadContent()
 	//set mau backcolor cho scene o day la mau xanh
 	mBackColor = D3DCOLOR_XRGB(0, 0, 0);
 
-	//Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/AGMusicEndCredits.wav", "AGMusicEndCredits");
-	//Sound::getInstance()->play("AGMusicEndCredits", true, 0);
+	Sound::getInstance()->loadSound("Resources/Sounds/MusicScene/GameOver.wav", "GameOver");
+	Sound::getInstance()->play("GameOver", true, 0);
+	Sound::getInstance()->setVolume(100, "GameOver");
 
 	mCurrentImage = new Animation("Resources/GameOverScene/1.PNG", 1, 1, 1, 0.0f);
 	timeTranslate = 0;
@@ -47,6 +48,7 @@ void GameOverScene::OnKeyDown(int keyCode)
 	{
 		delete mCurrentImage;
 		mCurrentImage = nullptr;
+		Sound::getInstance()->stop("GameOver");
 		SceneManager::GetInstance()->ReplaceScene(new BeginScene());
 	}
 }

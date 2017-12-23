@@ -18,13 +18,17 @@ void CompleteScene::LoadContent(Player *player, int scene)
 	//set mau backcolor cho scene o day la mau xanh
 	mBackColor = D3DCOLOR_XRGB(0, 0, 0);
 
-	//Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/AGMusicEndCredits.wav", "AGMusicEndCredits");
-	//Sound::getInstance()->play("AGMusicEndCredits", true, 0);
+	Sound::getInstance()->loadSound("Resources/Sounds/MusicScene/LevelComplete.wav", "LevelComplete");
+	Sound::getInstance()->play("LevelComplete", true, 0);
+	Sound::getInstance()->setVolume(100, "LevelComplete");
 
 	mPlayer = player;
 	delete mPlayer->mCamera;
 	mPlayer->mCamera = nullptr;
 	mScene = scene;
+
+	mPlayer->mLevelComplete = true;
+	mPlayer->SetPosition(800, 420);
 
 	mCurrentImage = new Animation("Resources/CompleteScene/1.PNG", 1, 1, 1, 0.0f);
 	timeTranslate = 0.5f;
@@ -36,8 +40,13 @@ void CompleteScene::Update(float dt)
 	timeTranslate += dt;
 	timeTranslateImage += dt;
 	mCurrentImage->Update(dt);
-	if (timeTranslateImage > 1.5f)
-		OnKeyDown(VK_RETURN);
+	mPlayer->Update(dt);
+	if (timeTranslateImage > 5.0f)
+	{
+		timeTranslate = 0;
+		timeTranslateImage = 0;
+		nextScene = true;
+	}
 
 	if (mScene == 1)
 	{
@@ -45,6 +54,7 @@ void CompleteScene::Update(float dt)
 		{
 			delete mCurrentImage;
 			mCurrentImage = nullptr;
+			Sound::getInstance()->stop("LevelComplete");
 			SceneManager::GetInstance()->ReplaceScene(new Scene2(mPlayer));
 		}
 	}
@@ -54,6 +64,7 @@ void CompleteScene::Update(float dt)
 		{
 			delete mCurrentImage;
 			mCurrentImage = nullptr;
+			Sound::getInstance()->stop("LevelComplete");
 			SceneManager::GetInstance()->ReplaceScene(new VictoryScene(mPlayer));
 		}
 	}
@@ -65,19 +76,13 @@ void CompleteScene::Draw()
 	{
 		mCurrentImage->SetPosition(GameGlobal::GetWidth() / 2, GameGlobal::GetHeight() / 2);
 		mCurrentImage->Draw();
+		mPlayer->Draw();
 	}
 }
 
 void CompleteScene::OnKeyDown(int keyCode)
 {
 	keys[keyCode] = true;
-
-	if (keyCode == VK_RETURN)
-	{
-		timeTranslate = 0;
-		timeTranslateImage = 0;
-		nextScene = true;
-	}
 }
 
 void CompleteScene::OnKeyUp(int keyCode)

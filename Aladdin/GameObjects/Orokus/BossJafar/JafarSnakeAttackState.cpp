@@ -24,7 +24,7 @@ void JafarSnakeAttackState::Update(float dt)
 			this->mOrokuData->jafar->GetPosition().x - this->mOrokuData->jafar->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MAX_X * 3)
 		{
 			timeCreateWeapon += dt;
-			if (timeCreateWeapon > 1.0f)
+			if (timeCreateWeapon > 1.5f)
 			{
 				this->mOrokuData->jafar->weapon = new FireWeapon(this->mOrokuData->jafar->GetPosition() + D3DXVECTOR3(-40, 30, 0));
 				this->mOrokuData->jafar->mListWeapon.push_back(this->mOrokuData->jafar->weapon);
@@ -37,7 +37,7 @@ void JafarSnakeAttackState::Update(float dt)
 			this->mOrokuData->jafar->GetPosition().x - this->mOrokuData->jafar->mPlayer->GetPosition().x < Define::DANGEROUS_AREA_MIN_X)
 		{
 			timeCreateWeapon += dt;
-			if (timeCreateWeapon > 1.0f)
+			if (timeCreateWeapon > 1.5f)
 			{
 				this->mOrokuData->jafar->weapon = new FireWeapon(this->mOrokuData->jafar->GetPosition() + D3DXVECTOR3(40, 30, 0));
 				this->mOrokuData->jafar->mListWeapon.push_back(this->mOrokuData->jafar->weapon);

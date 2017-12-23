@@ -3,6 +3,7 @@
 #include "PlayerDefaultState.h"
 #include "PlayerDeathState.h"
 #include "../../GameComponents/Sound.h"
+#include "../../GameObjects/MapObjects/Weapons/AppleWeapon.h"
 
 PlayerPushingState::PlayerPushingState(PlayerData *playerData)
 {
@@ -52,6 +53,23 @@ void PlayerPushingState::OnCollision(Entity *impactor, Entity::SideCollisions si
 		impactor->Tag == Entity::EntityTypes::Pot)
 	{
 
+	}
+	else if (impactor->Tag == Entity::EntityTypes::Item)
+	{
+		if (impactor->Id == Entity::EntityId::Revitalization_Default || impactor->Id == Entity::EntityId::Feddler_Standing)
+			return;
+		else if (impactor->Id == Entity::EntityId::Lamp)
+			this->mPlayerData->player->effectLamp = true;
+		else if (impactor->Id == Entity::EntityId::HeadGenie || impactor->Id == Entity::EntityId::Life)
+			this->mPlayerData->player->effectSpecial = true;
+		this->mPlayerData->player->allowItemEffect = true;
+		this->mPlayerData->player->collisionItem = true;
+		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
+		if (impactor->Id == Entity::EntityId::AppleItem)
+		{
+			this->mPlayerData->player->apple = new AppleWeapon();
+			this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
+		}
 	}
 	else
 	{

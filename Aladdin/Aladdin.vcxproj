@@ -122,6 +122,7 @@
     <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Cloud1_Scene2.cpp" />
     <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Cloud2_Scene1.cpp" />
     <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Cloud2_Scene2.cpp" />
+    <ClCompile Include="GameObjects\MapObjects\ObjectsMap\JasMine.cpp" />
     <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Spring.cpp" />
     <ClCompile Include="GameObjects\MapObjects\ObjectsMap\SpringAction.cpp" />
     <ClCompile Include="GameObjects\MapObjects\ObjectsMap\Stairs.cpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="GameObjects\Player\PlayerClimbingThrowAppleState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerJumpingAttackState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerJumpingThowAppleState.cpp" />
+    <ClCompile Include="GameObjects\Player\PlayerLevelCompleteState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerMoveMoonState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerPushingState.cpp" />
     <ClCompile Include="GameObjects\Player\PlayerRevivalState.cpp" />
@@ -274,6 +276,7 @@
     <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Cloud1_Scene2.h" />
     <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Cloud2_Scene1.h" />
     <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Cloud2_Scene2.h" />
+    <ClInclude Include="GameObjects\MapObjects\ObjectsMap\JasMine.h" />
     <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Spring.h" />
     <ClInclude Include="GameObjects\MapObjects\ObjectsMap\SpringAction.h" />
     <ClInclude Include="GameObjects\MapObjects\ObjectsMap\Stairs.h" />
@@ -335,6 +338,7 @@
     <ClInclude Include="GameObjects\Player\PlayerClimbingThrowAppleState.h" />
     <ClInclude Include="GameObjects\Player\PlayerJumpingAttackState.h" />
     <ClInclude Include="GameObjects\Player\PlayerJumpingThrowAppleState.h" />
+    <ClInclude Include="GameObjects\Player\PlayerLevelCompleteState.h" />
     <ClInclude Include="GameObjects\Player\PlayerMoveMoonState.h" />
     <ClInclude Include="GameObjects\Player\PlayerPushingState.h" />
     <ClInclude Include="GameObjects\Player\PlayerRevivalState.h" />

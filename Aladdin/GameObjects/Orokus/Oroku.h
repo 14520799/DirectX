@@ -54,6 +54,7 @@ public:
 
 	std::vector<MapObject*>	mListWeapon;
 	std::vector<MapObject*>	mListWeaponEffect;
+	std::vector<MapObject*> mListFireDecoration;//dung lua trang tri xung quanh cho boss snake;
 protected:
 	OrokuData *mOrokuData;
 

@@ -514,6 +514,12 @@
     <ClCompile Include="GameObjects\Player\PlayerScene18PlusStopState.cpp">
       <Filter>Framework\GameObjects\Player</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjects\Player\PlayerLevelCompleteState.cpp">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\MapObjects\ObjectsMap\JasMine.cpp">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameComponents\Game.h">
@@ -971,6 +977,12 @@
     </ClInclude>
     <ClInclude Include="GameObjects\Player\PlayerScene18PlusStopState.h">
       <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player\PlayerLevelCompleteState.h">
+      <Filter>Framework\GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\MapObjects\ObjectsMap\JasMine.h">
+      <Filter>Framework\GameObjects\MapObjects\ObjectsMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

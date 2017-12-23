@@ -31,7 +31,9 @@ public:
 	float timeDelayItemEffect;
 	float timeDelaySpringAction;
 
-	bool currentReverse;
+	//huong bay cua cay kiem
+	bool currentFlyWeapon;
+	//lat hinh
 	bool currentObjectReverse;
 	//xu ly cach bay cua fireWeapon cho boss
 	bool fireWeaponFlyStraight;

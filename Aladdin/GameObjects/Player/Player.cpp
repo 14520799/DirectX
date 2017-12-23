@@ -27,6 +27,7 @@
 #include "PlayerClimbingThrowAppleState.h"
 #include "PlayerRevivalState.h"
 #include "PlayerGameOverState.h"
+#include "PlayerLevelCompleteState.h"
 #include "PlayerMoveMoonState.h"
 #include "PlayerScene18PlusState.h"
 #include "PlayerScene18PlusStopState.h"
@@ -52,7 +53,7 @@ Player::Player()
 	LifeInfo = new Animation("Resources/AladdinInfo/LifeInfo.png", 1, 1, 1, 0.0f);
 	LifeInfoPos = D3DXVECTOR3(40, GameGlobal::GetHeight() / 2 - 30, 0);
 
-	mLifePlayer = 0;
+	mLifePlayer = 3;
 	mScorePlayer = 0;
 	mRubyPlayer = 0;
 
@@ -76,8 +77,27 @@ Player::~Player()
 
 void Player::Update(float dt)
 {
+	//state LevelComplete
+	if (mLevelComplete)
+	{
+		mLevelComplete = false;
+		this->SetState(new PlayerLevelCompleteState(this->mPlayerData));
+	}
+
+	if (mCurrentState == PlayerState::LevelComplete)
+	{
+		this->SetVx(-200);
+		mCurrentAnimation->Update(dt);
+		this->Entity::Update(dt);
+		if (this->mPlayerData->state)
+		{
+			this->mPlayerData->state->Update(dt);
+		}
+		return;
+	}
+
 	//nhung state Victory game cua player
-	if (VictoryGame)
+	if (VictoryGame && timeDelayScene > 3.0f)
 	{
 		for (size_t i = 0; i < mListAppleEffect.size(); i++)
 		{
@@ -127,6 +147,12 @@ void Player::Update(float dt)
 	if (this->mCurrentState == PlayerState::Revival || this->mCurrentState == PlayerState::Death ||
 		this->mCurrentState == PlayerState::GameOver)
 	{
+		delete mCamera;
+		mCamera = nullptr;
+		if (this->mCurrentState == PlayerState::Revival)
+			this->SetPosition(D3DXVECTOR3(GameGlobal::GetWidth() / 2, GameGlobal::GetHeight() / 4, 0));
+		else
+			this->SetPosition(D3DXVECTOR3(GameGlobal::GetWidth() / 2, GameGlobal::GetHeight() / 2, 0));
 		mCurrentAnimation->Update(dt);
 		if (this->mPlayerData->state)
 		{
@@ -190,7 +216,7 @@ void Player::Update(float dt)
 		}
 	}
 
-	//animation cua player chay
+	//animation cua player
 	BloodInfo->Update(dt);
 	mCurrentAnimation->Update(dt);
 
@@ -392,12 +418,24 @@ void Player::Update(float dt)
 
 void Player::InitPlayer()
 {
+	if (this->mCurrentState == PlayerState::Revival || this->mCurrentState == PlayerState::Death ||
+		this->mCurrentState == PlayerState::GameOver)
+	{
+		if (mCamera == nullptr)
+		{
+			mCamera = new Camera(GameGlobal::GetWidth(), GameGlobal::GetHeight());
+			mCamera->SetPosition(GameGlobal::GetWidth() / 2, mMap->GetHeight() - mCamera->GetHeight());
+			this->mMap->SetCamera(mCamera);
+			this->SetCamera(mCamera);
+		}
+	}
+
 	if (collisionRevitalization)
 		this->SetPosition(this->mRevivalPosition);
 	else
 		this->SetPosition(this->mOriginPosition);
 
-	this->bloodOfEntity = 1;
+	this->bloodOfEntity = Define::ALADDIN_BLOOD;
 	this->preBloodOfEntity = this->bloodOfEntity;
 	delete BloodInfo;
 	BloodInfo = new Animation("Resources/AladdinInfo/BloodInfo_10.png", 4, 1, 4, 0.1f);
@@ -806,7 +844,7 @@ void Player::SetState(PlayerState *newState)
 		allowDelayState = true;
 }
 
-void Player::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions size)
+void Player::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity::SideCollisions side)
 {
 	if (impactor->Tag == Entity::EntityTypes::TranslateScene)
 		this->allowTranslateScene = true;
@@ -853,12 +891,6 @@ void Player::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity:
 	}
 	else if (impactor->Id == Entity::EntityId::Revitalization_Default)
 		mScorePlayer += 125;
-	else if (impactor->Id == Entity::EntityId::Feddler_Standing)
-	{
-		Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/PeddlerShop.wav", "PeddlerShop");
-		Sound::getInstance()->play("PeddlerShop", false, 1);
-		mScorePlayer += 500;
-	}
 #pragma endregion
 
 	if (impactor->Tag == Entity::EntityTypes::Fire)
@@ -878,8 +910,22 @@ void Player::OnCollision(Entity *impactor, Entity::CollisionReturn data, Entity:
 	{
 		this->mPlayerData->player->collisionFireWeapon = true;
 	}
+	else if (impactor->Tag == Entity::EntityTypes::Bin && mCurrentState != PlayerState::StandingJump &&
+		mCurrentState != PlayerState::RunningJump && mCurrentState != PlayerState::JumpingAttack &&
+		mCurrentState != PlayerState::JumpingThrowApple && mCurrentState != PlayerState::Falling)
+	{
+		switch (side)
+		{
+		case Entity::Bottom:
+			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
+			break;
+
+		default:
+			break;
+		}
+	}
 	else
-		this->mPlayerData->state->OnCollision(impactor, size, data);
+		this->mPlayerData->state->OnCollision(impactor, side, data);
 }
 
 RECT Player::GetBound()
@@ -934,7 +980,7 @@ void Player::changeAnimation(PlayerState::StateName state)
 
 	case PlayerState::Running:
 		delete mAnimationRunning;
-		mAnimationRunning = new Animation("Resources/Aladdin/Running/Running.png", 13, 1, 13, 0.02f);
+		mAnimationRunning = new Animation("Resources/Aladdin/Running/Running.png", 13, 1, 13, 0.05f);
 		mCurrentAnimation = mAnimationRunning;
 		break;
 
@@ -1090,6 +1136,12 @@ void Player::changeAnimation(PlayerState::StateName state)
 		delete mAnimationGameOver;
 		mAnimationGameOver = new Animation("Resources/Aladdin/GameOver/GameOver.png", 12, 2, 6, 0.1f);
 		mCurrentAnimation = mAnimationGameOver;
+		break;
+
+	case PlayerState::LevelComplete:
+		delete mAnimationLevelComplete;
+		mAnimationLevelComplete = new Animation("Resources/Aladdin/LevelComplete/LevelComplete.png", 8, 1, 8, 0.2f);
+		mCurrentAnimation = mAnimationLevelComplete;
 		break;
 
 	case PlayerState::MoveMoon:

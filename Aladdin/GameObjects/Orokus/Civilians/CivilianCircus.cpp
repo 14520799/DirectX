@@ -93,7 +93,7 @@ void CivilianCircus::Update(float dt)
 			if (weapon->GetPosition() == weapon->originPos)
 			{
 				this->weapon->Mode = MapObject::WeaponMode::Nomal;
-				this->weapon->currentReverse = false;
+				this->weapon->currentFlyWeapon = false;
 				allowDrawWeapon = true;
 			}
 		}
@@ -104,7 +104,7 @@ void CivilianCircus::Update(float dt)
 			if (weapon->GetPosition() == weapon->originPos)
 			{
 				this->weapon->Mode = MapObject::WeaponMode::Nomal;
-				this->weapon->currentReverse = true;
+				this->weapon->currentFlyWeapon = true;
 				allowDrawWeapon = true;
 			}
 		}
@@ -118,7 +118,7 @@ void CivilianCircus::Update(float dt)
 			if (weapon->GetPosition() == weapon->originPos)
 			{
 				this->weapon->Mode = MapObject::WeaponMode::Fantastic;
-				this->weapon->currentReverse = false;
+				this->weapon->currentFlyWeapon = false;
 				allowDrawWeapon = true;
 				this->weapon->SetVy(Define::CIVILIAN_SWORD_MIN_VELOCITY);
 			}
@@ -133,7 +133,7 @@ void CivilianCircus::Update(float dt)
 			if (weapon->GetPosition() == weapon->originPos)
 			{
 				this->weapon->Mode = MapObject::WeaponMode::Fantastic;
-				this->weapon->currentReverse = true;
+				this->weapon->currentFlyWeapon = true;
 				allowDrawWeapon = true;
 				this->weapon->SetVy(Define::CIVILIAN_SWORD_MIN_VELOCITY);
 			}

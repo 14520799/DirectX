@@ -6,6 +6,7 @@
 #include "../../GameComponents/GameCollision.h"
 #include "../../GameDefines/GameDefine.h"
 #include "../../GameComponents/Sound.h"
+#include "../../GameObjects/MapObjects/Weapons/AppleWeapon.h"
 
 PlayerFallingStopState::PlayerFallingStopState(PlayerData *playerData)
 {
@@ -50,6 +51,23 @@ void PlayerFallingStopState::OnCollision(Entity *impactor, Entity::SideCollision
 		!this->mPlayerData->player->allowImunity)
 	{
 		this->mPlayerData->player->bloodOfEntity--;
+	}
+	else if (impactor->Tag == Entity::EntityTypes::Item)
+	{
+		if (impactor->Id == Entity::EntityId::Revitalization_Default || impactor->Id == Entity::EntityId::Feddler_Standing)
+			return;
+		else if (impactor->Id == Entity::EntityId::Lamp)
+			this->mPlayerData->player->effectLamp = true;
+		else if (impactor->Id == Entity::EntityId::HeadGenie || impactor->Id == Entity::EntityId::Life)
+			this->mPlayerData->player->effectSpecial = true;
+		this->mPlayerData->player->allowItemEffect = true;
+		this->mPlayerData->player->collisionItem = true;
+		this->mPlayerData->player->mOriginPositionItem = impactor->GetPosition();
+		if (impactor->Id == Entity::EntityId::AppleItem)
+		{
+			this->mPlayerData->player->apple = new AppleWeapon();
+			this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
+		}
 	}
 	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Oroku ||
 		impactor->Tag == Entity::EntityTypes::Fire || impactor->Tag == Entity::EntityTypes::Spring)

@@ -38,6 +38,7 @@ public:
         Death,
 		Revival,
 		GameOver,
+		LevelComplete,
 		MoveMoon,
 		Scene18Plus,
 		Scene18PlusStop

@@ -8,6 +8,7 @@
 #include "../../GameComponents/GameMap.h"
 #include "../../GameObjects/MapObjects/MapObject.h"
 #include "../../GameComponents/Text.h"
+#include "../Orokus/Oroku.h"
 #include "PlayerData.h"
 #include "PlayerState.h"
 #include "PlayerRunningState.h"
@@ -75,10 +76,12 @@ public:
 	bool collisionObjectMap;
 	bool collisionStarWeapon, collisionFireWeapon;
 	bool allowTranslateScene;//khi aladdin qua scene thi se cho phep chuyen sang scene khac
+	bool mLevelComplete;//khi aladdin dang o man hinh level complete thi se chuyen sang state do
 	bool VictoryGame;//khi player giet boss thi se victory game
 	bool allowShowTheEnd;//sau khi thuc hien xong canh 18+ thi se cho xuat hien chu theend
 
 	int demHurting;//khi player bi trung don thi se chay bien dem nay de the hien player dang bi thuong
+	float timeDelayScene;//sau khi kill boss thanh cong thi se delay 1 chut roi se thuc hien scene Victory
 
 	std::vector<MapObject*> mListApplePlayer; //apple cua player dang so huu
 	std::vector<MapObject*> mListAppleFly; //apple da duoc player nem di
@@ -143,6 +146,7 @@ protected:
 				*mAnimationDeath,
 				*mAnimationRevival,
 				*mAnimationGameOver,
+				*mAnimationLevelComplete,
 				*mAnimationMoveMoon,
 				*mAnimationScene18Plus,
 				*mAnimationScene18PlusStop;

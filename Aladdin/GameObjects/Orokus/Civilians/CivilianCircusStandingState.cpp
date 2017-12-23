@@ -16,7 +16,7 @@ void CivilianCircusStandingState::Update(float dt)
 	if (this->mOrokuData->civilianCircus->allowDrawWeapon)
 	{
 		//kiem bay qua ben phai
-		if (this->mOrokuData->civilianCircus->weapon->currentReverse)
+		if (this->mOrokuData->civilianCircus->weapon->currentFlyWeapon)
 		{
 			if (this->mOrokuData->civilianCircus->weapon->Mode == MapObject::WeaponMode::Nomal)
 			{

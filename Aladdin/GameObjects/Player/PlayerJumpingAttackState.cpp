@@ -159,10 +159,27 @@ void PlayerJumpingAttackState::OnCollision(Entity *impactor, Entity::SideCollisi
 
 	}
 	else if (impactor->Tag == Entity::EntityTypes::DownStairsControl || impactor->Tag == Entity::EntityTypes::UpStairsControl ||
-		impactor->Tag == Entity::EntityTypes::FallControl || impactor->Tag == Entity::EntityTypes::OrokuControl)
+		impactor->Tag == Entity::EntityTypes::FallControl || impactor->Tag == Entity::EntityTypes::OrokuControl ||
+		impactor->Tag == Entity::EntityTypes::VerticalRopeControl)
 	{
 
-	}	
+	}
+	else if (impactor->Tag == Entity::EntityTypes::Bin)
+	{
+		switch (side)
+		{
+		case Entity::Bottom:
+			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
+			if (noPressed)
+				this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
+			else
+				this->mPlayerData->player->SetState(new PlayerRunningState(this->mPlayerData));
+			break;
+
+		default:
+			break;
+		}
+	}
 	else
 	{
 		switch (side)

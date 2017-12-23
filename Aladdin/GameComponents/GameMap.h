@@ -63,13 +63,14 @@ public:
 	float timeDelayCreateFireEffectGuard;
 
 	Oroku *mBoss;
+
+	Camera *mCamera;
 private:
     void LoadMap(char* filePath);
 
     Tmx::Map                        *mMap;
     std::map<int, Sprite*>          mListTileset;
     LPD3DXSPRITE                    mSpriteHandler;
-    Camera                          *mCamera;
 	Player							*mPlayer;
     QuadTree                        *mQuadTree;
     std::vector<MapObject*>			mListMapObjects;

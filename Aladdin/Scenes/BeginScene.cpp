@@ -17,10 +17,11 @@ void BeginScene::LoadContent()
 	//set mau backcolor cho scene o day la mau xanh
 	mBackColor = D3DCOLOR_XRGB(0, 0, 0);
 
-	//Sound::getInstance()->loadSound("Resources/Sounds/Aladdin/AGMusicEndCredits.wav", "AGMusicEndCredits");
-	//Sound::getInstance()->play("AGMusicEndCredits", true, 0);
+	Sound::getInstance()->loadSound("Resources/Sounds/MusicScene/BeginEndGame.wav", "BeginEndGame");
+	Sound::getInstance()->play("BeginEndGame", true, 0);
+	Sound::getInstance()->setVolume(100, "BeginEndGame");
 
-	mCurrentImage = new Animation("Resources/BeginScene/1.PNG", 1, 1, 1, 0.0f);
+	mCurrentImage = new Animation("Resources/BeginScene/1.PNG", 2, 1, 2, 0.2f);
 	hinh = 1;
 	timeTranslate = 0.5f;
 	timeTranslateImage = 0;
@@ -34,7 +35,7 @@ void BeginScene::Update(float dt)
 		OnKeyDown(VK_RETURN);
 	mCurrentImage->Update(dt);
 
-	if (hinh == 11 && timeTranslate > 0.5f)
+	if (hinh == 12 && timeTranslate > 0.5f)
 	{
 		delete mCurrentImage;
 		mCurrentImage = nullptr;
@@ -64,24 +65,28 @@ void BeginScene::OnKeyDown(int keyCode)
 			{
 			case 1:
 				delete mCurrentImage;
-				mCurrentImage = new Animation("Resources/BeginScene/2.PNG", 1, 1, 1, 0.0f);
-				timeTranslate = 0;
+				mCurrentImage = new Animation("Resources/BeginScene/2.PNG", 4, 1, 4, 0.3f);
 				hinh = 2;
 				break;
 			case 2:
 				delete mCurrentImage;
 				mCurrentImage = new Animation("Resources/BeginScene/3.PNG", 1, 1, 1, 0.0f);
+				timeTranslate = 0;
 				hinh = 3;
 				break;
 			case 3:
 				delete mCurrentImage;
 				mCurrentImage = new Animation("Resources/BeginScene/4.PNG", 1, 1, 1, 0.0f);
-				timeTranslate = 0;
 				hinh = 4;
 				break;
 			case 4:
+				Sound::getInstance()->stop("BeginEndGame");
+				Sound::getInstance()->loadSound("Resources/Sounds/MusicScene/IntroStory.wav", "IntroStory");
+				Sound::getInstance()->play("IntroStory", true, 0);
+				Sound::getInstance()->setVolume(100, "IntroStory");
 				delete mCurrentImage;
 				mCurrentImage = new Animation("Resources/BeginScene/5.PNG", 1, 1, 1, 0.0f);
+				timeTranslate = 0;
 				hinh = 5;
 				break;
 			case 5:
@@ -107,12 +112,18 @@ void BeginScene::OnKeyDown(int keyCode)
 			case 9:
 				delete mCurrentImage;
 				mCurrentImage = new Animation("Resources/BeginScene/10.PNG", 1, 1, 1, 0.0f);
-				timeTranslate = 0;
 				hinh = 10;
 				break;
 			case 10:
+				delete mCurrentImage;
+				mCurrentImage = new Animation("Resources/BeginScene/11.PNG", 1, 1, 1, 0.0f);
 				timeTranslate = 0;
 				hinh = 11;
+				break;
+			case 11:
+				Sound::getInstance()->stop("IntroStory");
+				timeTranslate = 0.2f;
+				hinh = 12;
 				break;
 			default:
 				break;
