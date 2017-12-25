@@ -107,6 +107,11 @@ void Scene1::OnMouseDown(float x, float y)
 
 void Scene1::CheckCameraAndWorldMap()
 {
+	if (mPlayer->mCurrentState == PlayerState::StandingAttack || mPlayer->mCurrentState == PlayerState::StandingThrowApple ||
+		mPlayer->mCurrentState == PlayerState::Sitting || mPlayer->mCurrentState == PlayerState::SittingAttack ||
+		mPlayer->mCurrentState == PlayerState::SittingThrowApple)
+		return;
+
 	if (mPlayer->onKeyUpPressing)
 		mCamera->SetPosition(mPlayer->GetPosition() + D3DXVECTOR3(0, -250, 0));
 	else if (mPlayer->onKeyDownPressing)
