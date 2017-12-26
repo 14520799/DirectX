@@ -69,11 +69,11 @@ void PlayerSittingAttackState::OnCollision(Entity *impactor, Entity::SideCollisi
 			this->mPlayerData->player->AddPosition(-(data.RegionCollision.right - data.RegionCollision.left), 0);
 			break;
 
-		case Entity::Top: case Entity::TopLeft: case Entity::TopRight:
+		case Entity::Top:
 			this->mPlayerData->player->AddPosition(0, data.RegionCollision.bottom - data.RegionCollision.top);
 			break;
 
-		case Entity::Bottom: case Entity::BottomLeft: case Entity::BottomRight:
+		case Entity::Bottom:
 			this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
 			this->mPlayerData->player->SetVy(0);
 			break;

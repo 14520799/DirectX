@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="68" height="10" tilewidth="112" tileheight="112" nextobjectid="169">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="68" height="10" tilewidth="112" tileheight="112" nextobjectid="172">
  <tileset firstgid="1" source="Scene_1.tsx"/>
  <layer name="Tile Layer 1" width="68" height="10">
   <data encoding="csv">
@@ -60,7 +60,7 @@
   <object id="16" x="2339.5" y="685.5" width="153" height="19"/>
   <object id="17" x="2339" y="597.5" width="49.3333" height="19"/>
   <object id="18" x="2274.5" y="4.5" width="63" height="701"/>
-  <object id="19" name="VerticalRope" x="2450" y="167" width="4" height="307"/>
+  <object id="19" name="VerticalRope" x="2450" y="167" width="4" height="236"/>
   <object id="20" name="VerticalRopeControl" x="2437" y="160" width="30" height="6"/>
   <object id="21" name="VerticalRopeControl" x="3304" y="469" width="30" height="6"/>
   <object id="22" name="VerticalRope" x="3317" y="476" width="4" height="462"/>
@@ -77,17 +77,17 @@
   <object id="37" name="DownStairs" x="4108.33" y="1074.33" width="28" height="23.6667"/>
   <object id="38" x="3563.67" y="1098" width="853.333" height="21.3333"/>
   <object id="39" x="4417.17" y="929.5" width="63.6667" height="189.667"/>
-  <object id="40" name="UpStairs" x="3637.34" y="922.667" width="64.6666" height="13.3333"/>
+  <object id="40" name="UpStairs" x="3668.84" y="922.667" width="33.1666" height="13.3333"/>
   <object id="42" name="UpStairs" x="3701.33" y="910" width="51.3333" height="14"/>
   <object id="43" name="UpStairs" x="3752" y="896.667" width="52.6666" height="13.3333"/>
   <object id="44" name="UpStairs" x="3804" y="883.333" width="52" height="13.3333"/>
   <object id="45" name="UpStairs" x="3854.67" y="868" width="53.3333" height="15.3333"/>
   <object id="46" name="UpStairs" x="3907.33" y="854" width="88" height="13.3333"/>
   <object id="47" name="UpStairs" x="3994.67" y="840" width="78" height="13.3333"/>
-  <object id="48" name="UpStairs" x="4071.33" y="826.667" width="65.333" height="13.3333"/>
+  <object id="48" name="UpStairs" x="4071.33" y="826.667" width="129.833" height="13.3333"/>
   <object id="49" x="4353.33" y="908.667" width="162.667" height="20"/>
   <object id="50" name="UpStairsControl" x="3562.67" y="672" width="21" height="259.333"/>
-  <object id="52" name="DownStairsControl" x="4256" y="840.337" width="15" height="257"/>
+  <object id="52" name="DownStairsControl" x="4241" y="840.337" width="15" height="257"/>
   <object id="54" name="GroundControl" x="3920" y="1093.33" width="188" height="4"/>
   <object id="55" name="Fire" x="773" y="1025" width="100" height="5"/>
   <object id="56" name="Fire" x="1358" y="1025" width="100" height="5"/>
@@ -146,7 +146,7 @@
   <object id="123" name="FallControl" x="6912.17" y="896.167" width="6.33337" height="153"/>
   <object id="124" x="7246" y="19" width="52" height="69"/>
   <object id="130" x="2240.5" y="912" width="126" height="16"/>
-  <object id="131" x="4137.33" y="826.67" width="226.333" height="13.3333"/>
+  <object id="131" x="4201.33" y="826.67" width="162.333" height="13.3333"/>
   <object id="132" name="FallControl" x="7404.5" y="818.561" width="5" height="129.878"/>
   <object id="133" x="7279.83" y="1008" width="312.333" height="17.3333"/>
   <object id="134" name="FallControl" x="6075.5" y="561.125" width="5" height="185.75"/>
@@ -167,5 +167,6 @@
   <object id="159" name="FireControl" x="5103.83" y="1084.17" width="5" height="5"/>
   <object id="160" name="FireControl" x="4898.16" y="1084.83" width="5" height="5"/>
   <object id="165" name="OrokuControl" x="6927.5" y="135" width="5" height="150"/>
+  <object id="169" name="OrokuControl" x="7119" y="852.833" width="10" height="154.333"/>
  </objectgroup>
 </map>

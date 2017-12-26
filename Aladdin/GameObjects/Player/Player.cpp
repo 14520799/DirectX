@@ -150,7 +150,7 @@ void Player::Update(float dt)
 		delete mCamera;
 		mCamera = nullptr;
 		if (this->mCurrentState == PlayerState::Revival)
-			this->SetPosition(D3DXVECTOR3(GameGlobal::GetWidth() / 2, GameGlobal::GetHeight() / 4, 0));
+			this->SetPosition(D3DXVECTOR3(GameGlobal::GetWidth() / 2, GameGlobal::GetHeight() / 4 + 20, 0));
 		else
 			this->SetPosition(D3DXVECTOR3(GameGlobal::GetWidth() / 2, GameGlobal::GetHeight() / 2, 0));
 		mCurrentAnimation->Update(dt);

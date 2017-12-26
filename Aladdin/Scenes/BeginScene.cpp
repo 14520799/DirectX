@@ -64,11 +64,16 @@ void BeginScene::OnKeyDown(int keyCode)
 			switch (hinh)
 			{
 			case 1:
+				Sound::getInstance()->stop("BeginEndGame");
+				Sound::getInstance()->loadSound("Resources/Sounds/MusicScene/IntroGame.wav", "IntroGame");
+				Sound::getInstance()->play("IntroGame", true, 0);
+				Sound::getInstance()->setVolume(100, "IntroGame");
 				delete mCurrentImage;
 				mCurrentImage = new Animation("Resources/BeginScene/2.PNG", 4, 1, 4, 0.3f);
 				hinh = 2;
 				break;
 			case 2:
+				Sound::getInstance()->stop("IntroGame");
 				delete mCurrentImage;
 				mCurrentImage = new Animation("Resources/BeginScene/3.PNG", 1, 1, 1, 0.0f);
 				timeTranslate = 0;
@@ -80,7 +85,6 @@ void BeginScene::OnKeyDown(int keyCode)
 				hinh = 4;
 				break;
 			case 4:
-				Sound::getInstance()->stop("BeginEndGame");
 				Sound::getInstance()->loadSound("Resources/Sounds/MusicScene/IntroStory.wav", "IntroStory");
 				Sound::getInstance()->play("IntroStory", true, 0);
 				Sound::getInstance()->setVolume(100, "IntroStory");

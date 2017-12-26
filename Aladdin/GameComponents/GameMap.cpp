@@ -335,8 +335,11 @@ void GameMap::LoadMapOrokus(char* filepath)
 			}
 			if (id != 0)
 			{
+				if(id == 1|| id == 2 || id == 3)
+					oroku->bloodOfEntity = Define::OROKU_BLOOD;
+				else if(id == 5 || id == 6 || id == 7)
+					oroku->bloodOfEntity = Define::OROKU_BLOOD / 2;
 				oroku->Tag = Entity::EntityTypes::Oroku;
-				oroku->bloodOfEntity = Define::OROKU_BLOOD;
 				mListOrokus.push_back(oroku);
 			}
 		}
@@ -493,7 +496,7 @@ void GameMap::Update(float dt)
 			delete mListMapObjects[i];
 			mListMapObjects[i] = new RevitalizationAction(pos);
 			mListMapObjects[i]->Id = Entity::EntityId::Revitalization_Action;
-			mPlayer->mRevivalPosition = pos + D3DXVECTOR3(0, -50, 0);
+			mPlayer->mRevivalPosition = pos + D3DXVECTOR3(0, -60, 0);
 			mPlayer->collisionRevitalization = true;
 		}
 		else if (mListMapObjects[i]->Id == Entity::EntityId::Revitalization_Action)
@@ -714,7 +717,7 @@ void GameMap::Update(float dt)
 
 			mListItemAttackEffects.at(i)->Entity::Update(dt);
 			mListItemAttackEffects.at(i)->timeDelayItemEffect += dt;
-			if (mListItemAttackEffects.at(i)->timeDelayItemEffect > 0.6f)
+			if (mListItemAttackEffects.at(i)->timeDelayItemEffect > 0.55f)
 			{
 				itemEffect = new OrokuEffect(mListItemAttackEffects.at(i)->GetPosition());
 				mListItemEffects.push_back(itemEffect);

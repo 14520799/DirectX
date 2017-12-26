@@ -17,7 +17,6 @@ PlayerFallingState::PlayerFallingState(PlayerData *playerData)
 {
 	this->mPlayerData = playerData;
 	this->mPlayerData->player->SetVx(0);
-	timeAllowStop = 0;
 }
 
 
@@ -28,7 +27,6 @@ PlayerFallingState::~PlayerFallingState()
 void PlayerFallingState::Update(float dt)
 {
 	this->mPlayerData->player->AddVy(Define::PLAYER_FALL_SPEED_Y);
-	timeAllowStop += dt;
 	if (mPlayerData->player->GetVy() > Define::PLAYER_MAX_JUMP_VELOCITY)
 	{
 		mPlayerData->player->SetVy(Define::PLAYER_MAX_JUMP_VELOCITY);
@@ -208,7 +206,7 @@ void PlayerFallingState::OnCollision(Entity *impactor, Entity::SideCollisions si
 			//this->mPlayerData->player->AddPosition(0, -(data.RegionCollision.bottom - data.RegionCollision.top));
 			if (noPressed)
 			{
-				if (timeAllowStop > 0.5f)
+				if (mPlayerData->player->GetVy() >= Define::PLAYER_MAX_JUMP_VELOCITY)
 					this->mPlayerData->player->SetState(new PlayerFallingStopState(this->mPlayerData));
 				else
 					this->mPlayerData->player->SetState(new PlayerDefaultState(this->mPlayerData));
