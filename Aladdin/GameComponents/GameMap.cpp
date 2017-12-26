@@ -629,7 +629,7 @@ void GameMap::Update(float dt)
 	if (mPlayer->collisionFireWeapon)
 	{
 		timeDelayCreateFireEffectPlayer += dt;
-		if (timeDelayCreateFireEffectPlayer > 0.5f)
+		if (timeDelayCreateFireEffectPlayer > 0.1f)
 		{
 			itemEffect = new FireEffect(D3DXVECTOR3(mPlayer->GetPosition().x, mBoss->GetPosition().y + mBoss->GetHeight() / 2, 0));
 			this->mBoss->mListWeaponEffect.push_back(itemEffect);

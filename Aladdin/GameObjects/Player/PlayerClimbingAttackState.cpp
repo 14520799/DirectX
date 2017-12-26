@@ -56,7 +56,8 @@ void PlayerClimbingAttackState::OnCollision(Entity *impactor, Entity::SideCollis
 			this->mPlayerData->player->mListApplePlayer.push_back(this->mPlayerData->player->apple);
 		}
 	}
-	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot)
+	else if (impactor->Tag == Entity::EntityTypes::Sword || impactor->Tag == Entity::EntityTypes::Pot ||
+		impactor->Tag == Entity::EntityTypes::VerticalRopeControl)
 	{
 
 	}
